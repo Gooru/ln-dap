@@ -3,6 +3,7 @@
 --      _data: Implies this table is used as a view to API. The data in this table is populated using events with some transformation
 --      _data_ml: Implies this table is used as a view to API. The data is populated using some processing job probably using ML
 --      _tx: taxonomy related static tables
+--      _ts: This can follow other suffixes and if present should be last. This will imply that table is hypertable (ts implies it stores time series data)
 --      _master: Kind of metadata tables. The SSE may happen to modify this table
 
 
@@ -10,17 +11,17 @@
 -- Sample queries (assuming duration of 3 days)
 
 -- Total active users irrespective of subject for given days
---  select count(distinct(user_id)) from user_activity_datawhere activity_date <= current_date and activity_date >= current_date - 3;
+--  select count(distinct(user_id)) from user_activity_data_ts where activity_date <= current_date and activity_date >= current_date - 3;
 -- Total active users for a subject for given days
---  select count(distinct(user_id)) from user_activity_datawhere activity_date < current_date and activity_date >= current_date - 3 and subject_code = 'sub1';
+--  select count(distinct(user_id)) from user_activity_data_ts where activity_date < current_date and activity_date >= current_date - 3 and subject_code = 'sub1';
 -- Total active users for a zoom code for given days
---  select count(distinct(a.user_id)) from user_activity_dataa inner join user_profile p on a.user_id = p.user_id where a.activity_date < current_date and a.activity_date >= current_date - 3 and p.zoom_code = 'zoom1';
+--  select count(distinct(a.user_id)) from user_activity_data_ts inner join user_profile p on a.user_id = p.user_id where a.activity_date < current_date and a.activity_date >= current_date - 3 and p.zoom_code = 'zoom1';
 -- Total active users for a zoom code and subject for given days
---  select count(distinct(a.user_id)) from user_activity_dataa inner join user_profile p  on a.user_id = p.user_id where a.activity_date < current_date and a.activity_date >= current_date - 3 and p.zoom_code = 'zoom1' and a.subject_code = 'sub1';
+--  select count(distinct(a.user_id)) from user_activity_data_ts inner join user_profile p  on a.user_id = p.user_id where a.activity_date < current_date and a.activity_date >= current_date - 3 and p.zoom_code = 'zoom1' and a.subject_code = 'sub1';
 -- Other queries can be run are to find total users for a subject without passing in duration
 
 
-CREATE TABLE user_activity_data (
+CREATE TABLE user_activity_data_ts (
     activity_date date NOT NULL,
     user_id text NOT NULL,
     activity_count bigint,
@@ -29,9 +30,9 @@ CREATE TABLE user_activity_data (
     UNIQUE (activity_date, user_id, subject_code)
 );
 
-COMMENT on TABLE user_activity_data is 'Table used to serve data to API for queries like active users for duration, active users for specified subject for specified duration. To query on active users for specified subject, specified zoom code and specified zoom, this table needs to be joined with table which is storing user profile.';
+COMMENT on TABLE user_activity_data_ts is 'Table used to serve data to API for queries like active users for duration, active users for specified subject for specified duration. To query on active users for specified subject, specified zoom code and specified zoom, this table needs to be joined with table which is storing user profile.';
 
-select create_hypertable('user_activity_data', 'activity_date');  
+select create_hypertable('user_activity_data_ts', 'activity_date');  
 
 CREATE TABLE user_profile_master (
     id bigserial PRIMARY KEY,
