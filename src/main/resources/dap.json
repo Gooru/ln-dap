@@ -1,0 +1,33 @@
+{
+  "datasources": {
+    "defaultDataSource": {
+      "ds.type": "hikari",
+      "username": "dsuser",
+      "password": "dspass",
+      "autoCommit": true,
+      "jdbcUrl": "jdbc:postgresql://localhost:5433/dsdb",
+      "maximumPoolSize": 5
+    }
+  },
+  "listeners": {
+    "org.gooru.dap.listeners.TestListener": {
+      "instances": 1,
+      "worker": false,
+      "config": {
+        "redisConfig": {
+          "host": "localhost",
+          "port": 6379,
+          "encoding": "UTF-8",
+          "tcpKeepAlive": true,
+          "tcpNoDelay": true
+        },
+        "sessionTimeoutInSeconds": 3600
+      }
+    }
+  },
+  "app.configuration": {
+  },
+  "systemProperties": {
+    "logback.configurationFile": "src/main/resources/logback-dap.xml"
+  }
+}
