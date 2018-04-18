@@ -218,3 +218,141 @@ CREATE TABLE providers_master (
     name text NOT NULL UNIQUE,
     thumbnail text
 );
+
+CREATE TABLE course_completion_ts (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+course_id text NOT NULL,
+items_completed bigint,
+activity_date date NOT NULL,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
+UNIQUE (activity_date, user_id, course_id));
+
+select create_hypertable('course_completion_ts', 'activity_date');
+
+CREATE TABLE course_score_ts (
+id SERIAL PRIMARY KEY,
+user_id text NOT NULL,
+course_id text NOT NULL,
+score numeric(5,2),
+activity_date date NOT NULL,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
+UNIQUE (activity_date, user_id, course_id));
+
+select create_hypertable('course_completion_ts', 'activity_date');
+
+CREATE TABLE resource_timespent_ts (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+resource_content_type text,
+time_spent bigint,
+activity_date date NOT NULL,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
+UNIQUE (activity_date, user_id));
+
+select create_hypertable('resource_timespent_ts', 'activity_date');
+
+CREATE TABLE course_timespent_ts (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+course_id text NOT NULL,
+time_spent bigint,
+activity_date date NOT NULL,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
+select create_hypertable('course_timespent_ts', 'activity_date');
+
+CREATE TABLE course_timespent (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+course_id text NOT NULL,
+time_spent bigint,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
+UNIQUE (activity_date, user_id, course_id));
+
+CREATE TABLE ul_score (
+id SERIAL PRIMARY KEY,
+user_id text NOT NULL,
+class_id text,
+course_id text NOT NULL,
+unit_id text NOT NULL,
+unit_sequence_id smallint,
+unit_score numeric(5,2),
+lesson_id text NOT NULL,
+lesson_sequence_id smallint,
+lesson_score numeric(5,2),
+created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
+CREATE TABLE ul_timespent (
+id SERIAL PRIMARY KEY,
+user_id text NOT NULL,
+class_id text,
+course_id text NOT NULL,
+unit_id text NOT NULL,
+unit_sequence_id smallint,
+unit_time_spent bigint,
+lesson_id text NOT NULL,
+lesson_sequence_id smallint,
+lesson_time_spent bigint,
+created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
+CREATE TABLE course_assessment_score (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+class_id text,
+course_id text,
+unit_id text,
+lesson_id text,
+latest_session_id text,
+assessment_id text NOT NULL,
+path_id bigint,
+score numeric(5,2),
+num_attempts smallint,
+sequence_id text,
+created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
+CREATE TABLE course_assessment_timespent (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+class_id text,
+course_id text NOT NULL,
+unit_id text,
+lesson_id text,
+assessment_id text NOT NULL,
+path_id bigint,
+time_spent bigint,
+sequence_id text,
+created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
+CREATE TABLE course_collection_score (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+class_id text,
+course_id text NOT NULL,
+unit_id text,
+lesson_id text,
+collection_id text NOT NULL,
+path_id bigint,
+score numeric(5,2),
+sequence_id text,
+created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
+CREATE TABLE course_collection_timespent (
+id BIGSERIAL PRIMARY KEY,
+user_id text NOT NULL,
+class_id text,
+course_id text NOT NULL,
+unit_id text,
+lesson_id text,
+collection_id text NOT NULL,
+path_id bigint,
+time_spent bigint,
+sequence_id text,
+created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
