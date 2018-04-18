@@ -32,7 +32,7 @@
     </appender>
 
     <logger name="xmission.error" level="debug" additivity="false">
-        <appender-ref ref="XMISSION-ERRORS" />
+        <appender-ref ref="XMISSION-ERRORS"/>
     </logger>
 
     <!--

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.gooru.dap.configuration.KafkaConsumerConfig;
 import org.slf4j.Logger;
@@ -37,6 +38,25 @@ public class ConsumersDeployer {
         initializeDeployments();
 
         doDeploy();
+
+        setupShutdown();
+    }
+
+    private void setupShutdown() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                for (ConsumerTemplate consumer : deployments) {
+                    consumer.shutdown();
+                }
+                executorService.shutdown();
+                try {
+                    executorService.awaitTermination(5000, TimeUnit.MILLISECONDS);
+                } catch (InterruptedException e) {
+                    LOGGER.warn("Exception awaiting termination of executor service", e);
+                }
+            }
+        });
     }
 
     private void doDeploy() {

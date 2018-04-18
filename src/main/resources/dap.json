@@ -9,18 +9,26 @@
       "maximumPoolSize": 5
     }
   },
-  "deps.to.deploy": ["org.gooru.dap.deps.TestConsumer", "org.gooru.dap.deps.TestConsumer1"],
+  "deps.to.deploy": [
+    "org.gooru.dap.deps.TestConsumer",
+    "org.gooru.dap.deps.TestConsumer1"
+  ],
   "deps.config": {
     "org.gooru.dap.deps.TestConsumer": {
       "kafka.consumer.config": {
         "instances": 1,
         "props": {
           "bootstrap.servers": "localhost:9092",
-          "session.timeout.ms": 30000,
+          "session.timeout.ms": 120000,
           "group.id": "group-1",
-          "enable.autocommit": false
+          "max.poll.records": 5,
+          "max.poll.interval.ms": "enable.autocommit"
+          :
+          false
         },
-        "consumer.topics": ["org.gooru.da.sink.demux.test"]
+        "consumer.topics": [
+          "org.gooru.da.sink.demux.test"
+        ]
       }
     }
   },
