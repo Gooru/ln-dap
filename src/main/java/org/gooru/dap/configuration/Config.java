@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 class Config {
     private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
-    private static Config ourInstance = new Config();
+    private static final Config ourInstance = new Config();
     private final JsonNode rootConfigNode;
 
     static Config getInstance() {

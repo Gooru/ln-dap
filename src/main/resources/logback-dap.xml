@@ -11,7 +11,6 @@
         <file>dap.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>dap.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <!-- keep 30 days' worth of history -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
         <append>true</append>
@@ -36,7 +35,11 @@
         <appender-ref ref="XMISSION-ERRORS" />
     </logger>
 
-    <logger name="org.gooru.dap" level="debug" additivity="false">
+    <!--
+        To create proper separation, it is recommended that each listener should use its own file appender. Currently
+        we are using the same one but this needs to be changed while doing the deployment
+    -->
+    <logger name="org.gooru.dap" level="trace" additivity="false">
         <appender-ref ref="STDOUT"/>
     </logger>
 

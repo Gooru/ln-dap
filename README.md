@@ -28,6 +28,14 @@ This section outlines the top level packages which are bound to specific functio
 
 This package is home for whole application. It contains only one class named AppRunner. AppRunner is main class for this binary.
 
+### Adding a new DEP
+- Define the name in JSON config for key "deps.to.deploy"
+- Provide detailed configuration under key named "deps.config" with the name as defined above. Note that instances ideally should be one per partition and should be derived from topic definition
+- Provide specific appender in logback-dap.xml to enable separate logging for this dep
+- Create a new package under org.gooru.dep for the new dep
+- Define a kafka consumer class by inheriting KafkaConsumerTemplate and provide implementation for abstract methods
+- Define a processor for processing of the record
+
 ### Build 
 
 The build uses gradle 4.4. Best way is to use the gradlew binary (on windows OS gradlew.bat) to do the build. 
@@ -50,5 +58,5 @@ The binary can be run like any other java runnable jar.
     
 To provide a custom configuration, run it as
 
-    java -jar dap.jar [TODO provide params]
+    java -jar dap.jar -Dconfig.file=src/main/resources/dap.json
     

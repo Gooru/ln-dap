@@ -70,8 +70,7 @@ public final class DataSourceRegistry implements FinalizationAwareComponent, Ini
 
     @Override
     public void finalizeComponent() {
-        registry.entrySet().forEach(entry -> {
-            DataSource ds = entry.getValue();
+        registry.forEach((key, ds) -> {
             if (ds != null) {
                 if (ds instanceof HikariDataSource) {
                     ((HikariDataSource) ds).close();

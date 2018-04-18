@@ -22,4 +22,13 @@ public final class AppConfiguration {
     public static JsonNode fetchDataSources() {
         return Config.getInstance().getRootConfig().get("datasources");
     }
+
+    public static JsonNode fetchConsumersToDeploy() {
+        return Config.getInstance().getRootConfig().get("deps.to.deploy");
+    }
+
+    public static JsonNode fetchConsumerConfigForDeployment() {
+        return Config.getInstance().getRootConfig().get("deps.config");
+    }
+
 }

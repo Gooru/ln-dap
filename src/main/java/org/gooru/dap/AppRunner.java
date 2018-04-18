@@ -3,8 +3,10 @@ package org.gooru.dap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.gooru.dap.components.AppFinalizer;
 import org.gooru.dap.components.AppInitializer;
 import org.gooru.dap.configuration.AppConfiguration;
+import org.gooru.dap.infra.ConsumersDeployer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,23 @@ public class AppRunner {
 
     private void run() {
         initializeApplication();
+        runApplication();
+        finalizeApplication();
+    }
+
+    private void initializeApplication() {
+        setupSystemProperties();
+        setupLoggerMachinery();
+        AppInitializer.initializeApp();
+    }
+
+    private void finalizeApplication() {
+        AppFinalizer.finalizeApp();
+    }
+
+    private void runApplication() {
+        new ConsumersDeployer(AppConfiguration.fetchConsumersToDeploy(),
+            AppConfiguration.fetchConsumerConfigForDeployment()).deploy();
     }
 
     private void setupSystemProperties() {
@@ -64,20 +83,6 @@ public class AppRunner {
             LOGGER.warn("Not able to find logback config file");
             throw new IllegalArgumentException("Invalid logback config file");
         }
-
-    }
-
-    private void initializeApplication() {
-        setupSystemProperties();
-        setupLoggerMachinery();
-        AppInitializer.initializeApp();
-    }
-
-    private void finalizeApplication() {
-        // NO OP right now
-    }
-
-    private void deployListeners() {
 
     }
 
