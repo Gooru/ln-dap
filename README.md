@@ -35,6 +35,7 @@ This package is home for whole application. It contains only one class named App
 - Create a new package under org.gooru.dep for the new dep
 - Define a kafka consumer class by inheriting KafkaConsumerTemplate and provide implementation for abstract methods
 - Define a processor for processing of the record
+- Register the new DEP in ConsumerFactory so that system knows how to create new instance
 
 ### Build 
 
