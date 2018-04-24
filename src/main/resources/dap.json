@@ -22,9 +22,8 @@
           "session.timeout.ms": 120000,
           "group.id": "group-1",
           "max.poll.records": 5,
-          "max.poll.interval.ms": "enable.autocommit"
-          :
-          false
+          "max.poll.interval.ms": 30000,
+          "enable.autocommit": false
         },
         "consumer.topics": [
           "org.gooru.da.sink.demux.test"
