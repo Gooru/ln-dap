@@ -1,9 +1,13 @@
-package org.gooru.dap.processors.events.resource;
+package org.gooru.dap.processors.events;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.gooru.dap.processors.Processor;
 import org.gooru.dap.processors.ProcessorContext;
+import org.gooru.dap.processors.events.resource.UserStatsResourceTimeSpentProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,18 +15,20 @@ public enum ResourceEventProcessorBuilder {
 
     DEFAULT("default") {
         private final Logger LOGGER = LoggerFactory.getLogger(ResourceEventProcessorBuilder.class);
-
+        private List<Processor> processors = new ArrayList<>();
         @Override
-        public void build(ProcessorContext context) {
+        public List<Processor> build(ProcessorContext context) {
             LOGGER.error("Invalid operation type passed in, not able to handle");
-            
+            return processors;     
         }
     },
     RESOURCE_TIMESPENT("resource.timespent") {
-
+        private List<Processor> processors = new ArrayList<>();
         @Override
-        public void build(ProcessorContext context) {
-            new UserStatsResourceTimeSpentProcessor(context).process();
+        public List<Processor> build(ProcessorContext context) {
+            processors.add(new UserStatsResourceTimeSpentProcessor(context));
+            
+            return processors;
         }
     };
 
@@ -52,5 +58,5 @@ public enum ResourceEventProcessorBuilder {
         return builder;
     }
 
-    public abstract void build(ProcessorContext context);
+    public abstract List<Processor> build(ProcessorContext context);
 }
