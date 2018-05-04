@@ -1,6 +1,5 @@
 package org.gooru.dap.processors.repositories.jdbi.transactions;
 
-import org.gooru.dap.processors.ProcessorBuilder;
 import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.repositories.jdbi.dbhandlers.DBHandler;
 import org.gooru.dap.processors.repositories.jdbi.dbhandlers.Repository;
@@ -34,7 +33,5 @@ public final class TransactionExecutor {
             repository.executeRequest();
         }
     }
-    
-    
-    
+   
 }

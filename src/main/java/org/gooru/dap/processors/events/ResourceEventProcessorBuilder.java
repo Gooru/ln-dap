@@ -11,10 +11,10 @@ import org.gooru.dap.processors.events.resource.UserStatsResourceTimeSpentProces
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public enum EventProcessorBuilder {
+public enum ResourceEventProcessorBuilder {
 
     DEFAULT("default") {
-        private final Logger LOGGER = LoggerFactory.getLogger(EventProcessorBuilder.class);
+        private final Logger LOGGER = LoggerFactory.getLogger(ResourceEventProcessorBuilder.class);
         private List<Processor> processors = new ArrayList<>();
         @Override
         public List<Processor> build(ProcessorContext context) {
@@ -34,7 +34,7 @@ public enum EventProcessorBuilder {
 
     private String name;
 
-    EventProcessorBuilder(String name) {
+    ResourceEventProcessorBuilder(String name) {
         this.name = name;
     }
 
@@ -42,16 +42,16 @@ public enum EventProcessorBuilder {
         return this.name;
     }
 
-    private static final Map<String, EventProcessorBuilder> LOOKUP = new HashMap<>();
+    private static final Map<String, ResourceEventProcessorBuilder> LOOKUP = new HashMap<>();
 
     static {
-        for (EventProcessorBuilder builder : values()) {
+        for (ResourceEventProcessorBuilder builder : values()) {
             LOOKUP.put(builder.getName(), builder);
         }
     }
 
-    public static EventProcessorBuilder lookupBuilder(String name) {
-        EventProcessorBuilder builder = LOOKUP.get(name);
+    public static ResourceEventProcessorBuilder lookupBuilder(String name) {
+        ResourceEventProcessorBuilder builder = LOOKUP.get(name);
         if (builder == null) {
             return DEFAULT;
         }

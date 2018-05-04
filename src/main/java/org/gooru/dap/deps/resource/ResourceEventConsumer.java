@@ -1,13 +1,10 @@
 package org.gooru.dap.deps.resource;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
 import org.gooru.dap.infra.ConsumerTemplate;
-import org.gooru.dap.processors.ProcessorBuilder;
+import org.gooru.dap.processors.events.ProcessorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +33,7 @@ public class ResourceEventConsumer extends ConsumerTemplate<String, String> {
 
     @Override
     public void processRecord(ConsumerRecord<String, String> record) {
-        ProcessorBuilder.build(record.value()).process();
+        ProcessorBuilder.buildResourceEventProcessor(record.value()).process();
     }
 
     @Override
