@@ -1,10 +1,9 @@
 package org.gooru.dap.processors;
 
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.List;
 
 import org.gooru.dap.constants.EventMessageConstant;
-import org.gooru.dap.processors.events.resource.ResourceEventProcessorBuilder;
+import org.gooru.dap.processors.events.EventProcessorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +26,11 @@ class EventProcessor implements Processor {
         try {
             ExecutionStatus executionStatus = validateAndInitialize();
             if (executionStatus.isSuccessFul()) {
-                ResourceEventProcessorBuilder.lookupBuilder(eventName).build(createContext());
+               List<Processor> processors =  EventProcessorBuilder.lookupBuilder(eventName).build(createContext());
+               processors.forEach(processor -> {
+                   processor.process();
+               });
             }
-
         } catch (Throwable e) {
             LOGGER.error("Unhandled exception in processing", e);
         }

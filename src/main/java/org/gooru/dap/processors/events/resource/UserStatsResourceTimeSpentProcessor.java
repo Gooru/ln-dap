@@ -4,9 +4,9 @@ import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.events.AbstractEventProcessor;
 import org.gooru.dap.processors.repositories.RepoBuilder;
 
-class UserStatsResourceTimeSpentProcessor extends AbstractEventProcessor {
+public class UserStatsResourceTimeSpentProcessor extends AbstractEventProcessor {
 
-    UserStatsResourceTimeSpentProcessor(ProcessorContext context) {
+    public UserStatsResourceTimeSpentProcessor(ProcessorContext context) {
         super(context);
     }
 
