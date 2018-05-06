@@ -8,6 +8,9 @@ import java.util.Map;
 import org.gooru.dap.processors.Processor;
 import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.events.resource.UserStatsResourceTimeSpentProcessor;
+import org.gooru.dap.processors.events.resource.UserStatsResourceContentTypeTimeSpentProcessor;
+import org.gooru.dap.processors.events.resource.ResourceContentTypeTimeSpentProcessor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +30,8 @@ public enum ResourceEventProcessorBuilder {
         @Override
         public List<Processor> build(ProcessorContext context) {
             processors.add(new UserStatsResourceTimeSpentProcessor(context));
-            
+            processors.add(new UserStatsResourceContentTypeTimeSpentProcessor(context));
+            processors.add(new ResourceContentTypeTimeSpentProcessor(context));
             return processors;
         }
     };

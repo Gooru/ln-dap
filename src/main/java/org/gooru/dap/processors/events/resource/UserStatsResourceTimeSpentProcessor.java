@@ -12,7 +12,7 @@ public class UserStatsResourceTimeSpentProcessor extends AbstractEventProcessor 
 
     @Override
     protected void processEvent() {
-       RepoBuilder.buildTimeSpentRepo(context).userStatsResourceTimeSpent();
+       RepoBuilder.buildResourceRepo(context).userStatsResourceTimeSpent();
     }
 
 }

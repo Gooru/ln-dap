@@ -241,17 +241,6 @@ UNIQUE (activity_date, user_id, course_id));
 
 select create_hypertable('course_completion_ts', 'activity_date');
 
-CREATE TABLE resource_timespent_ts (
-id BIGSERIAL PRIMARY KEY,
-user_id text NOT NULL,
-resource_content_type text,
-time_spent bigint,
-activity_date date NOT NULL,
-updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
-UNIQUE (activity_date, user_id));
-
-select create_hypertable('resource_timespent_ts', 'activity_date');
-
 CREATE TABLE course_timespent_ts (
 id BIGSERIAL PRIMARY KEY,
 user_id text NOT NULL,
@@ -356,3 +345,34 @@ sequence_id text,
 created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
 
+CREATE TABLE userstat_resource_timespent_ts (
+activity_date date NOT NULL,
+user_id text NOT NULL,
+resource_id text NOT NULL,
+content_type text,
+time_spent bigint,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+UNIQUE (activity_date, user_id, resource_id));
+
+select create_hypertable('userstat_resource_timespent_ts', 'activity_date');
+
+
+CREATE TABLE userstat_resource_content_type_timespent_ts (
+activity_date date NOT NULL,
+user_id text NOT NULL,
+content_type text NOT NULL,
+time_spent bigint,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+UNIQUE (activity_date, user_id, content_type));
+
+select create_hypertable('userstat_resource_content_type_timespent_ts', 'activity_date');
+
+
+CREATE TABLE resource_content_type_timespent_ts (
+activity_date date NOT NULL,
+content_type text NOT NULL,
+time_spent bigint,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+UNIQUE (activity_date, content_type));
+
+select create_hypertable('resource_content_type_timespent_ts', 'activity_date');
