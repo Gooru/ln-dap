@@ -9,8 +9,16 @@ public final class DBResourceHandlerBuilder {
         throw new AssertionError();
     }
     
-    public static DBHandler buildUserResourceTimeSpentTS(ProcessorContext context) {
-        return new UserStatsResourceTimeSpentTSHandler(context);
+    public static DBHandler buildUserStatsResourceTimeSpent(ProcessorContext context) {
+        return new UserStatsResourceTimeSpentHandler(context);
+    }
+    
+    public static DBHandler buildUserStatsResourceContentTypeTimeSpent(ProcessorContext context) {
+        return new UserStatsResourceContentTypeTimeSpentHandler(context);
+    }
+    
+    public static DBHandler buildResourceContentTypeTimeSpent(ProcessorContext context) {
+        return new ResourceContentTypeTimeSpentHandler(context);
     }
     
 }

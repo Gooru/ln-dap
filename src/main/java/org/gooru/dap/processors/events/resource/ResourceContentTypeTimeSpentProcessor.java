@@ -4,15 +4,15 @@ import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.events.AbstractEventProcessor;
 import org.gooru.dap.processors.repositories.RepoBuilder;
 
-public class UserStatsResourceTimeSpentProcessor extends AbstractEventProcessor {
+public class ResourceContentTypeTimeSpentProcessor extends AbstractEventProcessor {
 
-    public UserStatsResourceTimeSpentProcessor(ProcessorContext context) {
+    public ResourceContentTypeTimeSpentProcessor(ProcessorContext context) {
         super(context);
     }
 
     @Override
     protected void processEvent() {
-       RepoBuilder.buildResourceRepo(context).userStatsResourceTimeSpent();
+       RepoBuilder.buildResourceRepo(context).resourceContentTypeTimeSpent();
     }
 
 }
