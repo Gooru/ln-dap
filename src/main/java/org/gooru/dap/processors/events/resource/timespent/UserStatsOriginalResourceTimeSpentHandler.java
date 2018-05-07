@@ -14,7 +14,7 @@ class UserStatsOriginalResourceTimeSpentHandler implements DBHandler {
 
     public static final List<String> USER_STATS_ORIGINAL_RESOURCE_MANDATORY_FIELDS =
         new ArrayList<>(Arrays.asList(EventMessageConstant.ACTIVITY_TIME, EventMessageConstant.RESOURCE_ID,
-            EventMessageConstant.USER_ID, EventMessageConstant.METRICS_TIMESPENT, EventMessageConstant.CONTENT_TYPE));
+            EventMessageConstant.USER_ID, EventMessageConstant.METRICS_TIMESPENT));
 
     private final ProcessorContext context;
 

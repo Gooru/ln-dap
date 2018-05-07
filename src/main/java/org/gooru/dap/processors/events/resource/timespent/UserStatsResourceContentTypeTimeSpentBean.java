@@ -3,10 +3,11 @@ package org.gooru.dap.processors.events.resource.timespent;
 import java.util.Date;
 
 import org.gooru.dap.constants.EventMessageConstant;
+import org.gooru.dap.processors.repositories.jdbi.shared.Dao.ContentBean;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-class UserStatsResourceContentTypeTimeSpentBean {
+public class UserStatsResourceContentTypeTimeSpentBean {
 
     private String userId;
     private String contentType;
@@ -45,11 +46,11 @@ class UserStatsResourceContentTypeTimeSpentBean {
         this.timeSpent = timeSpent;
     }
 
-    public static UserStatsResourceContentTypeTimeSpentBean fromJsonNode(JsonNode jsonNode) {
+    public static UserStatsResourceContentTypeTimeSpentBean createInstance(JsonNode jsonNode, ContentBean contentBean) {
         UserStatsResourceContentTypeTimeSpentBean userStatsResourceTimeSpentEntity = new UserStatsResourceContentTypeTimeSpentBean();
         userStatsResourceTimeSpentEntity
             .setActivityDate(new Date(jsonNode.get(EventMessageConstant.ACTIVITY_TIME).longValue()));
-        userStatsResourceTimeSpentEntity.setContentType(jsonNode.get(EventMessageConstant.CONTENT_TYPE).textValue());
+        userStatsResourceTimeSpentEntity.setContentType(contentBean.getContentType());
         userStatsResourceTimeSpentEntity.setUserId(jsonNode.get(EventMessageConstant.USER_ID).textValue());
         userStatsResourceTimeSpentEntity.setTimeSpent(jsonNode.at(EventMessageConstant.METRICS_TIMESPENT).longValue());
         return userStatsResourceTimeSpentEntity;
