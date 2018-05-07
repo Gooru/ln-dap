@@ -10,6 +10,7 @@ import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.events.resource.UserStatsResourceTimeSpentProcessor;
 import org.gooru.dap.processors.events.resource.UserStatsResourceContentTypeTimeSpentProcessor;
 import org.gooru.dap.processors.events.resource.ResourceContentTypeTimeSpentProcessor;
+import org.gooru.dap.processors.events.resource.UserStatsOriginalResourceTimeSpentProcessor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +33,7 @@ public enum ResourceEventProcessorBuilder {
             processors.add(new UserStatsResourceTimeSpentProcessor(context));
             processors.add(new UserStatsResourceContentTypeTimeSpentProcessor(context));
             processors.add(new ResourceContentTypeTimeSpentProcessor(context));
+            processors.add(new UserStatsOriginalResourceTimeSpentProcessor(context));
             return processors;
         }
     };
