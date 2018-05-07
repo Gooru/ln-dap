@@ -29,7 +29,7 @@ class UserStatsResourceContentTypeTimeSpentHandler implements DBHandler {
 
     @Override
     public Class<? extends Repository> getRepository() {
-        return UserStatsResourceContentTypeTimeSpentDto.class;
+        return UserStatsResourceContentTypeTimeSpentDaoImpl.class;
     }
 
     @Override

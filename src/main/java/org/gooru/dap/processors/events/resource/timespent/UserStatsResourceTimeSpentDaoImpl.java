@@ -3,16 +3,16 @@ package org.gooru.dap.processors.events.resource.timespent;
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.processors.ExecutionStatus;
 import org.gooru.dap.processors.repositories.jdbi.Repository;
-import org.gooru.dap.processors.repositories.jdbi.shared.Dao.ContentBean;
-import org.gooru.dap.processors.repositories.jdbi.shared.Dao.ContentDao;
+import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentBean;
+import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentDao;
 import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
 import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class UserStatsResourceTimeSpentDto extends Repository {
+abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsResourceTimeSpentDto.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsResourceTimeSpentDaoImpl.class);
 
     @CreateSqlObject
     abstract UserStatsResourceTimeSpentDao getResourceTimespentDao();

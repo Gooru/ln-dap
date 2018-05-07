@@ -29,7 +29,7 @@ class UserStatsResourceTimeSpentHandler implements DBHandler {
 
     @Override
     public Class<? extends Repository> getRepository() {
-        return UserStatsResourceTimeSpentDto.class;
+        return UserStatsResourceTimeSpentDaoImpl.class;
     }
 
     @Override

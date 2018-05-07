@@ -1,4 +1,4 @@
-package org.gooru.dap.processors.repositories.jdbi.shared.Dao;
+package org.gooru.dap.processors.repositories.jdbi.common.Dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
