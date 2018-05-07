@@ -376,3 +376,14 @@ updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 UNIQUE (activity_date, content_type));
 
 select create_hypertable('resource_content_type_timespent_ts', 'activity_date');
+
+CREATE TABLE userstat_original_resource_timespent_ts (
+activity_date date NOT NULL,
+user_id text NOT NULL,
+original_resource_id text NOT NULL,
+content_type text,
+time_spent bigint,
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+UNIQUE (activity_date, user_id, original_resource_id));
+
+select create_hypertable('userstat_original_resource_timespent_ts', 'activity_date');

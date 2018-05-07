@@ -21,4 +21,8 @@ public final class DBResourceHandlerBuilder {
         return new ResourceContentTypeTimeSpentHandler(context);
     }
     
+    public static DBHandler buildUserStatsOriginalResourceTimeSpent(ProcessorContext context) {
+        return new UserStatsOriginalResourceTimeSpentHandler(context);
+    }
+    
 }

@@ -28,4 +28,9 @@ public class JdbiResourceRepo implements ResourceRepo {
         TransactionExecutor.execute(DBResourceHandlerBuilder.buildResourceContentTypeTimeSpent(context));
     }
 
+    @Override
+    public void userStatsOriginalResourceTimeSpent() {
+        TransactionExecutor.execute(DBResourceHandlerBuilder.buildUserStatsOriginalResourceTimeSpent(context));
+    }
+
 }

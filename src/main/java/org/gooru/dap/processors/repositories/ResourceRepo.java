@@ -7,4 +7,6 @@ public interface ResourceRepo {
     void userStatsResourceContentTypeTimeSpent();
     
     void resourceContentTypeTimeSpent();
+    
+    void userStatsOriginalResourceTimeSpent();
 }
