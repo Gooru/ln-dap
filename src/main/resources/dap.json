@@ -5,7 +5,7 @@
       "username": "dsuser",
       "password": "dspass",
       "autoCommit": true,
-      "jdbcUrl": "jdbc:postgresql://localhost:5433/dsdb",
+      "jdbcUrl": "jdbc:postgresql://localhost:5432/dsdb",
       "maximumPoolSize": 5
     },
     "coreDataSource": {
@@ -19,7 +19,7 @@
   },
   "deps.to.deploy": [
     "org.gooru.dap.deps.TestConsumer",
-    "org.gooru.dap.deps.TestConsumer1",
+    "org.gooru.dap.deps.ResourceEventConsumer",
     "org.gooru.dap.deps.CompetencyConsumer"
   ],
   "deps.config": {
@@ -54,11 +54,29 @@
           "org.gooru.da.sink.demux.test"
         ]
       }
+    },
+    
+    "org.gooru.dap.deps.ResourceEventConsumer": {
+      "kafka.consumer.config": {
+        "instances": 1,
+        "props": {
+          "bootstrap.servers": "localhost:9092",
+          "session.timeout.ms": 120000,
+          "group.id": "group-1",
+          "max.poll.records": 5,
+          "max.poll.interval.ms": 30000,
+          "enable.autocommit": false
+        },
+        "consumer.topics": [
+          "org.gooru.da.sink.demux.resource"
+        ]
+      }
     }
+    
   },
   "app.configuration": {
   },
   "systemProperties": {
-    "logback.configurationFile": "src/main/resources/logback-dap.xml"
+    "logback.configurationFile": "/home/e100020/Gooru/dap/src/main/resources/logback-dap.xml"
   }
 }

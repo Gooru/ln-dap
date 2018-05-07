@@ -33,6 +33,7 @@ public class ResourceEventConsumer extends ConsumerTemplate<String, String> {
 
     @Override
     public void processRecord(ConsumerRecord<String, String> record) {
+        System.out.println(record);
         ProcessorBuilder.buildResourceEventProcessor(record.value()).process();
     }
 

@@ -7,11 +7,10 @@ import java.util.Map;
 
 import org.gooru.dap.processors.Processor;
 import org.gooru.dap.processors.ProcessorContext;
-import org.gooru.dap.processors.events.resource.UserStatsResourceTimeSpentProcessor;
-import org.gooru.dap.processors.events.resource.UserStatsResourceContentTypeTimeSpentProcessor;
-import org.gooru.dap.processors.events.resource.ResourceContentTypeTimeSpentProcessor;
-import org.gooru.dap.processors.events.resource.UserStatsOriginalResourceTimeSpentProcessor;
-
+import org.gooru.dap.processors.events.resource.timespent.ResourceContentTypeTimeSpentProcessor;
+import org.gooru.dap.processors.events.resource.timespent.UserStatsOriginalResourceTimeSpentProcessor;
+import org.gooru.dap.processors.events.resource.timespent.UserStatsResourceContentTypeTimeSpentProcessor;
+import org.gooru.dap.processors.events.resource.timespent.UserStatsResourceTimeSpentProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
