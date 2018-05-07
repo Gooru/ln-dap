@@ -9,7 +9,7 @@ public final class RepoBuilder {
         throw new AssertionError();
     }
     
-    public static ResourceRepo buildResourceRepo(ProcessorContext context) {
-        return JdbiRepoBuilder.buildResourceRepo(context);
+    public static ResourceTimeSpentRepo buildResourceTimeSpentRepo(ProcessorContext context) {
+        return JdbiRepoBuilder.buildResourceTimeSpentRepo(context);
     }
 }
