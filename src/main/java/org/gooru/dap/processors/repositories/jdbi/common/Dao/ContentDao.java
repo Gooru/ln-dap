@@ -1,4 +1,4 @@
-package org.gooru.dap.processors.repositories.jdbi.shared.Dao;
+package org.gooru.dap.processors.repositories.jdbi.common.Dao;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;

@@ -28,7 +28,7 @@ class ResourceContentTypeTimeSpentHandler implements DBHandler {
 
     @Override
     public Class<? extends Repository> getRepository() {
-        return ResourceContentTypeTimeSpentDto.class;
+        return ResourceContentTypeTimeSpentDaoImpl.class;
     }
 
     @Override

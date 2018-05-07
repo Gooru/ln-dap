@@ -3,7 +3,7 @@ package org.gooru.dap.processors.events.resource.timespent;
 import java.util.Date;
 
 import org.gooru.dap.constants.EventMessageConstant;
-import org.gooru.dap.processors.repositories.jdbi.shared.Dao.ContentBean;
+import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentBean;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
