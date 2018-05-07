@@ -14,5 +14,4 @@ public class ProcessorContext {
         return eventJsonNode;
     }
 
-    
 }

@@ -25,7 +25,7 @@ public enum ResourceEventProcessorBuilder {
             return processors;     
         }
     },
-    RESOURCE_TIMESPENT("resource.timespent") {
+    USAGE_RESOURCE_TIMESPENT("usage.resource.timespent") {
         private List<Processor> processors = new ArrayList<>();
         @Override
         public List<Processor> build(ProcessorContext context) {

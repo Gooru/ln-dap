@@ -3,6 +3,8 @@ package org.gooru.dap.processors.events.resource.timespent;
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.processors.ExecutionStatus;
 import org.gooru.dap.processors.repositories.jdbi.Repository;
+import org.gooru.dap.processors.repositories.jdbi.shared.Dao.ContentBean;
+import org.gooru.dap.processors.repositories.jdbi.shared.Dao.ContentDao;
 import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
 import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.Logger;
@@ -16,19 +18,20 @@ abstract class UserStatsOriginalResourceTimeSpentDto extends Repository {
     abstract UserStatsOriginalResourceTimeSpentDao getOriginalResourceTimespentDao();
 
     @CreateSqlObject
-    abstract OriginalResourceContentDao getOriginalResourceContentDao();
+    abstract ContentDao getContentDao();
 
-    private String originalContentId;
+    private ContentBean contentBean;
 
     @Transaction
     public ExecutionStatus validateRequest() {
         final String resourceId = getContext().getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final String originalResourceId = getOriginalResourceContentDao().getOriginalContentId(resourceId);
-        if (originalResourceId == null) {
-            LOGGER.error("Original resource id does not exist  for this resource instance {}", resourceId);
+        final ContentBean contentBean = getContentDao().getOriginalContentId(resourceId);
+        if (contentBean == null) {
+            LOGGER.error("content does not exist  for this resource instance {}", resourceId);
             return ExecutionStatus.FAILED;
         }
-        this.originalContentId = originalResourceId;
+
+        this.contentBean = contentBean;
 
         return ExecutionStatus.SUCCESSFUL;
     }
@@ -36,7 +39,7 @@ abstract class UserStatsOriginalResourceTimeSpentDto extends Repository {
     @Transaction
     public void executeRequest() {
         UserStatsOriginalResourceTimeSpentBean userStatsOriginalResourceTimeSpentBean =
-            UserStatsOriginalResourceTimeSpentBean.createInstance(getContext().getEventJsonNode(), originalContentId);
+            UserStatsOriginalResourceTimeSpentBean.createInstance(getContext().getEventJsonNode(), contentBean);
         getOriginalResourceTimespentDao().insertOrUpdate(userStatsOriginalResourceTimeSpentBean);
 
     }

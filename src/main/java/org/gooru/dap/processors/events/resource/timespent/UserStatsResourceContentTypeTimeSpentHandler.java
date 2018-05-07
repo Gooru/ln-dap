@@ -13,8 +13,8 @@ import org.gooru.dap.processors.repositories.jdbi.Repository;
 class UserStatsResourceContentTypeTimeSpentHandler implements DBHandler {
 
     public static final List<String> USER_STATS_RESOURCE_CONTENT_TYPE_MANDATORY_FIELDS =
-        new ArrayList<>(Arrays.asList(EventMessageConstant.ACTIVITY_TIME,
-            EventMessageConstant.USER_ID, EventMessageConstant.METRICS_TIMESPENT, EventMessageConstant.CONTENT_TYPE));
+        new ArrayList<>(Arrays.asList(EventMessageConstant.ACTIVITY_TIME, EventMessageConstant.USER_ID,
+            EventMessageConstant.METRICS_TIMESPENT));
 
     private final ProcessorContext context;
 
