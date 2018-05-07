@@ -5,7 +5,7 @@
       "username": "dsuser",
       "password": "dspass",
       "autoCommit": true,
-      "jdbcUrl": "jdbc:postgresql://localhost:5432/dsdb",
+      "jdbcUrl": "jdbc:postgresql://localhost:5433/dsdb",
       "maximumPoolSize": 5
     },
     "coreDataSource": {
@@ -77,6 +77,6 @@
   "app.configuration": {
   },
   "systemProperties": {
-    "logback.configurationFile": "/home/e100020/Gooru/dap/src/main/resources/logback-dap.xml"
+    "logback.configurationFile": "src/main/resources/logback-dap.xml"
   }
 }
