@@ -15,7 +15,7 @@ abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsResourceTimeSpentDaoImpl.class);
 
     @CreateSqlObject
-    abstract UserStatsResourceTimeSpentDao getResourceTimespentDao();
+    abstract UserStatsResourceTimeSpentDao getUserStatsResourceTimespentDao();
     
 
     @CreateSqlObject
@@ -41,7 +41,7 @@ abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
     public void executeRequest() {
         UserStatsResourceTimeSpentBean userStatsResourceTimeSpentBean = UserStatsResourceTimeSpentBean
             .createInstance(getContext().getEventJsonNode(), contentBean);
-        getResourceTimespentDao().insertOrUpdate(userStatsResourceTimeSpentBean);
+        getUserStatsResourceTimespentDao().insertOrUpdate(userStatsResourceTimeSpentBean);
         
     }
 

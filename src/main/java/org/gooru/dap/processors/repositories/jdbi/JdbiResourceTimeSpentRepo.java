@@ -12,7 +12,7 @@ public class JdbiResourceTimeSpentRepo implements ResourceTimeSpentRepo {
     public JdbiResourceTimeSpentRepo(ProcessorContext context) {
         this.context = context;
     }
-    
+
     @Override
     public void userStatsResourceTimeSpent() {
         TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsResourceTimeSpent(context));
@@ -20,7 +20,8 @@ public class JdbiResourceTimeSpentRepo implements ResourceTimeSpentRepo {
 
     @Override
     public void userStatsResourceContentTypeTimeSpent() {
-        TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsResourceContentTypeTimeSpent(context)); 
+        TransactionExecutor
+            .execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsResourceContentTypeTimeSpent(context));
     }
 
     @Override
@@ -31,6 +32,12 @@ public class JdbiResourceTimeSpentRepo implements ResourceTimeSpentRepo {
     @Override
     public void userStatsOriginalResourceTimeSpent() {
         TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsOriginalResourceTimeSpent(context));
+    }
+
+    @Override
+    public void userStatsCCULCResourceTimeSpent() {
+        TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsCCULCResourceTimeSpent(context));
+
     }
 
 }

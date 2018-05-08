@@ -387,3 +387,21 @@ updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 UNIQUE (activity_date, user_id, original_resource_id));
 
 select create_hypertable('userstat_original_resource_timespent_ts', 'activity_date');
+
+CREATE TABLE userstat_cculc_resource_timespent(
+user_id text NOT NULL,
+course_id text NOT NULL,
+unit_id text NOT NULL,
+lesson_id text NOT NULL,
+collection_id text NOT NULL,
+resource_id text NOT NULL,
+content_type  text NOT NULL,
+collection_type text NOT NULL,
+class_id text,
+time_spent bigint NOT NULL,
+UNIQUE(user_id,course_id,unit_id,lesson_id, collection_id, resource_id, class_id),
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+
+
+
+

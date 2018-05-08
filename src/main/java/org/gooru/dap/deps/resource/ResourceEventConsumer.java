@@ -24,11 +24,13 @@ public class ResourceEventConsumer extends ConsumerTemplate<String, String> {
 
     @Override
     public void processingRecordExceptionHandler(ConsumerRecord record, Exception e) {
- 
+        LOGGER.warn("Failure in handling message for topic '{}' offset '{}' partition '{}", record.topic(),
+            record.offset(), record.partition(), e);
     }
 
     @Override
     public void commitExceptionHandler(Exception e) {
+        LOGGER.warn("Failed to do commit.", e);
     }
 
     @Override

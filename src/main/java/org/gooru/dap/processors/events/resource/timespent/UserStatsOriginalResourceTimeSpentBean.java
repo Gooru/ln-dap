@@ -56,15 +56,15 @@ public class UserStatsOriginalResourceTimeSpentBean {
     }
 
     public static UserStatsOriginalResourceTimeSpentBean createInstance(JsonNode jsonNode, ContentBean contentBean) {
-        UserStatsOriginalResourceTimeSpentBean userStatsResourceTimeSpentEntity =
+        UserStatsOriginalResourceTimeSpentBean userStatsResourceTimeSpentBean =
             new UserStatsOriginalResourceTimeSpentBean();
-        userStatsResourceTimeSpentEntity
+        userStatsResourceTimeSpentBean
             .setActivityDate(new Date(jsonNode.get(EventMessageConstant.ACTIVITY_TIME).longValue()));
-        userStatsResourceTimeSpentEntity.setOriginalResourceId(contentBean.getOriginalContentId());
-        userStatsResourceTimeSpentEntity.setContentType(contentBean.getContentType());
-        userStatsResourceTimeSpentEntity.setUserId(jsonNode.get(EventMessageConstant.USER_ID).textValue());
-        userStatsResourceTimeSpentEntity.setTimeSpent(jsonNode.at(EventMessageConstant.METRICS_TIMESPENT).longValue());
-        return userStatsResourceTimeSpentEntity;
+        userStatsResourceTimeSpentBean.setOriginalResourceId(contentBean.getOriginalContentId());
+        userStatsResourceTimeSpentBean.setContentType(contentBean.getContentType());
+        userStatsResourceTimeSpentBean.setUserId(jsonNode.get(EventMessageConstant.USER_ID).textValue());
+        userStatsResourceTimeSpentBean.setTimeSpent(jsonNode.at(EventMessageConstant.METRICS_TIMESPENT).longValue());
+        return userStatsResourceTimeSpentBean;
 
     }
 
