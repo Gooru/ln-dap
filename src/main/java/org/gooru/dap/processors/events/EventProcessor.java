@@ -1,7 +1,10 @@
 package org.gooru.dap.processors.events;
 
+import java.util.List;
+
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.processors.ExecutionStatus;
+import org.gooru.dap.processors.Processor;
 import org.gooru.dap.processors.ProcessorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,35 +12,56 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-abstract class  EventProcessor {
-    
+class EventProcessor implements Processor {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(EventProcessor.class);
-    
-    abstract  String message();
-    
-    private String eventName;
-    
+    private final String message;
     private JsonNode eventJsonNode;
-    
+    private final String deploymentName;
+    private final String eventListenerTopicName;
+
+    public EventProcessor(String deploymentName, String eventListenerTopicName, String message) {
+        this.message = message;
+        this.eventListenerTopicName = eventListenerTopicName;
+        this.deploymentName = deploymentName;
+    }
+
+    @Override
+    public void process() {
+        try {
+            ExecutionStatus executionStatus = validateAndInitialize();
+            if (executionStatus.isSuccessFul()) {
+                List<Processor> processors =
+                    EventProcessorBuilder.lookupBuilder(deploymentName).build(eventListenerTopicName, createContext());
+                processors.forEach(processor -> {
+                    processor.process();
+                });
+            }
+        } catch (Throwable e) {
+            LOGGER.error("Unhandled exception in processing", e);
+        }
+    }
+
     protected ExecutionStatus validateAndInitialize() {
-        if (!validateMessage().isSuccessFul() || !validateEventName().isSuccessFul()) {
+        if (!validateEventListenerTopicName().isSuccessFul() || !validateMessage().isSuccessFul()
+            || !validateEventName().isSuccessFul()) {
+            
             return ExecutionStatus.FAILED;
         }
         return ExecutionStatus.SUCCESSFUL;
     }
-    
+
     private ExecutionStatus validateEventName() {
-        JsonNode eventName = getEventJsonNode().get(EventMessageConstant.EVENT_NAME);
+        JsonNode eventName = this.eventJsonNode.get(EventMessageConstant.EVENT_NAME);
         if (eventName == null) {
             LOGGER.error("Event name fieldname should not be null.");
             return ExecutionStatus.FAILED;
         }
-        this.setEventName(eventName.textValue());
         return ExecutionStatus.SUCCESSFUL;
     }
-    
+
     private ExecutionStatus validateMessage() {
-        final String message = message();
+        final String message = this.message;
         if (message == null || !message.startsWith("{") || !message.endsWith("}")) {
             LOGGER.error("Invalid message received, either null or message is not json string.");
             return ExecutionStatus.FAILED;
@@ -45,7 +69,7 @@ abstract class  EventProcessor {
         try {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode eventJsonNode = mapper.readTree(message);
-            setEventJsonNode(eventJsonNode);
+            this.eventJsonNode = eventJsonNode;
             return ExecutionStatus.SUCCESSFUL;
 
         } catch (Exception e) {
@@ -53,24 +77,17 @@ abstract class  EventProcessor {
             return ExecutionStatus.FAILED;
         }
     }
-    
+
+    private ExecutionStatus validateEventListenerTopicName() {
+        if (eventListenerTopicName == null) {
+            LOGGER.error("Event listener should be null");
+            return ExecutionStatus.FAILED;
+        }
+        return ExecutionStatus.SUCCESSFUL;
+    }
+
     protected ProcessorContext createContext() {
-        return new ProcessorContext(getEventJsonNode());
+        return new ProcessorContext(this.eventJsonNode);
     }
 
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public JsonNode getEventJsonNode() {
-        return eventJsonNode;
-    }
-
-    public void setEventJsonNode(JsonNode eventJsonNode) {
-        this.eventJsonNode = eventJsonNode;
-    }
 }
