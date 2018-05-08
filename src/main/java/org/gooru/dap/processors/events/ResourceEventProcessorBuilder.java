@@ -27,11 +27,11 @@ public enum ResourceEventProcessorBuilder {
             return processors;
         }
     },
-    USAGE_RESOURCE_TIMESPENT("usage.resource.timespent") {
-        private List<Processor> processors = new ArrayList<>();
-
+    RESOURCE_TIMESPENT("org.gooru.da.sink.gep.resource.timespent") {
+        
         @Override
         public List<Processor> build(ProcessorContext context) {
+            final List<Processor> processors = new ArrayList<>();
             processors.add(new UserStatsResourceTimeSpentProcessor(context));
             processors.add(new UserStatsResourceContentTypeTimeSpentProcessor(context));
             processors.add(new ResourceContentTypeTimeSpentProcessor(context));

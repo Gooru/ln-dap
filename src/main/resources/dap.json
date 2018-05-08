@@ -68,7 +68,7 @@
           "enable.autocommit": false
         },
         "consumer.topics": [
-          "org.gooru.da.sink.demux.resource"
+          "org.gooru.da.sink.gep.resource.timespent"
         ]
       }
     }
