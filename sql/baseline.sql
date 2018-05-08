@@ -399,8 +399,8 @@ content_type  text NOT NULL,
 collection_type text NOT NULL,
 class_id text,
 time_spent bigint NOT NULL,
-UNIQUE(user_id,course_id,unit_id,lesson_id, collection_id, resource_id, class_id),
-updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'));
+updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+UNIQUE(user_id,course_id,unit_id,lesson_id, collection_id, resource_id, class_id));
 
 
 
