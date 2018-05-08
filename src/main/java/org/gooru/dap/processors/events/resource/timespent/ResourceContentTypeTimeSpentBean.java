@@ -38,12 +38,12 @@ public class ResourceContentTypeTimeSpentBean {
     }
 
     public static ResourceContentTypeTimeSpentBean createInstance(JsonNode jsonNode, ContentBean contentBean) {
-        ResourceContentTypeTimeSpentBean resourceContentTimeSpentEntity = new ResourceContentTypeTimeSpentBean();
-        resourceContentTimeSpentEntity
+        ResourceContentTypeTimeSpentBean resourceContentTimeSpentBean = new ResourceContentTypeTimeSpentBean();
+        resourceContentTimeSpentBean
             .setActivityDate(new Date(jsonNode.get(EventMessageConstant.ACTIVITY_TIME).longValue()));
-        resourceContentTimeSpentEntity.setContentType(contentBean.getContentType());
-        resourceContentTimeSpentEntity.setTimeSpent(jsonNode.at(EventMessageConstant.METRICS_TIMESPENT).longValue());
-        return resourceContentTimeSpentEntity;
+        resourceContentTimeSpentBean.setContentType(contentBean.getContentType());
+        resourceContentTimeSpentBean.setTimeSpent(jsonNode.at(EventMessageConstant.METRICS_TIMESPENT).longValue());
+        return resourceContentTimeSpentBean;
 
     }
 

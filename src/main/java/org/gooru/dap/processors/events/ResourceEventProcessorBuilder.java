@@ -11,6 +11,7 @@ import org.gooru.dap.processors.events.resource.timespent.ResourceContentTypeTim
 import org.gooru.dap.processors.events.resource.timespent.UserStatsOriginalResourceTimeSpentProcessor;
 import org.gooru.dap.processors.events.resource.timespent.UserStatsResourceContentTypeTimeSpentProcessor;
 import org.gooru.dap.processors.events.resource.timespent.UserStatsResourceTimeSpentProcessor;
+import org.gooru.dap.processors.events.resource.timespent.UserStatsCCULCResourceTimeSpentProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,20 +20,23 @@ public enum ResourceEventProcessorBuilder {
     DEFAULT("default") {
         private final Logger LOGGER = LoggerFactory.getLogger(ResourceEventProcessorBuilder.class);
         private List<Processor> processors = new ArrayList<>();
+
         @Override
         public List<Processor> build(ProcessorContext context) {
             LOGGER.error("Invalid operation type passed in, not able to handle");
-            return processors;     
+            return processors;
         }
     },
     USAGE_RESOURCE_TIMESPENT("usage.resource.timespent") {
         private List<Processor> processors = new ArrayList<>();
+
         @Override
         public List<Processor> build(ProcessorContext context) {
             processors.add(new UserStatsResourceTimeSpentProcessor(context));
             processors.add(new UserStatsResourceContentTypeTimeSpentProcessor(context));
             processors.add(new ResourceContentTypeTimeSpentProcessor(context));
             processors.add(new UserStatsOriginalResourceTimeSpentProcessor(context));
+            processors.add(new UserStatsCCULCResourceTimeSpentProcessor(context));
             return processors;
         }
     };

@@ -23,7 +23,7 @@ public final class TransactionExecutor {
     private static void executeWithTransaction(DBHandler handler) {
         DBI dbi = DBICreator.getDbiForDefaultDS();
         ProcessorContext context = handler.getContext();
-        Repository repository = (Repository) dbi.onDemand(handler.getRepository());
+        Repository repository = dbi.onDemand(handler.getRepository());
         repository.setContext(context);
         if (repository.validateRequest().isSuccessFul()) {
             repository.executeRequest();

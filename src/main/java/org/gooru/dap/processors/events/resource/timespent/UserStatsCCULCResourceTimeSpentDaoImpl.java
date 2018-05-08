@@ -10,13 +10,12 @@ import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsResourceTimeSpentDaoImpl.class);
+abstract class UserStatsCCULCResourceTimeSpentDaoImpl extends Repository {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsCCULCResourceTimeSpentDaoImpl.class);
 
     @CreateSqlObject
-    abstract UserStatsResourceTimeSpentDao getUserStatsResourceTimespentDao();
-    
+    abstract UserStatsCCULCResourceTimeSpentDao getUserStatsCCULCResourceTimespentDao();
 
     @CreateSqlObject
     abstract ContentDao getContentDao();
@@ -39,10 +38,10 @@ abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
 
     @Transaction
     public void executeRequest() {
-        UserStatsResourceTimeSpentBean userStatsResourceTimeSpentBean = UserStatsResourceTimeSpentBean
-            .createInstance(getContext().getEventJsonNode(), contentBean);
-        getUserStatsResourceTimespentDao().insertOrUpdate(userStatsResourceTimeSpentBean);
-        
+        UserStatsCCULCResourceTimeSpentBean userStatsCCULCResourceTimeSpentBean =
+            UserStatsCCULCResourceTimeSpentBean.createInstance(getContext().getEventJsonNode(), contentBean);
+        getUserStatsCCULCResourceTimespentDao().insertOrUpdate(userStatsCCULCResourceTimeSpentBean);
+
     }
 
 }
