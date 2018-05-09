@@ -2,30 +2,29 @@ package org.gooru.dap.processors.events.question.timespent;
 
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.processors.ExecutionStatus;
+import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.repositories.jdbi.Repository;
 import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentBean;
 import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentDao;
-import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
-import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class UserStatsCCULCQuestionTimeSpentDaoImpl extends Repository {
+class UserStatsCCULCQuestionTimeSpentDaoImpl extends Repository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsCCULCQuestionTimeSpentDaoImpl.class);
 
-    @CreateSqlObject
-    abstract UserStatsCCULCQuestionTimeSpentDao getUserStatsCCULCQuestionTimespentDao();
+    private final ProcessorContext context;
 
-    @CreateSqlObject
-    abstract ContentDao getContentDao();
+    UserStatsCCULCQuestionTimeSpentDaoImpl(ProcessorContext context) {
+        this.context = context;
+    }
 
     private ContentBean contentBean;
 
-    @Transaction
     public ExecutionStatus validateRequest() {
-        final String questionId = getContext().getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final ContentBean contentBean = getContentDao().findOriginalContentById(questionId);
+        final String questionId = context.getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
+        final ContentDao contentDao = getDbiForCoreDS().onDemand(ContentDao.class);
+        final ContentBean contentBean = contentDao.findContentById(questionId);
         if (contentBean == null) {
             LOGGER.error("content does not exist  for this question instance {}", questionId);
             return ExecutionStatus.FAILED;
@@ -36,11 +35,11 @@ abstract class UserStatsCCULCQuestionTimeSpentDaoImpl extends Repository {
         return ExecutionStatus.SUCCESSFUL;
     }
 
-    @Transaction
     public void executeRequest() {
         UserStatsCCULCQuestionTimeSpentBean userStatsCCULCQuestionTimeSpentBean =
-            UserStatsCCULCQuestionTimeSpentBean.createInstance(getContext().getEventJsonNode(), contentBean);
-        getUserStatsCCULCQuestionTimespentDao().insertOrUpdate(userStatsCCULCQuestionTimeSpentBean);
+            UserStatsCCULCQuestionTimeSpentBean.createInstance(context.getEventJsonNode(), contentBean);
+        UserStatsCCULCQuestionTimeSpentDao userStatsCCULCQuestionTimeSpentDao = getDbiForDefaultDS().onDemand(UserStatsCCULCQuestionTimeSpentDao.class); 
+        userStatsCCULCQuestionTimeSpentDao.save(userStatsCCULCQuestionTimeSpentBean);
 
     }
 

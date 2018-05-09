@@ -27,8 +27,8 @@ class QuestionTypeTimeSpentHandler implements DBHandler {
     }
 
     @Override
-    public Class<? extends Repository> getRepository() {
-        return QuestionTypeTimeSpentDaoImpl.class;
+    public Repository getRepository() {
+        return new QuestionTypeTimeSpentDaoImpl(context);
     }
 
     @Override

@@ -2,30 +2,29 @@ package org.gooru.dap.processors.events.resource.timespent;
 
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.processors.ExecutionStatus;
+import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.repositories.jdbi.Repository;
 import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentBean;
 import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentDao;
-import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
-import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class UserStatsResourceContentTypeTimeSpentDaoImpl extends Repository {
+class UserStatsResourceContentTypeTimeSpentDaoImpl extends Repository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsResourceContentTypeTimeSpentDaoImpl.class);
 
-    @CreateSqlObject
-    abstract UserStatsResourceContentTypeTimeSpentDao getUserStatsResourceContentTypeTimespentDao();
+    private final ProcessorContext context;
 
-    @CreateSqlObject
-    abstract ContentDao getContentDao();
+    UserStatsResourceContentTypeTimeSpentDaoImpl(ProcessorContext context) {
+        this.context = context;
+    }
 
     private ContentBean contentBean;
 
-    @Transaction
     public ExecutionStatus validateRequest() {
-        final String resourceId = getContext().getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final ContentBean contentBean = getContentDao().findOriginalContentById(resourceId);
+        final ContentDao contentDao = getDbiForCoreDS().onDemand(ContentDao.class);
+        final String resourceId = context.getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
+        final ContentBean contentBean = contentDao.findContentById(resourceId);
         if (contentBean == null) {
             LOGGER.error("content does not exist  for this resource instance {}", resourceId);
             return ExecutionStatus.FAILED;
@@ -36,11 +35,12 @@ abstract class UserStatsResourceContentTypeTimeSpentDaoImpl extends Repository {
         return ExecutionStatus.SUCCESSFUL;
     }
 
-    @Transaction
     public void executeRequest() {
         UserStatsResourceContentTypeTimeSpentBean userStatsResourceContentTypeTimeSpentBean =
-            UserStatsResourceContentTypeTimeSpentBean.createInstance(getContext().getEventJsonNode(), contentBean);
-        getUserStatsResourceContentTypeTimespentDao().insertOrUpdate(userStatsResourceContentTypeTimeSpentBean);
+            UserStatsResourceContentTypeTimeSpentBean.createInstance(context.getEventJsonNode(), contentBean);
+        UserStatsResourceContentTypeTimeSpentDao userStatsResourceContentTypeTimeSpentDao =
+            getDbiForDefaultDS().onDemand(UserStatsResourceContentTypeTimeSpentDao.class);
+        userStatsResourceContentTypeTimeSpentDao.save(userStatsResourceContentTypeTimeSpentBean);
 
     }
 

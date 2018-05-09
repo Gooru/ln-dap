@@ -2,31 +2,29 @@ package org.gooru.dap.processors.events.question.timespent;
 
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.processors.ExecutionStatus;
+import org.gooru.dap.processors.ProcessorContext;
 import org.gooru.dap.processors.repositories.jdbi.Repository;
 import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentBean;
 import org.gooru.dap.processors.repositories.jdbi.common.Dao.ContentDao;
-import org.skife.jdbi.v2.sqlobject.CreateSqlObject;
-import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class UserStatsQuestionTimeSpentDaoImpl extends Repository {
-    
+class UserStatsQuestionTimeSpentDaoImpl extends Repository {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsQuestionTimeSpentDaoImpl.class);
 
-    @CreateSqlObject
-    abstract UserStatsQuestionTimeSpentDao getUserStatsQuestionTimespentDao();
-    
+    private final ProcessorContext context;
 
-    @CreateSqlObject
-    abstract ContentDao getContentDao();
+    UserStatsQuestionTimeSpentDaoImpl(ProcessorContext context) {
+        this.context = context;
+    }
 
     private ContentBean contentBean;
 
-    @Transaction
     public ExecutionStatus validateRequest() {
-        final String questionId = getContext().getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final ContentBean contentBean = getContentDao().findOriginalContentById(questionId);
+        final String questionId = context.getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
+        final ContentDao contentDao = getDbiForCoreDS().onDemand(ContentDao.class);
+        final ContentBean contentBean = contentDao.findContentById(questionId);
         if (contentBean == null) {
             LOGGER.error("content does not exist  for this question instance {}", questionId);
             return ExecutionStatus.FAILED;
@@ -37,12 +35,13 @@ abstract class UserStatsQuestionTimeSpentDaoImpl extends Repository {
         return ExecutionStatus.SUCCESSFUL;
     }
 
-    @Transaction
     public void executeRequest() {
-        UserStatsQuestionTimeSpentBean userStatsQuestionTimeSpentBean = UserStatsQuestionTimeSpentBean
-            .createInstance(getContext().getEventJsonNode(), contentBean);
-        getUserStatsQuestionTimespentDao().insertOrUpdate(userStatsQuestionTimeSpentBean);
-        
+        UserStatsQuestionTimeSpentBean userStatsQuestionTimeSpentBean =
+            UserStatsQuestionTimeSpentBean.createInstance(context.getEventJsonNode(), contentBean);
+        UserStatsQuestionTimeSpentDao userStatsQuestionTimeSpentDao =
+            getDbiForDefaultDS().onDemand(UserStatsQuestionTimeSpentDao.class);
+        userStatsQuestionTimeSpentDao.save(userStatsQuestionTimeSpentBean);
+
     }
 
 }

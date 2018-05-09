@@ -28,8 +28,8 @@ class UserStatsQuestionTypeTimeSpentHandler implements DBHandler {
     }
 
     @Override
-    public Class<? extends Repository> getRepository() {
-        return UserStatsQuestionTypeTimeSpentDaoImpl.class;
+    public Repository getRepository() {
+        return new UserStatsQuestionTypeTimeSpentDaoImpl(context);
     }
 
     @Override
