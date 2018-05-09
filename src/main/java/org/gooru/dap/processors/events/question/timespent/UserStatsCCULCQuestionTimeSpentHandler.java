@@ -12,11 +12,10 @@ import org.gooru.dap.processors.repositories.jdbi.Repository;
 
 class UserStatsCCULCQuestionTimeSpentHandler implements DBHandler {
 
-    public static final List<String> MANDATORY_FIELDS =
-        new ArrayList<>(Arrays.asList(EventMessageConstant.RESOURCE_ID, EventMessageConstant.USER_ID,
-            EventMessageConstant.CTX_COURSE_ID, EventMessageConstant.CTX_UNIT_ID, EventMessageConstant.CTX_LESSON_ID,
-            EventMessageConstant.CTX_COLLECTION_ID, EventMessageConstant.CTX_COLLECTION_TYPE,
-            EventMessageConstant.METRICS_TIMESPENT));
+    public static final List<String> MANDATORY_FIELDS = new ArrayList<>(Arrays.asList(EventMessageConstant.RESOURCE_ID,
+        EventMessageConstant.USER_ID, EventMessageConstant.CTX_COURSE_ID, EventMessageConstant.CTX_UNIT_ID,
+        EventMessageConstant.CTX_LESSON_ID, EventMessageConstant.CTX_COLLECTION_ID,
+        EventMessageConstant.CTX_COLLECTION_TYPE, EventMessageConstant.METRICS_TIMESPENT));
 
     private final ProcessorContext context;
 
@@ -30,8 +29,8 @@ class UserStatsCCULCQuestionTimeSpentHandler implements DBHandler {
     }
 
     @Override
-    public Class<? extends Repository> getRepository() {
-        return UserStatsCCULCQuestionTimeSpentDaoImpl.class;
+    public Repository getRepository() {
+        return new UserStatsCCULCQuestionTimeSpentDaoImpl(context);
     }
 
     @Override

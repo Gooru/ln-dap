@@ -2,6 +2,7 @@ package org.gooru.dap.processors.events.resource.timespent;
 
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.Transaction;
 
 abstract class ResourceContentTypeTimeSpentDao {
 
@@ -10,6 +11,11 @@ abstract class ResourceContentTypeTimeSpentDao {
         + "ON CONFLICT (content_type, activity_date) DO UPDATE set time_spent = (:timeSpent + (select "
         + "time_spent from resource_content_type_timespent_ts WHERE content_type = :contentType "
         + "AND activity_date = date(:activityDate)))")
-    public abstract void insertOrUpdate(@BindBean ResourceContentTypeTimeSpentBean resourceContentTypeTimeSpentBean);
+    protected abstract void insertOrUpdate(@BindBean ResourceContentTypeTimeSpentBean resourceContentTypeTimeSpentBean);
+    
+    @Transaction
+    protected void save(ResourceContentTypeTimeSpentBean resourceContentTypeTimeSpentBean) { 
+        this.insertOrUpdate(resourceContentTypeTimeSpentBean);
+    }
 
 }

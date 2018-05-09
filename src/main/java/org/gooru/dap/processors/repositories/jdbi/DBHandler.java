@@ -16,7 +16,7 @@ public interface DBHandler {
     
     ExecutionStatus checkSanity();
     
-    Class<? extends Repository> getRepository();
+    Repository getRepository();
     
     ProcessorContext getContext();
     

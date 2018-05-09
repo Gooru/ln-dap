@@ -2,6 +2,7 @@ package org.gooru.dap.processors.events.question.timespent;
 
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+import org.skife.jdbi.v2.sqlobject.Transaction;
 
 abstract class UserStatsCCULCQuestionTimeSpentDao {
 
@@ -11,7 +12,12 @@ abstract class UserStatsCCULCQuestionTimeSpentDao {
         + "collection_id, question_id, class_id) DO UPDATE set time_spent = (:timeSpent + (select time_spent from "
         + "userstat_cculc_question_timespent WHERE user_id = :userId AND course_id = :courseId AND unit_id = :unitId AND lesson_id = "
         + ":lessonId AND collection_id = :collectionId AND question_id = :questionId AND class_id = :classId)) ")
-    public abstract void insertOrUpdate(
-        @BindBean UserStatsCCULCQuestionTimeSpentBean userStatsCCULCQuestionTimeSpentBean);
+    protected abstract void
+        insertOrUpdate(@BindBean UserStatsCCULCQuestionTimeSpentBean userStatsCCULCQuestionTimeSpentBean);
+
+    @Transaction
+    protected void save(UserStatsCCULCQuestionTimeSpentBean userStatsCCULCQuestionTimeSpentBean) {
+        this.insertOrUpdate(userStatsCCULCQuestionTimeSpentBean);
+    }
 
 }

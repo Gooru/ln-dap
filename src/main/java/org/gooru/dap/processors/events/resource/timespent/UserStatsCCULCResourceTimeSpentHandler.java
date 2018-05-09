@@ -30,8 +30,8 @@ class UserStatsCCULCResourceTimeSpentHandler implements DBHandler {
     }
 
     @Override
-    public Class<? extends Repository> getRepository() {
-        return UserStatsCCULCResourceTimeSpentDaoImpl.class;
+    public Repository getRepository() {
+        return new UserStatsCCULCResourceTimeSpentDaoImpl(context);
     }
 
     @Override
