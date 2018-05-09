@@ -1,4 +1,4 @@
-package org.gooru.dap.processors.events.resource.timespent;
+package org.gooru.dap.processors.events.question.timespent;
 
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.processors.ExecutionStatus;
@@ -10,12 +10,12 @@ import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
+abstract class UserStatsQuestionTimeSpentDaoImpl extends Repository {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsResourceTimeSpentDaoImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsQuestionTimeSpentDaoImpl.class);
 
     @CreateSqlObject
-    abstract UserStatsResourceTimeSpentDao getUserStatsResourceTimespentDao();
+    abstract UserStatsQuestionTimeSpentDao getUserStatsQuestionTimespentDao();
     
 
     @CreateSqlObject
@@ -25,10 +25,10 @@ abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
 
     @Transaction
     public ExecutionStatus validateRequest() {
-        final String resourceId = getContext().getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final ContentBean contentBean = getContentDao().findOriginalContentById(resourceId);
+        final String questionId = getContext().getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
+        final ContentBean contentBean = getContentDao().findOriginalContentById(questionId);
         if (contentBean == null) {
-            LOGGER.error("content does not exist  for this resource instance {}", resourceId);
+            LOGGER.error("content does not exist  for this question instance {}", questionId);
             return ExecutionStatus.FAILED;
         }
 
@@ -39,9 +39,9 @@ abstract class UserStatsResourceTimeSpentDaoImpl extends Repository {
 
     @Transaction
     public void executeRequest() {
-        UserStatsResourceTimeSpentBean userStatsResourceTimeSpentBean = UserStatsResourceTimeSpentBean
+        UserStatsQuestionTimeSpentBean userStatsQuestionTimeSpentBean = UserStatsQuestionTimeSpentBean
             .createInstance(getContext().getEventJsonNode(), contentBean);
-        getUserStatsResourceTimespentDao().insertOrUpdate(userStatsResourceTimeSpentBean);
+        getUserStatsQuestionTimespentDao().insertOrUpdate(userStatsQuestionTimeSpentBean);
         
     }
 

@@ -8,6 +8,6 @@ public abstract class ContentDao {
 
     @SqlQuery("SELECT original_content_id, content_subformat::text from content where id = :id")
     @RegisterMapper(ContentMapper.class)
-    public abstract ContentBean getOriginalContentId(@Bind("id") String  id);
+    public abstract ContentBean findOriginalContentById(@Bind("id") String  id);
     
 }

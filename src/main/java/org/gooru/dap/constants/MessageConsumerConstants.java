@@ -6,6 +6,8 @@ public final  class MessageConsumerConstants {
         throw new AssertionError();
     }
     
-    public static final String RESOURCE = "org.gooru.dap.deps.ResourceEventConsumer";
+    public static final String RESOURCE = "org.gooru.dap.deps.ResourceConsumer";
+    
+    public static final String QUESTION = "org.gooru.dap.deps.QuestionConsumer";
 
 }

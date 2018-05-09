@@ -25,7 +25,7 @@ abstract class UserStatsOriginalResourceTimeSpentDaoImpl extends Repository {
     @Transaction
     public ExecutionStatus validateRequest() {
         final String resourceId = getContext().getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final ContentBean contentBean = getContentDao().getOriginalContentId(resourceId);
+        final ContentBean contentBean = getContentDao().findOriginalContentById(resourceId);
         if (contentBean == null) {
             LOGGER.error("content does not exist  for this resource instance {}", resourceId);
             return ExecutionStatus.FAILED;

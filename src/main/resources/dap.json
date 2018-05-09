@@ -5,7 +5,7 @@
       "username": "dsuser",
       "password": "dspass",
       "autoCommit": true,
-      "jdbcUrl": "jdbc:postgresql://localhost:5433/dsdb",
+      "jdbcUrl": "jdbc:postgresql://localhost:5432/dsdb",
       "maximumPoolSize": 5
     },
     "coreDataSource": {
@@ -18,27 +18,11 @@
     }
   },
   "deps.to.deploy": [
-    "org.gooru.dap.deps.TestConsumer",
-    "org.gooru.dap.deps.ResourceEventConsumer",
-    "org.gooru.dap.deps.CompetencyConsumer"
+    "org.gooru.dap.deps.ResourceConsumer",
+    "org.gooru.dap.deps.CompetencyConsumer",
+    "org.gooru.dap.deps.QuestionConsumer"
   ],
   "deps.config": {
-    "org.gooru.dap.deps.TestConsumer": {
-      "kafka.consumer.config": {
-        "instances": 1,
-        "props": {
-          "bootstrap.servers": "localhost:9092",
-          "session.timeout.ms": 120000,
-          "group.id": "group-1",
-          "max.poll.records": 5,
-          "max.poll.interval.ms": 30000,
-          "enable.autocommit": false
-        },
-        "consumer.topics": [
-          "org.gooru.da.sink.demux.test"
-        ]
-      }
-    },
     "org.gooru.dap.deps.CompetencyConsumer": {
       "kafka.consumer.config": {
         "instances": 1,
@@ -56,7 +40,7 @@
       }
     },
     
-    "org.gooru.dap.deps.ResourceEventConsumer": {
+    "org.gooru.dap.deps.ResourceConsumer": {
       "kafka.consumer.config": {
         "instances": 1,
         "props": {
@@ -69,6 +53,23 @@
         },
         "consumer.topics": [
           "org.gooru.da.sink.gep.resource.timespent"
+        ]
+      }
+    },
+    
+    "org.gooru.dap.deps.QuestionConsumer": {
+      "kafka.consumer.config": {
+        "instances": 1,
+        "props": {
+          "bootstrap.servers": "localhost:9092",
+          "session.timeout.ms": 120000,
+          "group.id": "group-1",
+          "max.poll.records": 5,
+          "max.poll.interval.ms": 30000,
+          "enable.autocommit": false
+        },
+        "consumer.topics": [
+          "org.gooru.da.sink.gep.question.timespent"
         ]
       }
     }
