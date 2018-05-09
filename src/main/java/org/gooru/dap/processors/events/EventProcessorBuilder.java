@@ -27,6 +27,13 @@ public enum EventProcessorBuilder {
         public List<Processor> build(String eventTopicName, ProcessorContext context) {
             return ResourceEventProcessorBuilder.lookupBuilder(eventTopicName).build(context);
         }
+    },
+    QUESTION(MessageConsumerConstants.QUESTION) {
+
+        @Override
+        public List<Processor> build(String eventTopicName, ProcessorContext context) {
+            return QuestionEventProcessorBuilder.lookupBuilder(eventTopicName).build(context);
+        }
     };
 
     private String name;

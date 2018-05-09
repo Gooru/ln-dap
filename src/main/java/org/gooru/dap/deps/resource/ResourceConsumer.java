@@ -9,11 +9,11 @@ import org.gooru.dap.processors.events.ProcessorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ResourceEventConsumer extends ConsumerTemplate<String, String> {
+public class ResourceConsumer extends ConsumerTemplate<String, String> {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceEventConsumer.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceConsumer.class);
 
-    public ResourceEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
+    public ResourceConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
         super(id, kafkaConsumerConfig);
     }
 

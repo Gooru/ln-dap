@@ -56,14 +56,14 @@ public class UserStatsResourceTimeSpentBean {
     }
 
     public static UserStatsResourceTimeSpentBean createInstance(JsonNode jsonNode, ContentBean contentBean) {
-        UserStatsResourceTimeSpentBean userStatsResourceTimeSpentEntity = new UserStatsResourceTimeSpentBean();
-        userStatsResourceTimeSpentEntity
+        UserStatsResourceTimeSpentBean userStatsResourceTimeSpentBean = new UserStatsResourceTimeSpentBean();
+        userStatsResourceTimeSpentBean
             .setActivityDate(new Date(jsonNode.get(EventMessageConstant.ACTIVITY_TIME).longValue()));
-        userStatsResourceTimeSpentEntity.setResourceId(jsonNode.get(EventMessageConstant.RESOURCE_ID).textValue());
-        userStatsResourceTimeSpentEntity.setContentType(contentBean.getContentType());
-        userStatsResourceTimeSpentEntity.setUserId(jsonNode.get(EventMessageConstant.USER_ID).textValue());
-        userStatsResourceTimeSpentEntity.setTimeSpent(jsonNode.at(EventMessageConstant.METRICS_TIMESPENT).longValue());
-        return userStatsResourceTimeSpentEntity;
+        userStatsResourceTimeSpentBean.setResourceId(jsonNode.get(EventMessageConstant.RESOURCE_ID).textValue());
+        userStatsResourceTimeSpentBean.setContentType(contentBean.getContentType());
+        userStatsResourceTimeSpentBean.setUserId(jsonNode.get(EventMessageConstant.USER_ID).textValue());
+        userStatsResourceTimeSpentBean.setTimeSpent(jsonNode.at(EventMessageConstant.METRICS_TIMESPENT).longValue());
+        return userStatsResourceTimeSpentBean;
 
     }
 
