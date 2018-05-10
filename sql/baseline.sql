@@ -372,6 +372,7 @@ CREATE TABLE resource_content_type_timespent_ts (
 activity_date date NOT NULL,
 content_type text NOT NULL,
 time_spent bigint,
+view_count integer,
 updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 UNIQUE (activity_date, content_type));
 
@@ -429,6 +430,7 @@ CREATE TABLE question_type_timespent_ts (
 activity_date date NOT NULL,
 question_type text NOT NULL,
 time_spent bigint,
+view_count integer,
 updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
 UNIQUE (activity_date, question_type));
 
