@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gooru.dap.configuration.KafkaConsumerConfig;
-import org.gooru.dap.deps.competency.CompetencyConsumer;
+import org.gooru.dap.deps.competency.AssessmentScoreConsumer;
 import org.gooru.dap.deps.question.QuestionConsumer;
 import org.gooru.dap.deps.resource.ResourceConsumer;
 import org.slf4j.Logger;
@@ -39,8 +39,6 @@ final class ConsumerFactory {
 
     private static ConsumerTemplate createConsumer(int id, String deploymentName, KafkaConsumerConfig config) {
         switch (deploymentName) {
-        case "org.gooru.dap.deps.CompetencyConsumer":
-            return new CompetencyConsumer(id, config);
 
         case "org.gooru.dap.deps.ResourceConsumer":
             return new ResourceConsumer(id, config);
@@ -48,6 +46,9 @@ final class ConsumerFactory {
         case "org.gooru.dap.deps.QuestionConsumer":
             return new QuestionConsumer(id, config);
 
+        case "org.gooru.dap.deps.competency.AssessmentScoreConsumer":
+        	return new AssessmentScoreConsumer(id, config);
+        	
         default:
             LOGGER.warn("Factory does not know to initiate the deployment for '{}'", deploymentName);
             throw new IllegalStateException("Invalid deployment descriptor: " + deploymentName);

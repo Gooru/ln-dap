@@ -52,7 +52,7 @@
         we are using the same one but this needs to be changed while doing the deployment
     -->
     <logger name="org.gooru.dap" level="trace" additivity="false">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </logger>
 
 	<logger name="org.gooru.dap.deps.competency" level="debug" additivity="false">

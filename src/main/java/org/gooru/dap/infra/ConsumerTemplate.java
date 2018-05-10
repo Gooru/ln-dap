@@ -50,7 +50,7 @@ public abstract class ConsumerTemplate<K, V> implements Runnable, Deployable {
      * @param record
      * @param e
      */
-    public abstract void processingRecordExceptionHandler(ConsumerRecord record, Exception e);
+    public abstract void processingRecordExceptionHandler(ConsumerRecord<K, V> record, Exception e);
 
     /**
      * The handler which will be invoked when the commit failed after processing the batch of records received in poll
@@ -75,12 +75,14 @@ public abstract class ConsumerTemplate<K, V> implements Runnable, Deployable {
         verifySetup();
         try {
             consumer.subscribe(kafkaConsumerConfig.getTopics());
-
+            Long pollInterval = Long.parseLong(kafkaConsumerConfig.getProperties().getProperty("max.poll.interval.ms", "1000"));
             while (!shuttingDown.get()) {
-                ConsumerRecords<K, V> records = consumer.poll(Long.MAX_VALUE);
+            	
+                ConsumerRecords<K, V> records = consumer.poll(pollInterval);
                 try {
                     for (ConsumerRecord<K, V> record : records) {
                         try {
+                        	LOGGER.debug("processing consumed record");
                             processRecord(record);
                         } catch (Exception e) {
                             LOGGER.warn("Failure in handling message for topic '{}' offset '{}' partition '{}",
@@ -100,7 +102,10 @@ public abstract class ConsumerTemplate<K, V> implements Runnable, Deployable {
                 LOGGER.warn("Got wakeup while not shutting down. ", e);
                 throw e;
             }
-        } finally {
+        } catch(Throwable t) {
+        	LOGGER.error("error while polling messages from kafka", t);
+        }
+        finally {
             consumer.close();
         }
     }

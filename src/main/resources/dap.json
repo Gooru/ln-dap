@@ -1,83 +1,82 @@
 {
-  "datasources": {
-    "defaultDataSource": {
-      "ds.type": "hikari",
-      "username": "dsuser",
-      "password": "dspass",
-      "autoCommit": true,
-      "jdbcUrl": "jdbc:postgresql://localhost:5432/dsdb",
-      "maximumPoolSize": 5
-    },
-    "coreDataSource": {
-      "ds.type": "hikari",
-      "username": "nucleus",
-      "password": "nucleus",
-      "autoCommit": false,
-      "jdbcUrl": "jdbc:postgresql://localhost:5432/nucleus",
-      "maximumPoolSize": 5
-    }
-  },
-  "deps.to.deploy": [
-    "org.gooru.dap.deps.ResourceConsumer",
-    "org.gooru.dap.deps.CompetencyConsumer",
-    "org.gooru.dap.deps.QuestionConsumer"
-  ],
-  "deps.config": {
-    "org.gooru.dap.deps.CompetencyConsumer": {
-      "kafka.consumer.config": {
-        "instances": 1,
-        "props": {
-          "bootstrap.servers": "localhost:9092",
-          "session.timeout.ms": 120000,
-          "group.id": "group-1",
-          "max.poll.records": 5,
-          "max.poll.interval.ms": 30000,
-          "enable.auto.commit": false
-        },
-        "consumer.topics": [
-          "org.gooru.da.sink.demux.test"
-        ]
-      }
-    },
-    
-    "org.gooru.dap.deps.ResourceConsumer": {
-      "kafka.consumer.config": {
-        "instances": 1,
-        "props": {
-          "bootstrap.servers": "localhost:9092",
-          "session.timeout.ms": 120000,
-          "group.id": "group-1",
-          "max.poll.records": 5,
-          "max.poll.interval.ms": 30000,
-          "enable.auto.commit": false
-        },
-        "consumer.topics": [
-          "org.gooru.da.sink.gep.resource.timespent"
-        ]
-      }
-    },
-    
-    "org.gooru.dap.deps.QuestionConsumer": {
-      "kafka.consumer.config": {
-        "instances": 1,
-        "props": {
-          "bootstrap.servers": "localhost:9092",
-          "session.timeout.ms": 120000,
-          "group.id": "group-1",
-          "max.poll.records": 5,
-          "max.poll.interval.ms": 30000,
-          "enable.auto.commit": false
-        },
-        "consumer.topics": [
-          "org.gooru.da.sink.gep.question.timespent"
-        ]
-      }
-    }
-    
-  },
-  "app.configuration": {
-  },
-  "systemProperties": {
-    "logback.configurationFile": "src/main/resources/logback-dap.xml"
-  }
+	"datasources": {
+		"defaultDataSource": {
+			"ds.type": "hikari",
+			"username": "dsuser",
+			"password": "dspass",
+			"autoCommit": true,
+			"jdbcUrl": "jdbc:postgresql://localhost:5432/dsdb",
+			"maximumPoolSize": 5
+		},
+		"coreDataSource": {
+			"ds.type": "hikari",
+			"username": "nucleus",
+			"password": "nucleus",
+			"autoCommit": false,
+			"jdbcUrl": "jdbc:postgresql://localhost:5432/nucleus",
+			"maximumPoolSize": 5
+		}
+	},
+	"deps.to.deploy": [
+		"org.gooru.dap.deps.ResourceConsumer",
+		"org.gooru.dap.deps.CompetencyConsumer",
+		"org.gooru.dap.deps.QuestionConsumer",
+		"org.gooru.dap.deps.competency.AssessmentScoreConsumer"
+	],
+	"deps.config": {
+		"org.gooru.dap.deps.competency.AssessmentScoreConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-1",
+					"max.poll.records": 1,
+					"max.poll.interval.ms": 1000,
+					"enable.auto.commit": true
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.gep.assessment.score"
+				]
+			}
+		},
+		"org.gooru.dap.deps.ResourceConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-1",
+					"max.poll.records": 5,
+					"max.poll.interval.ms": 30000,
+					"enable.auto.commit": false
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.gep.resource.timespent"
+				]
+			}
+		},
+		"org.gooru.dap.deps.QuestionConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-1",
+					"max.poll.records": 5,
+					"max.poll.interval.ms": 30000,
+					"enable.auto.commit": false
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.gep.question.timespent"
+				]
+			}
+		}
+	},
+	"app.configuration": {
+		
+	},
+	"systemProperties": {
+		"logback.configurationFile": "src/main/resources/logback-dap.xml"
+	}
 }
