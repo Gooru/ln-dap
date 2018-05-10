@@ -73,7 +73,7 @@ public class CompetencyStatusCommand {
 		return bean;
 	}
 
-	private static class CompetencyStatusBean {
+	public static class CompetencyStatusBean {
 		private String userId;
 		private String competencyCode;
 		private String competencyDisplayCode;

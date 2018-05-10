@@ -18,40 +18,22 @@
     }
   },
   "deps.to.deploy": [
-    "org.gooru.dap.deps.TestConsumer",
-    "org.gooru.dap.deps.TestConsumer1",
-    "org.gooru.dap.deps.CompetencyConsumer"
+    "org.gooru.dap.deps.competency.AssessmentScoreConsumer"
   ],
   "deps.config": {
-    "org.gooru.dap.deps.TestConsumer": {
+    "org.gooru.dap.deps.competency.AssessmentScoreConsumer": {
       "kafka.consumer.config": {
         "instances": 1,
         "props": {
           "bootstrap.servers": "localhost:9092",
           "session.timeout.ms": 120000,
           "group.id": "group-1",
-          "max.poll.records": 5,
-          "max.poll.interval.ms": 30000,
-          "enable.autocommit": false
+          "max.poll.records": 1,
+          "max.poll.interval.ms": 1000,
+          "enable.auto.commit": true
         },
         "consumer.topics": [
-          "org.gooru.da.sink.demux.test"
-        ]
-      }
-    },
-    "org.gooru.dap.deps.CompetencyConsumer": {
-      "kafka.consumer.config": {
-        "instances": 1,
-        "props": {
-          "bootstrap.servers": "localhost:9092",
-          "session.timeout.ms": 120000,
-          "group.id": "group-1",
-          "max.poll.records": 5,
-          "max.poll.interval.ms": 30000,
-          "enable.autocommit": false
-        },
-        "consumer.topics": [
-          "org.gooru.da.sink.demux.test"
+          "org.gooru.da.sink.gep.assessment.score"
         ]
       }
     }

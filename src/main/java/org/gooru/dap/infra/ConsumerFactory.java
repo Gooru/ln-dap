@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gooru.dap.configuration.KafkaConsumerConfig;
-import org.gooru.dap.deps.competency.CompetencyConsumer;
-import org.gooru.dap.deps.testdep.TestDep;
+import org.gooru.dap.deps.competency.AssessmentScoreConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,11 +35,9 @@ final class ConsumerFactory {
 
     private static ConsumerTemplate createConsumer(int id, String deploymentName, KafkaConsumerConfig config) {
         switch (deploymentName) {
-        case "org.gooru.dap.deps.TestConsumer":
-            return new TestDep(id, config);
             
-        case "org.gooru.dap.deps.CompetencyConsumer":
-        	return new CompetencyConsumer(id, config);
+        case "org.gooru.dap.deps.competency.AssessmentScoreConsumer":
+        	return new AssessmentScoreConsumer(id, config);
         	
         default:
             LOGGER.warn("Factory does not know to initiate the deployment for '{}'", deploymentName);
