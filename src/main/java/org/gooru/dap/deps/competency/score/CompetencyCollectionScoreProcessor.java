@@ -9,6 +9,7 @@ import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.score.mapper.AssessmentCompetency;
 import org.gooru.dap.deps.competency.score.mapper.AssessmentScoreEventMapper;
 import org.gooru.dap.deps.competency.score.mapper.GutCode;
+import org.gooru.dap.deps.competency.status.CompetencyStatusProcessor;
 import org.gooru.dap.deps.competency.usermatrix.UserCompetencyMatrixProcessor;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
@@ -26,13 +27,19 @@ public class CompetencyCollectionScoreProcessor {
 	private final DBI defaultDbi = DBICreator.getDbiForDefaultDS();
 	private final DBI coreDbi = DBICreator.getDbiForCoreDS();
 
+	private final AssessmentScoreEventMapper assessmentScoreEvent;
 	private final CompetencyCollectionScoreService service = new CompetencyCollectionScoreService(defaultDbi, coreDbi);
 
-	public void process(AssessmentScoreEventMapper assessmentScoreEvent) {
-		LOGGER.debug("processing of competency assessment score started");
-		CompetencyCollectionScoreCommand command = CompetencyCollectionScoreCommandBuilder.build(assessmentScoreEvent);
+	public CompetencyCollectionScoreProcessor(AssessmentScoreEventMapper assessmentScoreEvent) {
+		this.assessmentScoreEvent = assessmentScoreEvent;
+	}
 
-		String eventName = assessmentScoreEvent.getEventName();
+	public void process() {
+		LOGGER.debug("processing of competency assessment score started");
+		CompetencyCollectionScoreCommand command = CompetencyCollectionScoreCommandBuilder
+				.build(this.assessmentScoreEvent);
+
+		String eventName = this.assessmentScoreEvent.getEventName();
 		LOGGER.debug("processing event: {}", eventName);
 		switch (eventName) {
 		case "usage.assessment.score":
@@ -60,38 +67,48 @@ public class CompetencyCollectionScoreProcessor {
 		LOGGER.debug("assessment competency fetched from database");
 		// Fetch gut code mapping of the competency
 		List<GutCode> gutCodes = service.getGutCodeMapping(toPostgresArrayString(taxonomy.fieldNames()));
-		LOGGER.debug("gut code mapping fetched from database: #{}", gutCodes.size());
-		
+
+		final boolean isSignature = service.isSignatureAssessment(command.getCollectionId());
+		LOGGER.debug("'{}' signature assessment '{}', hence persist evidence and competency status", collectionId,
+				isSignature);
+
 		CompetencyCollectionScoreBean bean = new CompetencyCollectionScoreBean(command);
 		gutCodes.forEach(gutCode -> {
 			String gc = gutCode.getGutCode();
 			String tc = gutCode.getTaxonomyCode();
-			LOGGER.debug("persisting gutcode: '{}' and competency: '{}'", gc, tc);
 
-			JsonNode txNode = taxonomy.get(tc);
+			// If the assessment is not signature assessment then only update competency
+			// status and score otherwise skip
+			if (!isSignature) {
+				JsonNode txNode = taxonomy.get(tc);
 
-			bean.setGutCode(gc);
-			bean.setCompetencyCode(tc);
-			JsonNode displayCode = txNode.get(CompetencyConstants.TX_DISPLAY_CODE);
-			if (displayCode != null) {
-				bean.setCompetencyDisplayCode(displayCode.asText(null));
+				bean.setGutCode(gc);
+				bean.setCompetencyCode(tc);
+				JsonNode displayCode = txNode.get(CompetencyConstants.TX_DISPLAY_CODE);
+				if (displayCode != null) {
+					bean.setCompetencyDisplayCode(displayCode.asText(null));
+				}
+
+				JsonNode txTitle = txNode.get(CompetencyConstants.TX_TITLE);
+				if (txTitle != null) {
+					bean.setCompetencyTitle(txTitle.asText(null));
+				}
+
+				bean.setFrameworkCode(txNode.get(CompetencyConstants.TX_FRAMEWORK_CODE).asText());
+
+				LOGGER.debug("ready to persist evidence");
+				service.insertOrUpdateAssessmentCompetencyScore(bean);
+
+				LOGGER.debug("ready to update competency status");
+				new CompetencyStatusProcessor(this.assessmentScoreEvent, tc).process();
+
 			}
 
-			JsonNode txTitle = txNode.get(CompetencyConstants.TX_TITLE);
-			if (txTitle != null) {
-				bean.setCompetencyTitle(txTitle.asText(null));
-			}
-
-			bean.setFrameworkCode(txNode.get(CompetencyConstants.TX_FRAMEWORK_CODE).asText());
-
-			LOGGER.debug("ready to persist competency score");
-			service.insertOrUpdateAssessmentCompetencyScore(bean);
-
-			// Update user competency matrix
+			// always update user competency matrix
 			LOGGER.debug("ready to update user competency matrix");
-			boolean isSignature = service.isSignatureAssessment(command.getCollectionId());
-			new UserCompetencyMatrixProcessor(command.getUserId(), gc, command.getCollectionScore(), isSignature, command.getUpdatedAt())
-					.process();
+			new UserCompetencyMatrixProcessor(command.getUserId(), gc, command.getCollectionScore(), isSignature,
+					command.getUpdatedAt()).process();
+
 		});
 	}
 

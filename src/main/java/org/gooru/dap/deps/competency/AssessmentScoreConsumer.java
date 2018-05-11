@@ -54,7 +54,7 @@ public class AssessmentScoreConsumer extends ConsumerTemplate<String, String> {
 			LOGGER.debug("event has been mapped to object:== {}", assessmentScore.toString());
 			
 			// Store competency score
-			new CompetencyCollectionScoreProcessor().process(assessmentScore);
+			new CompetencyCollectionScoreProcessor(assessmentScore).process();
 		} catch (IOException e) {
 			LOGGER.error("unable to parse the event", e);
 		}
