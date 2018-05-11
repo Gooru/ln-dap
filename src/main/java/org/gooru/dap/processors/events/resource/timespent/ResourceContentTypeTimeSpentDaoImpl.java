@@ -40,6 +40,7 @@ public class ResourceContentTypeTimeSpentDaoImpl extends Repository {
         ResourceContentTypeTimeSpentBean resourceContentTypeTimeSpentBean =
             ResourceContentTypeTimeSpentBean.createInstance(context.getEventJsonNode(), contentBean);
         resourceContentTypeTimespentDao.save(resourceContentTypeTimeSpentBean);
+        
 
     }
 
