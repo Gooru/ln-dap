@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
-import org.gooru.dap.deps.competency.score.CompetencyCollectionScoreProcessor;
-import org.gooru.dap.deps.competency.score.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.processors.AssessmentScoreProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,9 +52,8 @@ public class AssessmentScoreConsumer extends ConsumerTemplate<String, String> {
 			AssessmentScoreEventMapper assessmentScore = mapper.readValue(record.value(),
 					AssessmentScoreEventMapper.class);
 			LOGGER.debug("event has been mapped to object:== {}", assessmentScore.toString());
-			
-			// Store competency score
-			new CompetencyCollectionScoreProcessor(assessmentScore).process();
+
+			new AssessmentScoreProcessor(assessmentScore).process();
 		} catch (IOException e) {
 			LOGGER.error("unable to parse the event", e);
 		}
