@@ -13,6 +13,7 @@ public class ContentCompetencyEvidenceProcessor {
 	private final double COMPLETION_SCORE = 80.00;
 
 	private static final Pattern PERIOD_PATTERN = Pattern.compile("\\.");
+	private static final Pattern HYPHEN_PATTERN = Pattern.compile("-");
 
 	private final AssessmentScoreEventMapper assessmentScore;
 	private final String competencyCode;
@@ -41,6 +42,9 @@ public class ContentCompetencyEvidenceProcessor {
 
 			String frameworkCode = PERIOD_PATTERN.split(competencyCode)[0];
 			bean.setFrameworkCode(frameworkCode);
+			
+			boolean isMicroCompetency = (HYPHEN_PATTERN.split(competencyCode).length >= 5);
+			bean.setMicroCompetency(isMicroCompetency);
 
 			this.service.insertOrUpdateContentCompetencyEvidence(bean);
 		}

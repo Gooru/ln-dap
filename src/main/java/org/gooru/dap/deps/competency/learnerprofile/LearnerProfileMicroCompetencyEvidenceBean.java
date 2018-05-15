@@ -1,16 +1,13 @@
-package org.gooru.dap.deps.competency.content;
+package org.gooru.dap.deps.competency.learnerprofile;
 
 import java.sql.Timestamp;
 
 /**
- * @author gooru on 14-May-2018
+ * @author gooru on 15-May-2018
  */
-public class ContentCompetencyEvidenceBean {
+public class LearnerProfileMicroCompetencyEvidenceBean {
 	private String userId;
-	private String competencyCode;
-	private String frameworkCode;
-	private boolean microCompetency;
-	private String gutCode;
+	private String microCompetencyCode;
 	private String classId;
 	private String courseId;
 	private String unitId;
@@ -23,10 +20,10 @@ public class ContentCompetencyEvidenceBean {
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
-	public ContentCompetencyEvidenceBean() {
+	public LearnerProfileMicroCompetencyEvidenceBean() {
 	}
 
-	public ContentCompetencyEvidenceBean(ContentCompetencyEvidenceCommand command) {
+	public LearnerProfileMicroCompetencyEvidenceBean(LearnerProfileCompetencyEvidenceCommand command) {
 		this.userId = command.getUserId();
 		this.classId = command.getClassId();
 		this.courseId = command.getCourseId();
@@ -50,36 +47,12 @@ public class ContentCompetencyEvidenceBean {
 		this.userId = userId;
 	}
 
-	public String getCompetencyCode() {
-		return competencyCode;
+	public String getMicroCompetencyCode() {
+		return microCompetencyCode;
 	}
 
-	public void setCompetencyCode(String competencyCode) {
-		this.competencyCode = competencyCode;
-	}
-
-	public String getFrameworkCode() {
-		return frameworkCode;
-	}
-
-	public void setFrameworkCode(String frameworkCode) {
-		this.frameworkCode = frameworkCode;
-	}
-	
-	public boolean isMicroCompetency() {
-		return microCompetency;
-	}
-
-	public void setMicroCompetency(boolean microCompetency) {
-		this.microCompetency = microCompetency;
-	}
-
-	public String getGutCode() {
-		return gutCode;
-	}
-
-	public void setGutCode(String gutCode) {
-		this.gutCode = gutCode;
+	public void setMicroCompetencyCode(String microCompetencyCode) {
+		this.microCompetencyCode = microCompetencyCode;
 	}
 
 	public String getClassId() {

@@ -1,5 +1,7 @@
 package org.gooru.dap.deps.competency.learnerprofile;
 
+import java.util.regex.Pattern;
+
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 
@@ -10,6 +12,7 @@ public class LearnerProfileCompetencyEvidenceProcessor {
 
 	// TODO: Move this to the config
 	private final double MASTERY_SCORE = 80.00;
+	private final static Pattern HYPHEN_PATTERN = Pattern.compile("-");
 
 	private final AssessmentScoreEventMapper assessmentScore;
 	private final String gutCode;
@@ -32,10 +35,25 @@ public class LearnerProfileCompetencyEvidenceProcessor {
 		if (score >= MASTERY_SCORE) {
 			LearnerProfileCompetencyEvidenceCommand command = LearnerProfileCompetencyEvidenceCommandBuilder
 					.build(this.assessmentScore);
-			LearnerProfileCompetencyEvidenceBean bean = new LearnerProfileCompetencyEvidenceBean(command);
 
-			bean.setGutCode(gutCode);
-			service.insertOrUpdateLearnerProfileCompetencyEvidence(bean);
+			boolean isMicroCompetency = (HYPHEN_PATTERN.split(gutCode).length >= 5);
+			if (isMicroCompetency) {
+				processMicroCompetency(command);
+			} else {
+				processCompetency(command);
+			}
 		}
+	}
+	
+	private void processMicroCompetency(LearnerProfileCompetencyEvidenceCommand command) {
+		LearnerProfileMicroCompetencyEvidenceBean microCompetencyBean = new LearnerProfileMicroCompetencyEvidenceBean(command);
+		microCompetencyBean.setMicroCompetencyCode(gutCode);
+		this.service.insertOrUpdateLearnerProfileMicroCompetencyEvidence(microCompetencyBean);
+	}
+	
+	private void processCompetency(LearnerProfileCompetencyEvidenceCommand command) {
+		LearnerProfileCompetencyEvidenceBean bean = new LearnerProfileCompetencyEvidenceBean(command);
+		bean.setGutCode(gutCode);
+		this.service.insertOrUpdateLearnerProfileCompetencyEvidence(bean);
 	}
 }
