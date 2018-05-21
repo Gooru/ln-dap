@@ -1,9 +1,11 @@
 package org.gooru.dap.deps.competency.common;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.gooru.dap.deps.competency.score.mapper.AssessmentCompetency;
-import org.gooru.dap.deps.competency.score.mapper.GutCode;
+import org.gooru.dap.deps.competency.db.mapper.AssessmentCompetency;
+import org.gooru.dap.deps.competency.db.mapper.GutCode;
 import org.skife.jdbi.v2.DBI;
 
 /**
@@ -21,8 +23,15 @@ public class CompetencyAssessmentService {
 		return competencyAssessmentDao.getAssessmentCompetency(assessmentId);
 	}
 
-	public List<GutCode> getGutCodeMapping(String taxonomyIds) {
-		return competencyAssessmentDao.fetchGutCodes(taxonomyIds);
+	public Map<String, String> getGutCodeMapping(String taxonomyIds) {
+		List<GutCode> gutCodes = competencyAssessmentDao.fetchGutCodes(taxonomyIds);
+		Map<String, String> fwCodeMap = new HashMap<>();
+		
+		gutCodes.forEach(gutcode -> {
+			fwCodeMap.put(gutcode.getTaxonomyCode(), gutcode.getGutCode());
+		});
+		
+		return fwCodeMap;
 	}
 
 	public boolean isSignatureAssessment(String assessmentId) {

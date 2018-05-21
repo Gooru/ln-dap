@@ -21,10 +21,11 @@
 		"org.gooru.dap.deps.ResourceConsumer",
 		"org.gooru.dap.deps.CompetencyConsumer",
 		"org.gooru.dap.deps.QuestionConsumer",
-		"org.gooru.dap.deps.competency.AssessmentScoreConsumer"
+		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer",
+		"org.gooru.dap.deps.competency.CollectionStartEventConsumer"
 	],
 	"deps.config": {
-		"org.gooru.dap.deps.competency.AssessmentScoreConsumer": {
+		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer": {
 			"kafka.consumer.config": {
 				"instances": 1,
 				"props": {
@@ -69,6 +70,22 @@
 				},
 				"consumer.topics": [
 					"org.gooru.da.sink.gep.question.timespent"
+				]
+			}
+		},
+		"org.gooru.dap.deps.competency.CollectionStartEventConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-4",
+					"max.poll.records": 1,
+					"max.poll.interval.ms": 1000,
+					"enable.auto.commit": true
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.gep.collection.start"
 				]
 			}
 		}

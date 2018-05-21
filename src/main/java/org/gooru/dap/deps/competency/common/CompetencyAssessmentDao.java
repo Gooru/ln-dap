@@ -2,10 +2,10 @@ package org.gooru.dap.deps.competency.common;
 
 import java.util.List;
 
-import org.gooru.dap.deps.competency.score.mapper.AssessmentCompetency;
-import org.gooru.dap.deps.competency.score.mapper.AssessmentCompetencyMapper;
-import org.gooru.dap.deps.competency.score.mapper.GutCode;
-import org.gooru.dap.deps.competency.score.mapper.GutCodeMapper;
+import org.gooru.dap.deps.competency.db.mapper.AssessmentCompetency;
+import org.gooru.dap.deps.competency.db.mapper.AssessmentCompetencyMapper;
+import org.gooru.dap.deps.competency.db.mapper.GutCode;
+import org.gooru.dap.deps.competency.db.mapper.GutCodeMapper;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
