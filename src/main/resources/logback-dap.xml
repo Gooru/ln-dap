@@ -18,6 +18,18 @@
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
     </appender>
+    
+    <appender name="COMPETENCY-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>competency.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>competency.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
 
     <appender name="XMISSION-ERRORS" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>dap-xmission-errors.log</file>
@@ -40,9 +52,12 @@
         we are using the same one but this needs to be changed while doing the deployment
     -->
     <logger name="org.gooru.dap" level="trace" additivity="false">
-        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
     </logger>
 
+	<logger name="org.gooru.dap.deps.competency" level="debug" additivity="false">
+		<appender-ref ref="COMPETENCY-LOG"/>
+	</logger>
 
     <root level="info">
         <appender-ref ref="STDOUT"/>
