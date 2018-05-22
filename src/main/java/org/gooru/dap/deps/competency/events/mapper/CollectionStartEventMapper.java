@@ -79,4 +79,11 @@ public class CollectionStartEventMapper {
 		this.context = context;
 	}
 
+	@Override
+	public String toString() {
+		return "CollectionStartEventMapper [userId=" + userId + ", eventId=" + eventId + ", eventName=" + eventName
+				+ ", collectionId=" + collectionId + ", collectionType=" + collectionType + ", activityTime="
+				+ activityTime + ", version=" + version + ", context=" + context + "]";
+	}
+
 }

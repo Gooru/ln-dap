@@ -87,4 +87,12 @@ public class AssessmentScoreEventMapper {
 	public void setResult(ResultMapper result) {
 		this.result = result;
 	}
+
+	@Override
+	public String toString() {
+		return "AssessmentScoreEventMapper [userId=" + userId + ", eventId=" + eventId + ", eventName=" + eventName
+				+ ", collectionId=" + collectionId + ", collectionType=" + collectionType + ", activityTime="
+				+ activityTime + ", version=" + version + ", context=" + context + ", result=" + result + "]";
+	}
+
 }
