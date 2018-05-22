@@ -49,11 +49,12 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
 
 	@Override
 	public void processRecord(ConsumerRecord<String, String> record) {
-		LOGGER.debug("started consuming message");
+		final String event = record.value();
+		LOGGER.debug("Received Event ==> {}", event);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			// Convert event json into java object
-			CollectionStartEventMapper collectionStartEventMapper = mapper.readValue(record.value(),
+			CollectionStartEventMapper collectionStartEventMapper = mapper.readValue(event,
 					CollectionStartEventMapper.class);
 			LOGGER.debug("event has been mapped to object:== {}", collectionStartEventMapper.toString());
 

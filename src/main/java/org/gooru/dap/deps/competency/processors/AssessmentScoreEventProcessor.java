@@ -59,6 +59,7 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
 	 * in_progress if already not completed or mastered
 	 */
 	private void processAssessmentScore() {
+		LOGGER.debug("assessment score event processing start");
 		String collectionId = this.assessmentScoreEvent.getCollectionId();
 
 		// Fetch competencies tagged with assessment
@@ -70,14 +71,12 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
 			return;
 		}
 
-		LOGGER.debug("assessment competency fetched from database");
 		// Fetch gut code mapping of the competency
 		Map<String, String> fwToGutCodeMapping = service
 				.getGutCodeMapping(CompetencyUtils.toPostgresArrayString(taxonomy.fieldNames()));
 
 		final boolean isSignature = service.isSignatureAssessment(collectionId);
-		LOGGER.debug("'{}' signature assessment '{}', hence persist evidence and competency status", collectionId,
-				isSignature);
+		LOGGER.debug("'{}' is signature assessment '{}'", collectionId, isSignature);
 
 		Iterator<String> fields = taxonomy.fieldNames();
 		while (fields.hasNext()) {
@@ -88,6 +87,8 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
 			// competency status and evidence. In case of signature assessment we do not
 			// want to persist content competency evidence & status
 			if (!isSignature) {
+				LOGGER.debug(
+						"assessment is not signature assessment, hence persisting content competency status and evidence");
 				new ContentCompetencyStatusProcessor(assessmentScoreEvent, tc).process();
 				new ContentCompetencyEvidenceProcessor(assessmentScoreEvent, tc, (gc != null) ? gc : null).process();
 			}
@@ -96,8 +97,14 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
 			// mapping exists, logic for mastery and completed will be in respective
 			// processors
 			if (gc != null && !gc.isEmpty()) {
+				LOGGER.debug(
+						"gut mapping found for competency '{}', persisting learner profile competency status and evidence",
+						tc);
 				new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, isSignature).process();
 				new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc).process();
+			} else {
+				LOGGER.debug(
+						"gut mapping not found for competency '{}', hence learner profile competency status and evidence is not persisted");
 			}
 		}
 	}

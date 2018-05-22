@@ -48,10 +48,12 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
 
 	@Override
 	public void processRecord(ConsumerRecord<String, String> record) {
+		final String event = record.value();
+		LOGGER.debug("Received Event ==> {}", event);
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			// Convert event json into java object
-			AssessmentScoreEventMapper assessmentScore = mapper.readValue(record.value(),
+			AssessmentScoreEventMapper assessmentScore = mapper.readValue(event,
 					AssessmentScoreEventMapper.class);
 			LOGGER.debug("event has been mapped to object:== {}", assessmentScore.toString());
 
