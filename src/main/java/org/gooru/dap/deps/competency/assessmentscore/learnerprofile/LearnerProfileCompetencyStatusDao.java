@@ -29,9 +29,9 @@ public abstract class LearnerProfileCompetencyStatusDao {
 	 * SINGLE assessment(s) for that competency is completed and the SCORE is >80%)
 	 */
 
-	@SqlUpdate("INSERT INTO learner_profile_competency_status(tx_subject_code, user_id, gut_code, status, created_at, updated_at) VALUES(:txSubjectCode,"
-			+ " :userId, :gutCode, :status, :createdAt, :updatedAt) ON CONFLICT (user_id, gut_code) DO UPDATE SET status = :status,"
-			+ " updated_at = :updatedAt WHERE learner_profile_competency_status.status <= 1")
+	@SqlUpdate("INSERT INTO learner_profile_competency_status(tx_subject_code, user_id, gut_code, status, created_at, updated_at) "
+			+ "VALUES(:txSubjectCode, :userId, :gutCode, :status, :createdAt, :updatedAt) ON CONFLICT (user_id, gut_code) "
+			+ "DO UPDATE SET status = :status, updated_at = :updatedAt WHERE learner_profile_competency_status.status <= EXCLUDED.status")
 	protected abstract void insertOrUpdateLearnerProfileCompetencyStatus(
 			@BindBean LearnerProfileCompetencyStatusBean bean);
 }
