@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.gooru.dap.configuration.KafkaConsumerConfig;
-import org.gooru.dap.deps.competency.AssessmentScoreConsumer;
+import org.gooru.dap.deps.competency.AssessmentScoreEventConsumer;
+import org.gooru.dap.deps.competency.CollectionStartEventConsumer;
 import org.gooru.dap.deps.question.QuestionConsumer;
 import org.gooru.dap.deps.resource.ResourceConsumer;
 import org.slf4j.Logger;
@@ -46,8 +47,11 @@ final class ConsumerFactory {
         case "org.gooru.dap.deps.QuestionConsumer":
             return new QuestionConsumer(id, config);
 
-        case "org.gooru.dap.deps.competency.AssessmentScoreConsumer":
-        	return new AssessmentScoreConsumer(id, config);
+        case "org.gooru.dap.deps.competency.AssessmentScoreEventConsumer":
+        	return new AssessmentScoreEventConsumer(id, config);
+        	
+        case "org.gooru.dap.deps.competency.CollectionStartEventConsumer":
+        	return new CollectionStartEventConsumer(id, config);
         	
         default:
             LOGGER.warn("Factory does not know to initiate the deployment for '{}'", deploymentName);

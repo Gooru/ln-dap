@@ -1,9 +1,9 @@
 package org.gooru.dap.deps.competency.events.mapper;
 
 /**
- * @author gooru on 09-May-2018
+ * @author gooru on 18-May-2018
  */
-public class AssessmentScoreEventMapper {
+public class CollectionStartEventMapper {
 
 	private String userId;
 	private String eventId;
@@ -14,7 +14,6 @@ public class AssessmentScoreEventMapper {
 	private String version;
 
 	private ContextMapper context;
-	private ResultMapper result;
 
 	public String getUserId() {
 		return userId;
@@ -80,19 +79,11 @@ public class AssessmentScoreEventMapper {
 		this.context = context;
 	}
 
-	public ResultMapper getResult() {
-		return result;
-	}
-
-	public void setResult(ResultMapper result) {
-		this.result = result;
-	}
-
 	@Override
 	public String toString() {
-		return "AssessmentScoreEventMapper [userId=" + userId + ", eventId=" + eventId + ", eventName=" + eventName
+		return "CollectionStartEventMapper [userId=" + userId + ", eventId=" + eventId + ", eventName=" + eventName
 				+ ", collectionId=" + collectionId + ", collectionType=" + collectionType + ", activityTime="
-				+ activityTime + ", version=" + version + ", context=" + context + ", result=" + result + "]";
+				+ activityTime + ", version=" + version + ", context=" + context + "]";
 	}
 
 }
