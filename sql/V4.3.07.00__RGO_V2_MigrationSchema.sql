@@ -9,6 +9,44 @@ CREATE TABLE learner_profile_competency_status_ts (
   UNIQUE(user_id, gut_code, status)
 );
 
+CREATE TABLE learner_profile_competency_evidence_ts (
+  id BIGSERIAL PRIMARY KEY,
+  user_id text NOT NULL,
+  gut_code text NOT NULL,
+  class_id text,
+  course_id text,
+  unit_id text,
+  lesson_id text,
+  latest_session_id text,
+  collection_id text,
+  collection_path_id bigint,
+  collection_score numeric(5,2),
+  collection_type text,
+  status smallint NOT NULL DEFAULT 0 CHECK(status::smallint = ANY(ARRAY[0, 1, 2, 3, 4, 5])),
+  created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  UNIQUE(user_id, gut_code, collection_id, status)
+);
+
+CREATE TABLE learner_profile_micro_competency_evidence_ts (
+  id BIGSERIAL PRIMARY KEY,
+  user_id text NOT NULL,
+  micro_competency_code text NOT NULL,
+  class_id text,
+  course_id text,
+  unit_id text,
+  lesson_id text,
+  latest_session_id text,
+  collection_id text,
+  collection_path_id bigint,
+  collection_score numeric(5,2),
+  collection_type text,
+  status smallint NOT NULL DEFAULT 0 CHECK(status::smallint = ANY(ARRAY[0, 1, 2, 3, 4, 5])),
+  created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  UNIQUE(user_id, micro_competency_code, collection_id, status)
+);
+
 CREATE TABLE users_profile_master (
   id bigserial PRIMARY KEY,
   user_id text NOT NULL UNIQUE,
@@ -67,6 +105,38 @@ CREATE TABLE user_vectors (
   citizenship integer,
   reputation integer,
   updated_at timestamp without time zone DEFAULT timezone('UTC'::text, now()) NOT NULL
+);
+
+CREATE TABLE course_performance (
+  id SERIAL PRIMARY KEY,
+  user_id text,
+  class_id text,
+  class_title text,
+  class_code text,
+  course_id text,
+  course_title text,
+  course_asmt_time_spent bigint,
+  course_asmt_score numeric(5,2),
+  course_coll_time_spent bigint,
+  course_coll_score numeric(5,2),
+  unit_id text,
+  unit_title text,
+  unit_sequence_id smallint,
+  unit_asmt_time_spent bigint,
+  unit_asmt_score numeric(5,2),
+  unit_coll_time_spent bigint,
+  unit_coll_score numeric(5,2),
+  lesson_id text,
+  lesson_title text,
+  lesson_sequence_id smallint,
+  lesson_asmt_time_spent bigint,
+  lesson_asmt_score numeric(5,2),
+  lesson_coll_time_spent bigint,
+  lesson_coll_score numeric(5,2),
+  course_assessments_complete smallint,
+  total_assessments smallint,
+  created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC')
 );
 
 
