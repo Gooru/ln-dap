@@ -20,4 +20,12 @@ public class LearnerProfileCompetencyEvidenceService {
 	public void insertOrUpdateLearnerProfileMicroCompetencyEvidence(LearnerProfileMicroCompetencyEvidenceBean bean) {
 		this.dao.insertOrUpdateLearnerProfileMicroCompetencyEvidence(bean);
 	}
+	
+	public void insertOrUpdateLearnerProfileCompetencyEvidenceTS(LearnerProfileCompetencyEvidenceBean bean) {
+		this.dao.insertOrUpdateLearnerProfileCompetencyEvidenceTS(bean);
+	}
+	
+	public void insertOrUpdateLearnerProfileMicroCompetencyEvidenceTS(LearnerProfileMicroCompetencyEvidenceBean bean) {
+		this.dao.insertOrUpdateLearnerProfileMicroCompetencyEvidenceTS(bean);
+	}
 }

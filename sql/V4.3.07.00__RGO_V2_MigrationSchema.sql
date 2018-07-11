@@ -47,6 +47,40 @@ CREATE TABLE learner_profile_micro_competency_evidence_ts (
   UNIQUE(user_id, micro_competency_code, collection_id, status)
 );
 
+CREATE TABLE content_competency_status_ts (
+  id BIGSERIAL PRIMARY KEY,
+  user_id text,
+  competency_code text,
+  framework_code text,
+  status smallint NOT NULL CHECK(status::smallint = ANY(ARRAY[1, 2, 4])),
+  created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  UNIQUE(user_id, competency_code, status)
+);
+
+CREATE TABLE content_competency_evidence_ts (
+  id BIGSERIAL PRIMARY KEY,
+  user_id text NOT NULL,
+  competency_code text NOT NULL,
+  framework_code text,
+  is_micro_competency boolean NOT NULL default false,
+  gut_code text,
+  class_id text,
+  course_id text,
+  unit_id text,
+  lesson_id text,
+  latest_session_id text,
+  collection_id text,
+  collection_path_id bigint,
+  collection_score numeric(5,2),
+  collection_type text,
+  status smallint NOT NULL CHECK(status::smallint = ANY(ARRAY[1, 2, 4])),
+  created_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  updated_at timestamp NOT NULL DEFAULT (NOW() AT TIME ZONE 'UTC'),
+  UNIQUE(user_id, competency_code, collection_id, status)
+);
+
+
 CREATE TABLE users_profile_master (
   id bigserial PRIMARY KEY,
   user_id text NOT NULL UNIQUE,
