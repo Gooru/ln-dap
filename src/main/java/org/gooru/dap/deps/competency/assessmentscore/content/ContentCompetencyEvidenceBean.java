@@ -20,6 +20,7 @@ public class ContentCompetencyEvidenceBean {
 	private long collectionPathId;
 	private double collectionScore;
 	private String collectionType;
+	private int status;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
@@ -152,6 +153,14 @@ public class ContentCompetencyEvidenceBean {
 
 	public void setCollectionType(String collectionType) {
 		this.collectionType = collectionType;
+	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public Timestamp getCreatedAt() {

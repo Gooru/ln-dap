@@ -101,7 +101,7 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
 						"gut mapping found for competency '{}', persisting learner profile competency status and evidence",
 						tc);
 				new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, isSignature).process();
-				new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc).process();
+				new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, isSignature).process();
 			} else {
 				LOGGER.debug(
 						"gut mapping not found for competency '{}', hence learner profile competency status and evidence is not persisted");
