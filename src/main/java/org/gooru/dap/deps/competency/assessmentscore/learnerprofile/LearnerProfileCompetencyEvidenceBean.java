@@ -18,6 +18,12 @@ public class LearnerProfileCompetencyEvidenceBean {
 	private long collectionPathId;
 	private double collectionScore;
 	private String collectionType;
+	/*
+	 * Purpose of this status is to persist evidence for multiple status. It should
+	 * not be used for business logic. Eventually we should remove the status from
+	 * evidence schema and uniqueness clause.
+	 */
+	private int status;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
@@ -126,6 +132,14 @@ public class LearnerProfileCompetencyEvidenceBean {
 
 	public void setCollectionType(String collectionType) {
 		this.collectionType = collectionType;
+	}
+	
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 	public Timestamp getCreatedAt() {

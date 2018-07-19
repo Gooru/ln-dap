@@ -16,4 +16,8 @@ public class ContentCompetencyEvidenceService {
 	public void insertOrUpdateContentCompetencyEvidence(ContentCompetencyEvidenceBean bean) {
 		this.dao.insertOrUpdateLearnerProfileCompetencyEvidence(bean);
 	}
+	
+	public void insertOrUpdateContentCompetencyEvidenceTS(ContentCompetencyEvidenceBean bean) {
+		this.dao.insertOrUpdateLearnerProfileCompetencyEvidenceTS(bean);
+	}
 }
