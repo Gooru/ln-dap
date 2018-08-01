@@ -36,6 +36,6 @@ public abstract class LearnerProfileCompetencyEvidenceDao {
 	@SqlUpdate("INSERT INTO learner_profile_micro_competency_evidence_ts(user_id, micro_competency_code, class_id, course_id, unit_id, lesson_id, latest_session_id,"
 			+ " collection_id, collection_path_id, collection_score, collection_type, status, created_at, updated_at) VALUES (:userId, :microCompetencyCode, :classId,"
 			+ " :courseId, :unitId, :lessonId, :latestSessionId, :collectionId, :collectionPathId, :collectionScore, :collectionType, :status, :createdAt,"
-			+ " :updatedAt) ON CONFLICT (user_id, micro_competency_code, collection_id) DO NOTHING")
+			+ " :updatedAt) ON CONFLICT (user_id, micro_competency_code, collection_id, status) DO NOTHING")
 	protected abstract void insertOrUpdateLearnerProfileMicroCompetencyEvidenceTS(@BindBean LearnerProfileMicroCompetencyEvidenceBean bean);
 }

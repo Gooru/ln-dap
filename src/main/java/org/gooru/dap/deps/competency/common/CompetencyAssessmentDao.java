@@ -24,6 +24,6 @@ public abstract class CompetencyAssessmentDao {
 			+ " = ANY(:taxonomyIds::text[])")
 	protected abstract List<GutCode> fetchGutCodes(@Bind("taxonomyIds") String taxonomyIds);
 	
-	@SqlQuery("SELECT count(*) FROM signature_items WHERE item_id = :assessmentId")
-	protected abstract int fetchSignatureAssessment(@Bind("assessmentId") String assessmentId);
+	@SqlQuery("SELECT competency_gut_code FROM signature_items WHERE item_id = :assessmentId")
+	protected abstract List<String> fetchSignatureAssessment(@Bind("assessmentId") String assessmentId);
 }

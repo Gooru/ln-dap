@@ -1,6 +1,7 @@
 package org.gooru.dap.deps.competency.processors;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.gooru.dap.components.jdbi.DBICreator;
@@ -75,13 +76,16 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
 		Map<String, String> fwToGutCodeMapping = service
 				.getGutCodeMapping(CompetencyUtils.toPostgresArrayString(taxonomy.fieldNames()));
 
-		final boolean isSignature = service.isSignatureAssessment(collectionId);
-		LOGGER.debug("'{}' is signature assessment '{}'", collectionId, isSignature);
+		final List<String> signatureGutCodes = service.fetchSignatureAssessmentGutCodes(collectionId);
+		LOGGER.debug("'{}' gut codes found in signature assessment for '{}'", signatureGutCodes.size(), collectionId);
 
 		Iterator<String> fields = taxonomy.fieldNames();
 		while (fields.hasNext()) {
 			String tc = fields.next();
 			String gc = fwToGutCodeMapping.get(tc);
+
+			// Check if the gut code is signature assessment gut code
+			boolean isSignature = signatureGutCodes.contains(gc);
 
 			// If the assessment is NOT signature assessment then only update content
 			// competency status and evidence. In case of signature assessment we do not
