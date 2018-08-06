@@ -1,7 +1,6 @@
 package org.gooru.dap.deps.competency.assessmentscore.learnerprofile;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * @author gooru on 14-May-2018
@@ -22,10 +21,9 @@ public class LearnerProfileCompetencyStatusBean {
 		this.txSubjectCode = command.getTxSubjectCode();
 		this.userId = command.getUserId();
 		this.gutCode = command.getGutCode();
-		Date now = new Date();
-		Timestamp ts = new Timestamp(now.getTime());
-		this.createdAt = ts;
-		this.updatedAt = ts;
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		this.createdAt = now;
+		this.updatedAt = now;
 	}
 
 	public String getTxSubjectCode() {

@@ -6,6 +6,7 @@ import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.constants.StatusConstants;
 import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +38,11 @@ public class ContentCompetencyEvidenceProcessor {
 
 	public void process() {
 
-		final double score = this.assessmentScore.getResult().getScore();
+		ResultMapper result = this.assessmentScore.getResult();
+		Double score = null;
+		if (result != null) {
+			score = this.assessmentScore.getResult().getScore();
+		}
 
 		ContentCompetencyEvidenceCommand command = ContentCompetencyEvidenceCommandBuilder.build(this.assessmentScore);
 		ContentCompetencyEvidenceBean bean = new ContentCompetencyEvidenceBean(command);
@@ -54,18 +59,48 @@ public class ContentCompetencyEvidenceProcessor {
 		// Calculate the status to persist in evidence ts table to uniquely identify the
 		// evidence by status
 		int status = StatusConstants.IN_PROGRESS;
-		if (score >= COMPLETION_SCORE) {
+		if (score != null && score >= COMPLETION_SCORE) {
 			status = StatusConstants.COMPLETED;
 		}
-
+		LOGGER.debug("Content Competency Evidence: Competency:{} || status:{}", competencyCode, status);
 		// Update - 12-July-2018:
 		// Regardless of the score, persist the evidence. This will enable in progress
 		// evidence
-		this.service.insertOrUpdateContentCompetencyEvidence(bean);
 
-		// Regardless of score always persist evidence in TS tables
-		LOGGER.debug("status:={} : persisting content competency evidence in ts table", status);
+		// Update - 02-Aug-2018:
+		// Get the existing score for user, gut and assessment. IF there is no score
+		// already exists, then persist the evidence. If score exists and less than 80
+		// (in-progress) then update the evidence. If score exists and greater than 80
+		// then only update evidence if status is COMPLETED. Here, we do not
+		// want to down grade the score if its already COMPLETED. However,
+		// we need to persist latest evidence for them.
+		Double existingScore = this.service.getCompetencyScore(bean);
+		LOGGER.debug("existing score for the competency '{}' is '{}'", competencyCode, existingScore);
+		if (existingScore == null || existingScore < COMPLETION_SCORE) {
+			this.service.insertOrUpdateContentCompetencyEvidence(bean);
+		} else {
+			if (status != StatusConstants.IN_PROGRESS) {
+				this.service.insertOrUpdateContentCompetencyEvidence(bean);
+			}
+		}
+
+		// set the status to persist in TS table
 		bean.setStatus(status);
-		this.service.insertOrUpdateContentCompetencyEvidenceTS(bean);
+
+		// Update - 02-Aug-2018:
+		// Check if the competency is already COMPLETED
+		// If current status of the competency is INPROGRESS and its not already
+		// COMPLETED then Insert new or update the score
+		// If current status of the competency is COMPLETED then straight
+		// forward INSERT, In case of conflict update score
+		boolean isCompleted = this.service.checkIfCompetencyIsCompleted(bean);
+		LOGGER.debug("competency '{}' || isCompletedOrMastered:{}", competencyCode, isCompleted);
+		if (status == StatusConstants.IN_PROGRESS) {
+			if (!isCompleted) {
+				this.service.insertOrUpdateContentCompetencyEvidenceTS(bean);
+			}
+		} else {
+			this.service.insertOrUpdateContentCompetencyEvidenceTS(bean);
+		}
 	}
 }
