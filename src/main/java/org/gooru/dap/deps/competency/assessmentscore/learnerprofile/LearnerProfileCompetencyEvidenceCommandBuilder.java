@@ -1,6 +1,7 @@
 package org.gooru.dap.deps.competency.assessmentscore.learnerprofile;
 
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.CollectionStartEventMapper;
 import org.gooru.dap.deps.competency.events.mapper.ContextMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 
@@ -28,12 +29,15 @@ public final class LearnerProfileCompetencyEvidenceCommandBuilder {
 		long pathId = context.getPathId();
 
 		ResultMapper result = assessmentScoreEvent.getResult();
-		double score = result.getScore();
+		Double score = null;
+		if (result != null) {
+			score = result.getScore();
+		}
 
 		LearnerProfileCompetencyEvidenceCommand command = new LearnerProfileCompetencyEvidenceCommand(userId, classId,
 				courseId, unitId, lessonId, sessionId, collectionId, pathId, score, collectionType, activityTime);
-		// TODO: validation for the collection type ??
 		return command;
 
 	}
+	
 }

@@ -17,8 +17,8 @@ public class ContentCompetencyEvidenceBean {
 	private String lessonId;
 	private String latestSessionId;
 	private String collectionId;
-	private long collectionPathId;
-	private double collectionScore;
+	private Long collectionPathId;
+	private Double collectionScore;
 	private String collectionType;
 	private int status;
 	private Timestamp createdAt;
@@ -38,9 +38,10 @@ public class ContentCompetencyEvidenceBean {
 		this.collectionPathId = command.getCollectionPathId();
 		this.collectionScore = command.getCollectionScore();
 		this.collectionType = command.getCollectionType();
-		Timestamp ts = new Timestamp(command.getActivityTime());
-		this.createdAt = ts;
-		this.updatedAt = ts;
+
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		this.createdAt = now;
+		this.updatedAt = now;
 	}
 
 	public String getUserId() {
@@ -66,7 +67,7 @@ public class ContentCompetencyEvidenceBean {
 	public void setFrameworkCode(String frameworkCode) {
 		this.frameworkCode = frameworkCode;
 	}
-	
+
 	public boolean isMicroCompetency() {
 		return microCompetency;
 	}
@@ -131,19 +132,19 @@ public class ContentCompetencyEvidenceBean {
 		this.collectionId = collectionId;
 	}
 
-	public long getCollectionPathId() {
+	public Long getCollectionPathId() {
 		return collectionPathId;
 	}
 
-	public void setCollectionPathId(long collectionPathId) {
+	public void setCollectionPathId(Long collectionPathId) {
 		this.collectionPathId = collectionPathId;
 	}
 
-	public double getCollectionScore() {
+	public Double getCollectionScore() {
 		return collectionScore;
 	}
 
-	public void setCollectionScore(double collectionScore) {
+	public void setCollectionScore(Double collectionScore) {
 		this.collectionScore = collectionScore;
 	}
 
@@ -154,7 +155,7 @@ public class ContentCompetencyEvidenceBean {
 	public void setCollectionType(String collectionType) {
 		this.collectionType = collectionType;
 	}
-	
+
 	public int getStatus() {
 		return status;
 	}

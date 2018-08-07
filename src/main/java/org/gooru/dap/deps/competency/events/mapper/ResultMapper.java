@@ -5,13 +5,13 @@ package org.gooru.dap.deps.competency.events.mapper;
  */
 public class ResultMapper {
 
-	private double score;
+	private Double score;
 
-	public double getScore() {
+	public Double getScore() {
 		return score;
 	}
 
-	public void setScore(double score) {
+	public void setScore(Double score) {
 		this.score = score;
 	}
 

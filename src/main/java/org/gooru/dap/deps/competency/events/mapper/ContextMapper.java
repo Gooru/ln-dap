@@ -14,6 +14,7 @@ public class ContextMapper {
 	private String partnerId;
 	private int questionCount;
 	private long pathId;
+	private String pathType;
 
 	public String getCourseId() {
 		return courseId;
@@ -85,6 +86,14 @@ public class ContextMapper {
 
 	public void setPathId(long pathId) {
 		this.pathId = pathId;
+	}
+	
+	public String getPathType() {
+		return pathType;
+	}
+
+	public void setPathType(String pathType) {
+		this.pathType = pathType;
 	}
 
 	@Override

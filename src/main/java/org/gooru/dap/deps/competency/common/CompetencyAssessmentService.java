@@ -34,8 +34,7 @@ public class CompetencyAssessmentService {
 		return fwCodeMap;
 	}
 
-	public boolean isSignatureAssessment(String assessmentId) {
-		int count = competencyAssessmentDao.fetchSignatureAssessment(assessmentId);
-		return count >= 1 ? true : false;
+	public List<String> fetchSignatureAssessmentGutCodes(String assessmentId) {
+		return competencyAssessmentDao.fetchSignatureAssessment(assessmentId);
 	}
 }

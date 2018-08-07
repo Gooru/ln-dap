@@ -12,13 +12,13 @@ public class LearnerProfileCompetencyEvidenceCommand {
 	private String lessonId;
 	private String latestSessionId;
 	private String collectionId;
-	private long collectionPathId;
-	private double collectionScore;
+	private Long collectionPathId;
+	private Double collectionScore;
 	private String collectionType;
 	private long activityTime;
 
 	public LearnerProfileCompetencyEvidenceCommand(String userId, String classId, String courseId, String unitId,
-			String lessonId, String latestSessionId, String collectionId, long collectionPathId, double collectionScore,
+			String lessonId, String latestSessionId, String collectionId, Long collectionPathId, Double collectionScore,
 			String collectionType, long activityTime) {
 		this.userId = userId;
 		this.classId = classId;
@@ -61,11 +61,11 @@ public class LearnerProfileCompetencyEvidenceCommand {
 		return collectionId;
 	}
 
-	public long getCollectionPathId() {
+	public Long getCollectionPathId() {
 		return collectionPathId;
 	}
 
-	public double getCollectionScore() {
+	public Double getCollectionScore() {
 		return collectionScore;
 	}
 
