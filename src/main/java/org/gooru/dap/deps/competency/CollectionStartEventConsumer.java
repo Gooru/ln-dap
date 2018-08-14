@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
+import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.gooru.dap.deps.competency.events.mapper.CollectionStartEventMapper;
 import org.gooru.dap.deps.competency.processors.CollectionStartEventProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;
@@ -54,12 +55,16 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			// Convert event json into java object
-			CollectionStartEventMapper collectionStartEventMapper = mapper.readValue(event,
+			/*CollectionStartEventMapper collectionStartEventMapper = mapper.readValue(event,
 					CollectionStartEventMapper.class);
 			LOGGER.debug("event has been mapped to object:== {}", collectionStartEventMapper.toString());
 
-			new CollectionStartEventProcessor(collectionStartEventMapper).process();
+			new CollectionStartEventProcessor(collectionStartEventMapper).process();*/
+			AssessmentScoreEventMapper eventMapper = mapper.readValue(event,
+					AssessmentScoreEventMapper.class);
+			LOGGER.debug("event has been mapped to object:== {}", eventMapper.toString());
 
+			new CollectionStartEventProcessor(eventMapper).process();
 		} catch (IOException e) {
 			LOGGER.error("unable to parse the event", e);
 			// Just in case if we need the event

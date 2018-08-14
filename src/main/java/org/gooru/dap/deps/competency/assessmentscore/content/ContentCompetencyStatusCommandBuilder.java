@@ -23,12 +23,4 @@ public final class ContentCompetencyStatusCommandBuilder {
 		return command;
 	}
 	
-	public static ContentCompetencyStatusCommand build(CollectionStartEventMapper collectionStart, String competencyCode) {
-		String userId = collectionStart.getUserId();
-		long activityTime = collectionStart.getActivityTime();
-
-		ContentCompetencyStatusCommand command = new ContentCompetencyStatusCommand(userId, competencyCode,
-				activityTime);
-		return command;
-	}
 }

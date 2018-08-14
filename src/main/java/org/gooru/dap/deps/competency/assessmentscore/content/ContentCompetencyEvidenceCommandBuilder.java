@@ -28,7 +28,10 @@ public final class ContentCompetencyEvidenceCommandBuilder {
 		long pathId = context.getPathId();
 
 		ResultMapper result = assessmentScoreEvent.getResult();
-		double score = result.getScore();
+		Double score = null;
+		if (result != null) {
+			score = result.getScore();
+		}
 
 		ContentCompetencyEvidenceCommand command = new ContentCompetencyEvidenceCommand(userId, classId, courseId,
 				unitId, lessonId, sessionId, collectionId, pathId, score, collectionType, activityTime);

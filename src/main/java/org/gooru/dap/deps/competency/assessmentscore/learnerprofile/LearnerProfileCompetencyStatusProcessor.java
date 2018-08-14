@@ -3,6 +3,7 @@ package org.gooru.dap.deps.competency.assessmentscore.learnerprofile;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +14,7 @@ public class LearnerProfileCompetencyStatusProcessor {
 
 	// TODO: Move this to the config
 	private final double MASTERY_SCORE = 80.00;
-	
+
 	private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
 
 	private final AssessmentScoreEventMapper assessmentScore;
@@ -41,19 +42,26 @@ public class LearnerProfileCompetencyStatusProcessor {
 		 * update to in_progress
 		 */
 
-		final double score = this.assessmentScore.getResult().getScore();
-		LOGGER.info("score = {}, isSignature = {}, gutCode = {}", score, this.isSignature, gutCode);
-		if (score >= MASTERY_SCORE) {
+		ResultMapper result = this.assessmentScore.getResult();
+		Double score = null;
+		if (result != null) {
+			score = this.assessmentScore.getResult().getScore();
+		}
+		
+		if (score != null && score >= MASTERY_SCORE) {
 			if (this.isSignature) {
-				LOGGER.debug("getting marked as mastered");
+				LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Masterd", score, this.isSignature,
+						gutCode);
 				service.updateLearnerProfileCompetencyStatusToMastered(bean);
 			} else {
-				LOGGER.debug("getting marked as completed");
+				LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Completed", score,
+						this.isSignature, gutCode);
 				service.updateLearnerProfileCompetencyStatusToCompleted(bean);
 			}
 		} else {
 			if (!this.isSignature) {
-				LOGGER.debug("getting marked as in progress");
+				LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=InProgress", score,
+						this.isSignature, gutCode);
 				service.updateLearnerProfileCompetencyStatusToInprogress(bean);
 			}
 		}

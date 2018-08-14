@@ -23,13 +23,4 @@ public final class LearnerProfileCompetencyStatusCommandBuilder {
 				assessmentScore.getUserId(), gutCode, assessmentScore.getActivityTime());
 		return command;
 	}
-
-	public static LearnerProfileCompetencyStatusCommand build(CollectionStartEventMapper collectionStart,
-			String gutCode) {
-		String subjectCode = HYPEN_PATTERN.split(gutCode)[0];
-
-		LearnerProfileCompetencyStatusCommand command = new LearnerProfileCompetencyStatusCommand(subjectCode,
-				collectionStart.getUserId(), gutCode, collectionStart.getActivityTime());
-		return command;
-	}
 }

@@ -1,7 +1,6 @@
 package org.gooru.dap.deps.competency.assessmentscore.content;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * @author gooru on 14-May-2018
@@ -23,10 +22,9 @@ public class ContentCompetencyStatusBean {
 		this.competencyCode = command.getCompetencyCode();
 		this.frameworkCode = command.getFrameworkCode();
 
-		Date now = new Date();
-		Timestamp ts = new Timestamp(now.getTime());
-		this.createdAt = ts;
-		this.updatedAt = ts;
+		Timestamp now = new Timestamp(System.currentTimeMillis());
+		this.createdAt = now;
+		this.updatedAt = now;
 	}
 
 	public String getUserId() {
