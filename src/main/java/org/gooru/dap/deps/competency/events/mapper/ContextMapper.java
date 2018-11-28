@@ -16,6 +16,9 @@ public class ContextMapper {
 	private long pathId;
 	private String pathType;
 
+	private String contextCollectionType;
+	private String contextCollectionId;
+
 	public String getCourseId() {
 		return courseId;
 	}
@@ -95,12 +98,28 @@ public class ContextMapper {
 	public void setPathType(String pathType) {
 		this.pathType = pathType;
 	}
+	
+	public String getContextCollectionType() {
+		return contextCollectionType;
+	}
+
+	public void setContextCollectionType(String contextCollectionType) {
+		this.contextCollectionType = contextCollectionType;
+	}
+
+	public String getContextCollectionId() {
+		return contextCollectionId;
+	}
+
+	public void setContextCollectionId(String contextCollectionId) {
+		this.contextCollectionId = contextCollectionId;
+	}
 
 	@Override
 	public String toString() {
 		return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId + ", lessonId="
 				+ lessonId + ", sessionId=" + sessionId + ", tenantId=" + tenantId + ", partnerId=" + partnerId
-				+ ", questionCount=" + questionCount + ", pathId=" + pathId + "]";
+				+ ", questionCount=" + questionCount + ", pathId=" + pathId + ", contextCollectionType=" + contextCollectionType + ", "
+						+ "contextCollectionId=" + contextCollectionId + "]";
 	}
-
 }
