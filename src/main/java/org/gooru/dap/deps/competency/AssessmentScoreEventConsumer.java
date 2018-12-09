@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
+import org.gooru.dap.deps.competency.assessmentscore.atc.preprocessor.AtcPreProcessor;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.gooru.dap.deps.competency.processors.AssessmentScoreEventProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;
@@ -58,6 +59,10 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
 			LOGGER.debug("event has been mapped to object:== {}", assessmentScore.toString());
 
 			new AssessmentScoreEventProcessor(assessmentScore).process();
+			
+			//TODO: Remove this once I put the Kafka Producer Infra in place.
+			//ATC Computation module will be a consumer in itself, processing Assessment score events
+			new AtcPreProcessor(assessmentScore).process();
 		} catch (IOException e) {
 			LOGGER.error("unable to parse the event", e);
 			// Just in case if we need the event 
