@@ -78,6 +78,7 @@ public class AtcComputeImpl implements AtcCompute {
 			gradeCompetencyStatsModel.setClassId(atcEventObject.getClassId());
 			gradeCompetencyStatsModel.setCourseId(atcEventObject.getCourseId());
 			gradeCompetencyStatsModel.setGradeId(atcEventObject.getGradeId());
+			gradeCompetencyStatsModel.setSubjectCode(atcEventObject.getSubjectCode());
 			gradeCompetencyStatsModel.setTotalCompetencies(totalCompetencies);
 			counts = competencyCompletionService.fetchUserCompetencyStatus(cm, atcEventObject.getSubjectCode(),
 					gradeCompetencyList);
@@ -87,7 +88,7 @@ public class AtcComputeImpl implements AtcCompute {
 				Double inprogressCount = counts.getDouble("inprogressCount");
 				gradeCompetencyStatsModel.setInprogressCompetencies(inprogressCount);
 				gradeCompetencyStatsModel.setPercentCompletion(
-						totalCompetencies != 0 ? (Double.valueOf(compCount / totalCompetencies) * 100) : 0);
+						totalCompetencies != 0 ? (Double.valueOf(compCount / totalCompetencies) * 100) : 0);				
 			} else {
 				gradeCompetencyStatsModel.setCompletedCompetencies(0.0);
 				gradeCompetencyStatsModel.setInprogressCompetencies(0.0);
