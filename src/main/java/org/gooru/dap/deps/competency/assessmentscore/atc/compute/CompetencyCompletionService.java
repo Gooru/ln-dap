@@ -11,8 +11,6 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.json.JSONObject;
-
 /**
  * @author mukul@gooru
  */
@@ -27,15 +25,15 @@ public class CompetencyCompletionService {
 	private final CompetencyCompletionDao competencyCompletionDao;
 	private final UserSkylineDao userSkylineDao;
 	private Integer completionCount;
+	private GradeCompetencyStatsModel gradeCompetencyStatsModel = new GradeCompetencyStatsModel();
 
 	CompetencyCompletionService(DBI dbi) {
 		this.competencyCompletionDao = dbi.onDemand(CompetencyCompletionDao.class);
 		this.userSkylineDao = dbi.onDemand(UserSkylineDao.class);
 	}
 	
-	JSONObject fetchUserCompetencyStatus(String user, String subjectCode, List<String> competencyCodes) {	
-		
-		JSONObject counts = new JSONObject();
+	GradeCompetencyStatsModel fetchUserCompetencyStatus(String user, String subjectCode, List<String> competencyCodes) {	
+
 		completionCount = 0;
 		List<CompetencyModel> userGradeCompetencyStatusModels = new ArrayList<>();
 		List<CompetencyModel> userSkylineModels = new ArrayList<>();
@@ -49,7 +47,7 @@ public class CompetencyCompletionService {
 		
 		if (userGradeCompetencyStatusModels.isEmpty()) {
 			LOGGER.info("The User competency Status model is empty");
-			return new JSONObject();
+			return null;
 		} else {
 			List<CompetencyModel> completed = userGradeCompetencyStatusModels.stream()
 					.filter(model -> model.getStatus() >= COMPLETED).collect(Collectors.toList());
@@ -132,15 +130,15 @@ public class CompetencyCompletionService {
 				}
 			});
 			
-			counts.put("completionCount", completionCount);
+			gradeCompetencyStatsModel.setCompletedCompetencies(completionCount);
 			LOGGER.debug("Completed/Mastered/Inferred " + completionCount);
 			
 			List<CompetencyModel> inProgress = userGradeCompetencyStatusModels.stream()
 			    .filter(model -> model.getStatus() == IN_PROGRESS).collect(Collectors.toList());
-			counts.put("inprogressCount", inProgress.size());
+			gradeCompetencyStatsModel.setInprogressCompetencies(inProgress.size());
 			LOGGER.debug("InProgress Competencies " + inProgress.size());
 			
-			return counts;
+			return gradeCompetencyStatsModel;
 		}
 	}
 }

@@ -36,9 +36,6 @@ dependencies {
 
     // Test dependencies
     testCompile "junit:junit:${junitVersion}"
-    
-    // https://mvnrepository.com/artifact/org.json/json
-    compile group: 'org.json', name: 'json', version: '20180130'    
 }
 
 defaultTasks 'shadowJar'
