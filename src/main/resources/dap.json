@@ -3,9 +3,9 @@
 		"defaultDataSource": {
 			"ds.type": "hikari",
 			"username": "dsuser",
-			"password": "dspass",
+			"password": "dsuser",
 			"autoCommit": true,
-			"jdbcUrl": "jdbc:postgresql://localhost:5433/dsdb",
+			"jdbcUrl": "jdbc:postgresql://localhost:5434/dsdb",
 			"maximumPoolSize": 5
 		},
 		"coreDataSource": {
@@ -22,7 +22,8 @@
 		"org.gooru.dap.deps.CompetencyConsumer",
 		"org.gooru.dap.deps.QuestionConsumer",
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer",
-		"org.gooru.dap.deps.competency.CollectionStartEventConsumer"
+		"org.gooru.dap.deps.competency.CollectionStartEventConsumer",	
+		"org.gooru.dap.deps.competency.CompetencyStatsEventConsumer"
 	],
 	"deps.config": {
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer": {
@@ -88,10 +89,40 @@
 					"org.gooru.da.sink.gep.collection.start"
 				]
 			}
-		}
+		},
+		"org.gooru.dap.deps.competency.CompetencyStatsEventConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-5",
+					"max.poll.records": 1,
+					"max.poll.interval.ms": 1000,
+					"enable.auto.commit": true
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.dap.competency.stats"
+				]
+			}
+		}		
 	},
-	"app.configuration": {
-		
+	"kafkaproducers": {
+		"kafka.producer.config": {
+			"instances": 1,
+			"props": {
+				"bootstrap.servers": "127.0.0.1:9092",
+				"key.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+				"value.serializer": "org.apache.kafka.common.serialization.StringSerializer",
+				"batch.size": 10,
+				"retries": 2,
+				"linger.ms": 1,
+				"buffer.memory": 33554432
+			},
+			"producer.topics": [
+				"org.gooru.da.sink.dap.competency.stats"
+			]
+		}
 	},
 	"systemProperties": {
 		"logback.configurationFile": "src/main/resources/logback-dap.xml"

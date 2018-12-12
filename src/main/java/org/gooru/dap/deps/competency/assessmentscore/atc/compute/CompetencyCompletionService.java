@@ -33,7 +33,7 @@ public class CompetencyCompletionService {
 		this.userSkylineDao = dbi.onDemand(UserSkylineDao.class);
 	}
 	
-	JSONObject fetchUserCompetencyStatus(String user, String subjectCode, List<String> competencyCodes) {
+	JSONObject fetchUserCompetencyStatus(String user, String subjectCode, List<String> competencyCodes) {	
 		
 		JSONObject counts = new JSONObject();
 		completionCount = 0;
