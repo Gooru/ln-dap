@@ -57,25 +57,28 @@ public class AtcProcessor {
 
 			if (gradeId != null) {
 				LOGGER.debug("Fetching subject code");
-				initializeSubjectCode();
-				
+				initializeSubjectCode();				
 				//If we don't get Subject Code - EXIT
-				//Mukul - Add logic here
-				
-				// Inject this object for further calculation
-				AtcEvent atcEventObject = new AtcEvent(classId, courseId, userId, gradeId, subjectCode);
+				if (subjectCode != null) {
+					// Inject this object for further calculation
+					AtcEvent atcEventObject = new AtcEvent(classId, courseId, userId, gradeId, subjectCode);
 
-				AtcCompute atcComputeInstance = AtcCompute.createInstance();
-				GradeCompetencyStatsModel gradeCompetencyStats = atcComputeInstance.compute(atcEventObject);
-				
-				//DEBUG - Convert to Json
-				LOGGER.debug(new ObjectMapper().writeValueAsString(gradeCompetencyStats));
-				
-				// Persist Aggregated Data into a DB Table
-				gradeCompetencyStatsService.insertUserClassCompetencyStats(gradeCompetencyStats);
-				
+					AtcCompute atcComputeInstance = AtcCompute.createInstance();
+					GradeCompetencyStatsModel gradeCompetencyStats = atcComputeInstance.compute(atcEventObject);
+					
+					//DEBUG - Convert to Json
+					LOGGER.debug(new ObjectMapper().writeValueAsString(gradeCompetencyStats));
+					
+					// Persist Aggregated Data into a DB Table
+					gradeCompetencyStatsService.insertUserClassCompetencyStats(gradeCompetencyStats);
+					
+				} else {
+					LOGGER.info("Subject is not set for user" + userId + "at class " + classId
+							+ ".No further processing will be done!");
+					return;
+				}				
 			} else {
-				LOGGER.info("Grade is not set user" + userId + "at class " + classId
+				LOGGER.info("Grade is not set for user" + userId + "at class " + classId
 						+ ".No further processing will be done!");
 				return;
 			}
@@ -92,19 +95,5 @@ public class AtcProcessor {
 			throw new IllegalStateException("Not able to find subject code for specified course " + courseId);
 		}
 	}
-	
-	//DEBUG
-	private String statsModeltoString(GradeCompetencyStatsModel gradeCompetencyStats) {
-		try {
-			String statsString  = new ObjectMapper().writeValueAsString(gradeCompetencyStats);
-			LOGGER.debug(statsString);
-			return statsString;
-		} catch (JsonProcessingException e) {
-            LOGGER.error("Not able to convert data to JSON", e); 
-            return null;
-        } catch (Throwable throwable) {
-            LOGGER.warn("Encountered exception", throwable);
-            return null;
-        }
-	}	
+
 }

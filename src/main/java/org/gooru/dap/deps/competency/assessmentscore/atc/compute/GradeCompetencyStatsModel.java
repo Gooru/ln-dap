@@ -35,11 +35,11 @@ private Integer gradeId;
 @JsonProperty("subjectCode")
 private String subjectCode;
 @JsonProperty("totalCompetencies")
-private Double totalCompetencies;
+private Integer totalCompetencies;
 @JsonProperty("completedCompetencies")
-private Double completedCompetencies;
+private Integer completedCompetencies;
 @JsonProperty("inprogressCompetencies")
-private Double inprogressCompetencies;
+private Integer inprogressCompetencies;
 @JsonProperty("percentCompletion")
 private Double percentCompletion;
 @JsonProperty("percentScore")
@@ -63,8 +63,8 @@ public GradeCompetencyStatsModel() {
 * @param totalCompetencies
 * @param courseId
 */
-public GradeCompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId, String subjectCode, Double totalCompetencies, 
-		Double completedCompetencies, Double inprogressCompetencies, Double percentCompletion, Double percentScore) {
+public GradeCompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId, String subjectCode, Integer totalCompetencies, 
+		Integer completedCompetencies, Integer inprogressCompetencies, Double percentCompletion, Double percentScore) {
 super();
 this.userId = userId;
 this.classId = classId;
@@ -154,46 +154,46 @@ return this;
 }
 
 @JsonProperty("totalCompetencies")
-public Double getTotalCompetencies() {
+public Integer getTotalCompetencies() {
 return totalCompetencies;
 }
 
 @JsonProperty("totalCompetencies")
-public void setTotalCompetencies(Double totalCompetencies) {
+public void setTotalCompetencies(Integer totalCompetencies) {
 this.totalCompetencies = totalCompetencies;
 }
 
-public GradeCompetencyStatsModel withTotalCompetencies(Double totalCompetencies) {
+public GradeCompetencyStatsModel withTotalCompetencies(Integer totalCompetencies) {
 this.totalCompetencies = totalCompetencies;
 return this;
 }
 
 @JsonProperty("completedCompetencies")
-public Double getCompletedCompetencies() {
+public Integer getCompletedCompetencies() {
 return completedCompetencies;
 }
 
 @JsonProperty("completedCompetencies")
-public void setCompletedCompetencies(Double completedCompetencies) {
+public void setCompletedCompetencies(Integer completedCompetencies) {
 this.completedCompetencies = completedCompetencies;
 }
 
-public GradeCompetencyStatsModel withCompletedCompetencies(Double completedCompetencies) {
+public GradeCompetencyStatsModel withCompletedCompetencies(Integer completedCompetencies) {
 this.completedCompetencies = completedCompetencies;
 return this;
 }
 
 @JsonProperty("inprogressCompetencies")
-public Double getInprogressCompetencies() {
+public Integer getInprogressCompetencies() {
 return inprogressCompetencies;
 }
 
 @JsonProperty("inprogressCompetencies")
-public void setInprogressCompetencies(Double inprogressCompetencies) {
+public void setInprogressCompetencies(Integer inprogressCompetencies) {
 this.inprogressCompetencies = inprogressCompetencies;
 }
 
-public GradeCompetencyStatsModel withInprogressCompetencies(Double inprogressCompetencies) {
+public GradeCompetencyStatsModel withInprogressCompetencies(Integer inprogressCompetencies) {
 this.inprogressCompetencies = inprogressCompetencies;
 return this;
 }

@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mukul@gooru
  */
-public class AtcPreProcessor implements EventProcessor {
+public class AtcPreProcessor {
 	
 	private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
 	private String classId;
@@ -26,24 +26,8 @@ public class AtcPreProcessor implements EventProcessor {
 		this.assessmentScoreEvent = assessmentScoreEvent;
 	}
 
-	@Override
 	public void process() {
-		try {
-			String eventName = this.assessmentScoreEvent.getEventName();
-			LOGGER.debug("processing event: {}", eventName);
-			switch (eventName) {
-			case "usage.assessment.score":
-				processAssessmentScore();
-				break;
-
-			default:
-				LOGGER.warn("invalid event passed in");
-				return;
-			}
-		} catch (Throwable t) {
-			LOGGER.error("exception while processing event", t);
-			return;
-		}
+			processAssessmentScore();
 	}
 
 	private void processAssessmentScore() {
@@ -65,7 +49,7 @@ public class AtcPreProcessor implements EventProcessor {
 			}
 			
 		} catch (Throwable t) {
-			LOGGER.error("exception while processing event", t);
+			LOGGER.error("Exception while processing event", t);
 			return;
 		}
 		

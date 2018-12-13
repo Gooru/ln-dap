@@ -11,8 +11,6 @@ import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.json.JSONObject;
-
 /**
  * @author mukul@gooru
  */
@@ -57,8 +55,7 @@ public class AtcComputeImpl implements AtcCompute {
 
 	private void computeGradeBasedUserCompetencyCompletion() {
 
-		JSONObject counts;
-		Double totalCompetencies = 0.0;
+		Integer totalCompetencies = 0;
 		String cm = atcEventObject.getUserId();
 
 		CompetencyCompletionService competencyCompletionService = new CompetencyCompletionService(
@@ -71,7 +68,7 @@ public class AtcComputeImpl implements AtcCompute {
 			for (String cc : gradeCompetencyList) {
 				LOGGER.debug("The list of competencies is" + cc);
 			}
-			totalCompetencies = Double.valueOf(gradeCompetencyList.size());
+			totalCompetencies = gradeCompetencyList.size();
 
 			LOGGER.info("The UserId is" + cm);
 			gradeCompetencyStatsModel.setUserId(cm);
@@ -80,18 +77,17 @@ public class AtcComputeImpl implements AtcCompute {
 			gradeCompetencyStatsModel.setGradeId(atcEventObject.getGradeId());
 			gradeCompetencyStatsModel.setSubjectCode(atcEventObject.getSubjectCode());
 			gradeCompetencyStatsModel.setTotalCompetencies(totalCompetencies);
-			counts = competencyCompletionService.fetchUserCompetencyStatus(cm, atcEventObject.getSubjectCode(),
+			GradeCompetencyStatsModel stats = competencyCompletionService.fetchUserCompetencyStatus(cm, atcEventObject.getSubjectCode(),
 					gradeCompetencyList);
-			if (!(counts.length() == 0) && counts != null) {
-				Double compCount = counts.getDouble("completionCount");
+			if (stats != null) {
+				Integer compCount = stats.getCompletedCompetencies();
 				gradeCompetencyStatsModel.setCompletedCompetencies(compCount);
-				Double inprogressCount = counts.getDouble("inprogressCount");
-				gradeCompetencyStatsModel.setInprogressCompetencies(inprogressCount);
+				gradeCompetencyStatsModel.setInprogressCompetencies(stats.getInprogressCompetencies());
 				gradeCompetencyStatsModel.setPercentCompletion(
 						totalCompetencies != 0 ? (Double.valueOf(compCount / totalCompetencies) * 100) : 0);				
 			} else {
-				gradeCompetencyStatsModel.setCompletedCompetencies(0.0);
-				gradeCompetencyStatsModel.setInprogressCompetencies(0.0);
+				gradeCompetencyStatsModel.setCompletedCompetencies(0);
+				gradeCompetencyStatsModel.setInprogressCompetencies(0);
 				gradeCompetencyStatsModel.setPercentCompletion(0.0);
 			}
 
