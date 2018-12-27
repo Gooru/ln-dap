@@ -12,58 +12,58 @@ import org.slf4j.LoggerFactory;
  */
 public class LearnerProfileCompetencyStatusProcessor {
 
-	// TODO: Move this to the config
-	private final double MASTERY_SCORE = 80.00;
+  // TODO: Move this to the config
+  private final double MASTERY_SCORE = 80.00;
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
+  private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
 
-	private final AssessmentScoreEventMapper assessmentScore;
-	private final String gutCode;
-	private final boolean isSignature;
+  private final AssessmentScoreEventMapper assessmentScore;
+  private final String gutCode;
+  private final boolean isSignature;
 
-	private LearnerProfileCompetencyStatusService service = new LearnerProfileCompetencyStatusService(
-			DBICreator.getDbiForDefaultDS());
+  private LearnerProfileCompetencyStatusService service =
+      new LearnerProfileCompetencyStatusService(DBICreator.getDbiForDefaultDS());
 
-	public LearnerProfileCompetencyStatusProcessor(AssessmentScoreEventMapper assessmentScore, String gutCode,
-			boolean isSignature) {
-		this.assessmentScore = assessmentScore;
-		this.gutCode = gutCode;
-		this.isSignature = isSignature;
-	}
+  public LearnerProfileCompetencyStatusProcessor(AssessmentScoreEventMapper assessmentScore,
+      String gutCode, boolean isSignature) {
+    this.assessmentScore = assessmentScore;
+    this.gutCode = gutCode;
+    this.isSignature = isSignature;
+  }
 
-	public void process() {
-		LearnerProfileCompetencyStatusCommand command = LearnerProfileCompetencyStatusCommandBuilder
-				.build(assessmentScore, gutCode);
-		LearnerProfileCompetencyStatusBean bean = new LearnerProfileCompetencyStatusBean(command);
+  public void process() {
+    LearnerProfileCompetencyStatusCommand command =
+        LearnerProfileCompetencyStatusCommandBuilder.build(assessmentScore, gutCode);
+    LearnerProfileCompetencyStatusBean bean = new LearnerProfileCompetencyStatusBean(command);
 
-		/*
-		 * if score > 80 and signature assessment update to mastered. If score > 80 and
-		 * regular assessment update to completed. If score < 80 and regular assessment
-		 * update to in_progress
-		 */
+    /*
+     * if score > 80 and signature assessment update to mastered. If score > 80 and regular
+     * assessment update to completed. If score < 80 and regular assessment update to in_progress
+     */
 
-		ResultMapper result = this.assessmentScore.getResult();
-		Double score = null;
-		if (result != null) {
-			score = this.assessmentScore.getResult().getScore();
-		}
-		
-		if (score != null && score >= MASTERY_SCORE) {
-			if (this.isSignature) {
-				LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Masterd", score, this.isSignature,
-						gutCode);
-				service.updateLearnerProfileCompetencyStatusToMastered(bean);
-			} else {
-				LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Completed", score,
-						this.isSignature, gutCode);
-				service.updateLearnerProfileCompetencyStatusToCompleted(bean);
-			}
-		} else {
-			if (!this.isSignature) {
-				LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=InProgress", score,
-						this.isSignature, gutCode);
-				service.updateLearnerProfileCompetencyStatusToInprogress(bean);
-			}
-		}
-	}
+    ResultMapper result = this.assessmentScore.getResult();
+    Double score = null;
+    if (result != null) {
+      score = this.assessmentScore.getResult().getScore();
+    }
+
+    if (score != null && score >= MASTERY_SCORE) {
+      if (this.isSignature) {
+        LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Masterd",
+            score, this.isSignature, gutCode);
+        service.updateLearnerProfileCompetencyStatusToMastered(bean);
+      } else {
+        LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Completed",
+            score, this.isSignature, gutCode);
+        service.updateLearnerProfileCompetencyStatusToCompleted(bean);
+      }
+    } else {
+      if (!this.isSignature) {
+        LOGGER.info(
+            "LP Status: score = {} || isSignature = {} || gutCode = {} || status=InProgress", score,
+            this.isSignature, gutCode);
+        service.updateLearnerProfileCompetencyStatusToInprogress(bean);
+      }
+    }
+  }
 }

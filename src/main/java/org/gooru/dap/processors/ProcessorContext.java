@@ -4,14 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class ProcessorContext {
 
-    private final JsonNode eventJsonNode;
+  private final JsonNode eventJsonNode;
 
-    public ProcessorContext(JsonNode eventJson) {
-        this.eventJsonNode = eventJson;
-    }
+  public ProcessorContext(JsonNode eventJson) {
+    this.eventJsonNode = eventJson;
+  }
 
-    public JsonNode getEventJsonNode() {
-        return eventJsonNode;
-    }
+  public JsonNode getEventJsonNode() {
+    return eventJsonNode;
+  }
 
 }

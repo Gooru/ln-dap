@@ -7,156 +7,155 @@ import java.sql.Timestamp;
  */
 public class LearnerProfileCompetencyEvidenceBean {
 
-	private String userId;
-	private String gutCode;
-	private String classId;
-	private String courseId;
-	private String unitId;
-	private String lessonId;
-	private String latestSessionId;
-	private String collectionId;
-	private Long collectionPathId;
-	private Double collectionScore;
-	private String collectionType;
-	/*
-	 * Purpose of this status is to persist evidence for multiple status. It should
-	 * not be used for business logic. Eventually we should remove the status from
-	 * evidence schema and uniqueness clause.
-	 */
-	private int status;
-	private Timestamp createdAt;
-	private Timestamp updatedAt;
+  private String userId;
+  private String gutCode;
+  private String classId;
+  private String courseId;
+  private String unitId;
+  private String lessonId;
+  private String latestSessionId;
+  private String collectionId;
+  private Long collectionPathId;
+  private Double collectionScore;
+  private String collectionType;
+  /*
+   * Purpose of this status is to persist evidence for multiple status. It should not be used for
+   * business logic. Eventually we should remove the status from evidence schema and uniqueness
+   * clause.
+   */
+  private int status;
+  private Timestamp createdAt;
+  private Timestamp updatedAt;
 
-	public LearnerProfileCompetencyEvidenceBean() {
-	}
+  public LearnerProfileCompetencyEvidenceBean() {}
 
-	public LearnerProfileCompetencyEvidenceBean(LearnerProfileCompetencyEvidenceCommand command) {
-		this.userId = command.getUserId();
-		this.classId = command.getClassId();
-		this.courseId = command.getCourseId();
-		this.unitId = command.getUnitId();
-		this.lessonId = command.getLessonId();
-		this.latestSessionId = command.getLatestSessionId();
-		this.collectionId = command.getCollectionId();
-		this.collectionPathId = command.getCollectionPathId();
-		this.collectionScore = command.getCollectionScore();
-		this.collectionType = command.getCollectionType();
-		
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		this.createdAt = now;
-		this.updatedAt = now;
-	}
+  public LearnerProfileCompetencyEvidenceBean(LearnerProfileCompetencyEvidenceCommand command) {
+    this.userId = command.getUserId();
+    this.classId = command.getClassId();
+    this.courseId = command.getCourseId();
+    this.unitId = command.getUnitId();
+    this.lessonId = command.getLessonId();
+    this.latestSessionId = command.getLatestSessionId();
+    this.collectionId = command.getCollectionId();
+    this.collectionPathId = command.getCollectionPathId();
+    this.collectionScore = command.getCollectionScore();
+    this.collectionType = command.getCollectionType();
 
-	public String getUserId() {
-		return userId;
-	}
+    Timestamp now = new Timestamp(System.currentTimeMillis());
+    this.createdAt = now;
+    this.updatedAt = now;
+  }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  public String getUserId() {
+    return userId;
+  }
 
-	public String getGutCode() {
-		return gutCode;
-	}
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
-	public void setGutCode(String gutCode) {
-		this.gutCode = gutCode;
-	}
+  public String getGutCode() {
+    return gutCode;
+  }
 
-	public String getClassId() {
-		return classId;
-	}
+  public void setGutCode(String gutCode) {
+    this.gutCode = gutCode;
+  }
 
-	public void setClassId(String classId) {
-		this.classId = classId;
-	}
+  public String getClassId() {
+    return classId;
+  }
 
-	public String getCourseId() {
-		return courseId;
-	}
+  public void setClassId(String classId) {
+    this.classId = classId;
+  }
 
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
-	}
+  public String getCourseId() {
+    return courseId;
+  }
 
-	public String getUnitId() {
-		return unitId;
-	}
+  public void setCourseId(String courseId) {
+    this.courseId = courseId;
+  }
 
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
-	}
+  public String getUnitId() {
+    return unitId;
+  }
 
-	public String getLessonId() {
-		return lessonId;
-	}
+  public void setUnitId(String unitId) {
+    this.unitId = unitId;
+  }
 
-	public void setLessonId(String lessonId) {
-		this.lessonId = lessonId;
-	}
+  public String getLessonId() {
+    return lessonId;
+  }
 
-	public String getLatestSessionId() {
-		return latestSessionId;
-	}
+  public void setLessonId(String lessonId) {
+    this.lessonId = lessonId;
+  }
 
-	public void setLatestSessionId(String latestSessionId) {
-		this.latestSessionId = latestSessionId;
-	}
+  public String getLatestSessionId() {
+    return latestSessionId;
+  }
 
-	public String getCollectionId() {
-		return collectionId;
-	}
+  public void setLatestSessionId(String latestSessionId) {
+    this.latestSessionId = latestSessionId;
+  }
 
-	public void setCollectionId(String collectionId) {
-		this.collectionId = collectionId;
-	}
+  public String getCollectionId() {
+    return collectionId;
+  }
 
-	public Long getCollectionPathId() {
-		return collectionPathId;
-	}
+  public void setCollectionId(String collectionId) {
+    this.collectionId = collectionId;
+  }
 
-	public void setCollectionPathId(Long collectionPathId) {
-		this.collectionPathId = collectionPathId;
-	}
+  public Long getCollectionPathId() {
+    return collectionPathId;
+  }
 
-	public Double getCollectionScore() {
-		return collectionScore;
-	}
+  public void setCollectionPathId(Long collectionPathId) {
+    this.collectionPathId = collectionPathId;
+  }
 
-	public void setCollectionScore(Double collectionScore) {
-		this.collectionScore = collectionScore;
-	}
+  public Double getCollectionScore() {
+    return collectionScore;
+  }
 
-	public String getCollectionType() {
-		return collectionType;
-	}
+  public void setCollectionScore(Double collectionScore) {
+    this.collectionScore = collectionScore;
+  }
 
-	public void setCollectionType(String collectionType) {
-		this.collectionType = collectionType;
-	}
-	
-	public int getStatus() {
-		return status;
-	}
+  public String getCollectionType() {
+    return collectionType;
+  }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+  public void setCollectionType(String collectionType) {
+    this.collectionType = collectionType;
+  }
 
-	public Timestamp getCreatedAt() {
-		return createdAt;
-	}
+  public int getStatus() {
+    return status;
+  }
 
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setStatus(int status) {
+    this.status = status;
+  }
 
-	public Timestamp getUpdatedAt() {
-		return updatedAt;
-	}
+  public Timestamp getCreatedAt() {
+    return createdAt;
+  }
 
-	public void setUpdatedAt(Timestamp updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
+  }
+
+  public Timestamp getUpdatedAt() {
+    return updatedAt;
+  }
+
+  public void setUpdatedAt(Timestamp updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
 }

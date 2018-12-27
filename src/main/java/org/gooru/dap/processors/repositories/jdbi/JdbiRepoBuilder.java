@@ -6,16 +6,16 @@ import org.gooru.dap.processors.repositories.ResourceTimeSpentRepo;
 
 public final class JdbiRepoBuilder {
 
-    private JdbiRepoBuilder() {
-        throw new AssertionError();
-    }
+  private JdbiRepoBuilder() {
+    throw new AssertionError();
+  }
 
-    public static ResourceTimeSpentRepo buildResourceTimeSpentRepo(ProcessorContext context) {
-        return new JdbiResourceTimeSpentRepo(context);
-    }
-    
-    public static QuestionTimeSpentRepo buildQuestionTimeSpentRepo(ProcessorContext context) {
-        return new JdbiQuestionTimeSpentRepo(context);
-    }
-    
+  public static ResourceTimeSpentRepo buildResourceTimeSpentRepo(ProcessorContext context) {
+    return new JdbiResourceTimeSpentRepo(context);
+  }
+
+  public static QuestionTimeSpentRepo buildQuestionTimeSpentRepo(ProcessorContext context) {
+    return new JdbiQuestionTimeSpentRepo(context);
+  }
+
 }

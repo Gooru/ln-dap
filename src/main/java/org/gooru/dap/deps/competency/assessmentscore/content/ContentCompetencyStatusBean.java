@@ -7,72 +7,71 @@ import java.sql.Timestamp;
  */
 public class ContentCompetencyStatusBean {
 
-	private String userId;
-	private String competencyCode;
-	private String frameworkCode;
-	private int status;
-	private Timestamp createdAt;
-	private Timestamp updatedAt;
+  private String userId;
+  private String competencyCode;
+  private String frameworkCode;
+  private int status;
+  private Timestamp createdAt;
+  private Timestamp updatedAt;
 
-	public ContentCompetencyStatusBean() {
-	}
+  public ContentCompetencyStatusBean() {}
 
-	public ContentCompetencyStatusBean(ContentCompetencyStatusCommand command) {
-		this.userId = command.getUserId();
-		this.competencyCode = command.getCompetencyCode();
-		this.frameworkCode = command.getFrameworkCode();
+  public ContentCompetencyStatusBean(ContentCompetencyStatusCommand command) {
+    this.userId = command.getUserId();
+    this.competencyCode = command.getCompetencyCode();
+    this.frameworkCode = command.getFrameworkCode();
 
-		Timestamp now = new Timestamp(System.currentTimeMillis());
-		this.createdAt = now;
-		this.updatedAt = now;
-	}
+    Timestamp now = new Timestamp(System.currentTimeMillis());
+    this.createdAt = now;
+    this.updatedAt = now;
+  }
 
-	public String getUserId() {
-		return userId;
-	}
+  public String getUserId() {
+    return userId;
+  }
 
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
+  public void setUserId(String userId) {
+    this.userId = userId;
+  }
 
-	public String getCompetencyCode() {
-		return competencyCode;
-	}
+  public String getCompetencyCode() {
+    return competencyCode;
+  }
 
-	public void setCompetencyCode(String competencyCode) {
-		this.competencyCode = competencyCode;
-	}
+  public void setCompetencyCode(String competencyCode) {
+    this.competencyCode = competencyCode;
+  }
 
-	public String getFrameworkCode() {
-		return frameworkCode;
-	}
+  public String getFrameworkCode() {
+    return frameworkCode;
+  }
 
-	public void setFrameworkCode(String frameworkCode) {
-		this.frameworkCode = frameworkCode;
-	}
+  public void setFrameworkCode(String frameworkCode) {
+    this.frameworkCode = frameworkCode;
+  }
 
-	public int getStatus() {
-		return status;
-	}
+  public int getStatus() {
+    return status;
+  }
 
-	public void setStatus(int status) {
-		this.status = status;
-	}
+  public void setStatus(int status) {
+    this.status = status;
+  }
 
-	public Timestamp getCreatedAt() {
-		return createdAt;
-	}
+  public Timestamp getCreatedAt() {
+    return createdAt;
+  }
 
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
-	}
+  public void setCreatedAt(Timestamp createdAt) {
+    this.createdAt = createdAt;
+  }
 
-	public Timestamp getUpdatedAt() {
-		return updatedAt;
-	}
+  public Timestamp getUpdatedAt() {
+    return updatedAt;
+  }
 
-	public void setUpdatedAt(Timestamp updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+  public void setUpdatedAt(Timestamp updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
 }

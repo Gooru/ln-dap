@@ -5,121 +5,122 @@ package org.gooru.dap.deps.competency.events.mapper;
  */
 public class ContextMapper {
 
-	private String courseId;
-	private String classId;
-	private String unitId;
-	private String lessonId;
-	private String sessionId;
-	private String tenantId;
-	private String partnerId;
-	private int questionCount;
-	private long pathId;
-	private String pathType;
+  private String courseId;
+  private String classId;
+  private String unitId;
+  private String lessonId;
+  private String sessionId;
+  private String tenantId;
+  private String partnerId;
+  private int questionCount;
+  private long pathId;
+  private String pathType;
 
-	private String contextCollectionType;
-	private String contextCollectionId;
+  private String contextCollectionType;
+  private String contextCollectionId;
 
-	public String getCourseId() {
-		return courseId;
-	}
+  public String getCourseId() {
+    return courseId;
+  }
 
-	public void setCourseId(String courseId) {
-		this.courseId = courseId;
-	}
+  public void setCourseId(String courseId) {
+    this.courseId = courseId;
+  }
 
-	public String getClassId() {
-		return classId;
-	}
+  public String getClassId() {
+    return classId;
+  }
 
-	public void setClassId(String classId) {
-		this.classId = classId;
-	}
+  public void setClassId(String classId) {
+    this.classId = classId;
+  }
 
-	public String getUnitId() {
-		return unitId;
-	}
+  public String getUnitId() {
+    return unitId;
+  }
 
-	public void setUnitId(String unitId) {
-		this.unitId = unitId;
-	}
+  public void setUnitId(String unitId) {
+    this.unitId = unitId;
+  }
 
-	public String getLessonId() {
-		return lessonId;
-	}
+  public String getLessonId() {
+    return lessonId;
+  }
 
-	public void setLessonId(String lessonId) {
-		this.lessonId = lessonId;
-	}
+  public void setLessonId(String lessonId) {
+    this.lessonId = lessonId;
+  }
 
-	public String getSessionId() {
-		return sessionId;
-	}
+  public String getSessionId() {
+    return sessionId;
+  }
 
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
-	}
+  public void setSessionId(String sessionId) {
+    this.sessionId = sessionId;
+  }
 
-	public String getTenantId() {
-		return tenantId;
-	}
+  public String getTenantId() {
+    return tenantId;
+  }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+  public void setTenantId(String tenantId) {
+    this.tenantId = tenantId;
+  }
 
-	public String getPartnerId() {
-		return partnerId;
-	}
+  public String getPartnerId() {
+    return partnerId;
+  }
 
-	public void setPartnerId(String partnerId) {
-		this.partnerId = partnerId;
-	}
+  public void setPartnerId(String partnerId) {
+    this.partnerId = partnerId;
+  }
 
-	public int getQuestionCount() {
-		return questionCount;
-	}
+  public int getQuestionCount() {
+    return questionCount;
+  }
 
-	public void setQuestionCount(int questionCount) {
-		this.questionCount = questionCount;
-	}
+  public void setQuestionCount(int questionCount) {
+    this.questionCount = questionCount;
+  }
 
-	public long getPathId() {
-		return pathId;
-	}
+  public long getPathId() {
+    return pathId;
+  }
 
-	public void setPathId(long pathId) {
-		this.pathId = pathId;
-	}
-	
-	public String getPathType() {
-		return pathType;
-	}
+  public void setPathId(long pathId) {
+    this.pathId = pathId;
+  }
 
-	public void setPathType(String pathType) {
-		this.pathType = pathType;
-	}
-	
-	public String getContextCollectionType() {
-		return contextCollectionType;
-	}
+  public String getPathType() {
+    return pathType;
+  }
 
-	public void setContextCollectionType(String contextCollectionType) {
-		this.contextCollectionType = contextCollectionType;
-	}
+  public void setPathType(String pathType) {
+    this.pathType = pathType;
+  }
 
-	public String getContextCollectionId() {
-		return contextCollectionId;
-	}
+  public String getContextCollectionType() {
+    return contextCollectionType;
+  }
 
-	public void setContextCollectionId(String contextCollectionId) {
-		this.contextCollectionId = contextCollectionId;
-	}
+  public void setContextCollectionType(String contextCollectionType) {
+    this.contextCollectionType = contextCollectionType;
+  }
 
-	@Override
-	public String toString() {
-		return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId + ", lessonId="
-				+ lessonId + ", sessionId=" + sessionId + ", tenantId=" + tenantId + ", partnerId=" + partnerId
-				+ ", questionCount=" + questionCount + ", pathId=" + pathId + ", contextCollectionType=" + contextCollectionType + ", "
-						+ "contextCollectionId=" + contextCollectionId + "]";
-	}
+  public String getContextCollectionId() {
+    return contextCollectionId;
+  }
+
+  public void setContextCollectionId(String contextCollectionId) {
+    this.contextCollectionId = contextCollectionId;
+  }
+
+  @Override
+  public String toString() {
+    return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId
+        + ", lessonId=" + lessonId + ", sessionId=" + sessionId + ", tenantId=" + tenantId
+        + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId
+        + ", contextCollectionType=" + contextCollectionType + ", " + "contextCollectionId="
+        + contextCollectionId + "]";
+  }
 }

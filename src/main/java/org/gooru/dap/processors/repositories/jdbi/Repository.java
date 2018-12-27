@@ -6,20 +6,20 @@ import org.skife.jdbi.v2.DBI;
 
 public abstract class Repository {
 
-    private static final DBI DBI = DBICreator.getDbiForDefaultDS();
+  private static final DBI DBI = DBICreator.getDbiForDefaultDS();
 
-    private static final DBI CORE_DBI = DBICreator.getDbiForCoreDS();
+  private static final DBI CORE_DBI = DBICreator.getDbiForCoreDS();
 
-    public abstract ExecutionStatus validateRequest();
+  public abstract ExecutionStatus validateRequest();
 
-    public abstract void executeRequest();
+  public abstract void executeRequest();
 
 
-    protected DBI getDbiForCoreDS() {
-        return CORE_DBI;
-    }
-    
-    protected DBI getDbiForDefaultDS() {
-        return DBI;
-    }
+  protected DBI getDbiForCoreDS() {
+    return CORE_DBI;
+  }
+
+  protected DBI getDbiForDefaultDS() {
+    return DBI;
+  }
 }
