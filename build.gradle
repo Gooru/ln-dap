@@ -27,6 +27,7 @@ ext {
 
 
 dependencies {
+    
     compile "org.apache.kafka:kafka_2.12:${kafkaVersion}"
     compile "ch.qos.logback:logback-classic:${logbackVersion}"
     compile "com.zaxxer:HikariCP:${hikariVersion}"
