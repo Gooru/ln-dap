@@ -10,36 +10,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ResourceConsumer extends ConsumerTemplate<String, String> {
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceConsumer.class);
 
-    public ResourceConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
-        super(id, kafkaConsumerConfig);
-    }
+  private static final Logger LOGGER = LoggerFactory.getLogger(ResourceConsumer.class);
 
-    @Override
-    public void init() {
-        super.initialize(new StringDeserializer(), new StringDeserializer());
-    }
+  public ResourceConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
+    super(id, kafkaConsumerConfig);
+  }
 
-    @Override
-    public void processingRecordExceptionHandler(ConsumerRecord record, Exception e) {
-        LOGGER.warn("Failure in handling message for topic '{}' offset '{}' partition '{}", record.topic(),
-            record.offset(), record.partition(), e);
-    }
+  @Override
+  public void init() {
+    super.initialize(new StringDeserializer(), new StringDeserializer());
+  }
 
-    @Override
-    public void commitExceptionHandler(Exception e) {
-        LOGGER.warn("Failed to do commit.", e);
-    }
+  @Override
+  public void processingRecordExceptionHandler(ConsumerRecord record, Exception e) {
+    LOGGER.warn("Failure in handling message for topic '{}' offset '{}' partition '{}",
+        record.topic(), record.offset(), record.partition(), e);
+  }
 
-    @Override
-    public void processRecord(ConsumerRecord<String, String> record) {
-        ProcessorBuilder.build(getDeploymentName(), record.topic(), record.value()).process();
-    }
+  @Override
+  public void commitExceptionHandler(Exception e) {
+    LOGGER.warn("Failed to do commit.", e);
+  }
 
-    @Override
-    public String getDeploymentName() {
-        return MessageConsumerConstants.RESOURCE;
-    }
+  @Override
+  public void processRecord(ConsumerRecord<String, String> record) {
+    ProcessorBuilder.build(getDeploymentName(), record.topic(), record.value()).process();
+  }
+
+  @Override
+  public String getDeploymentName() {
+    return MessageConsumerConstants.RESOURCE;
+  }
 }

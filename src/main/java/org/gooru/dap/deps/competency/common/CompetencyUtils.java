@@ -7,24 +7,24 @@ import java.util.Iterator;
  */
 public final class CompetencyUtils {
 
-	private CompetencyUtils() {
-		throw new AssertionError();
-	}
-	
-	public static String toPostgresArrayString(Iterator<String> input) {
-		if (!input.hasNext()) {
-			return "{}";
-		}
+  private CompetencyUtils() {
+    throw new AssertionError();
+  }
 
-		StringBuilder sb = new StringBuilder();
-		sb.append('{');
-		for (;;) {
-			String s = input.next();
-			sb.append('"').append(s).append('"');
-			if (!input.hasNext()) {
-				return sb.append('}').toString();
-			}
-			sb.append(',');
-		}
-	}
+  public static String toPostgresArrayString(Iterator<String> input) {
+    if (!input.hasNext()) {
+      return "{}";
+    }
+
+    StringBuilder sb = new StringBuilder();
+    sb.append('{');
+    for (;;) {
+      String s = input.next();
+      sb.append('"').append(s).append('"');
+      if (!input.hasNext()) {
+        return sb.append('}').toString();
+      }
+      sb.append(',');
+    }
+  }
 }

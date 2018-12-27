@@ -6,13 +6,13 @@ import org.gooru.dap.processors.repositories.RepoBuilder;
 
 public class UserStatsCCULCQuestionTimeSpentProcessor extends AbstractEventProcessor {
 
-    public UserStatsCCULCQuestionTimeSpentProcessor(ProcessorContext context) {
-        super(context);
-    }
+  public UserStatsCCULCQuestionTimeSpentProcessor(ProcessorContext context) {
+    super(context);
+  }
 
-    @Override
-    protected void processEvent() {
-       RepoBuilder.buildQuestionTimeSpentRepo(context).userStatsCCULCQuestionTimeSpent();
-    }
+  @Override
+  protected void processEvent() {
+    RepoBuilder.buildQuestionTimeSpentRepo(context).userStatsCCULCQuestionTimeSpent();
+  }
 
 }

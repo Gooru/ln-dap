@@ -11,42 +11,43 @@ import org.slf4j.LoggerFactory;
 
 public class KafkaMessageProducer {
 
-	  private static final KafkaMessageProducer INSTANCE = new KafkaMessageProducer();
-	  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaMessageProducer.class);
+  private static final KafkaMessageProducer INSTANCE = new KafkaMessageProducer();
+  private static final Logger LOGGER = LoggerFactory.getLogger(KafkaMessageProducer.class);
 
-	  private KafkaMessageProducer() {
-	  }
+  private KafkaMessageProducer() {}
 
-	  public static KafkaMessageProducer getInstance() {
-	    return INSTANCE;
-	  }
-	  
-	  public void sendEvents(String topic, String msg) {
-		    sendMessage(topic, msg);
-		  }
+  public static KafkaMessageProducer getInstance() {
+    return INSTANCE;
+  }
 
-	  
-	  private void sendMessage(String topic, String msg) {
-	    Producer<String, String> producer = KafkaProducerRegistry.getInstance().getKafkaProducer();
-	    ProducerRecord<String, String> kafkaMsg;
-	    kafkaMsg = new ProducerRecord<>(topic, msg);
+  public void sendEvents(String topic, String msg) {
+    sendMessage(topic, msg);
+  }
 
-	    try {
-	      if (producer != null) {
-	        producer.send(kafkaMsg, (metadata, exception) -> {
-	          if (exception == null) {
-	            LOGGER.info("Message Delivered Successfully: Offset : " + metadata.offset() + " : Topic : " + metadata.topic() + " : Partition : "
-	                    + metadata.partition() + " : Message : " + kafkaMsg);
-	          } else {
-	            LOGGER.error("Message Could not be delivered : " + kafkaMsg + ". Cause: " + exception.getMessage());
-	          }
-	        });
-	        LOGGER.debug("Message Sent Successfully: " + kafkaMsg);
-	      } else {
-	        LOGGER.error("Not able to obtain producer instance");
-	      }
-	    } catch (InterruptException | BufferExhaustedException | SerializationException ie) {
-	      LOGGER.error("sendMessageToKafka: to Kafka server:", ie);
-	    }
-	  }
+
+  private void sendMessage(String topic, String msg) {
+    Producer<String, String> producer = KafkaProducerRegistry.getInstance().getKafkaProducer();
+    ProducerRecord<String, String> kafkaMsg;
+    kafkaMsg = new ProducerRecord<>(topic, msg);
+
+    try {
+      if (producer != null) {
+        producer.send(kafkaMsg, (metadata, exception) -> {
+          if (exception == null) {
+            LOGGER.info("Message Delivered Successfully: Offset : " + metadata.offset()
+                + " : Topic : " + metadata.topic() + " : Partition : " + metadata.partition()
+                + " : Message : " + kafkaMsg);
+          } else {
+            LOGGER.error("Message Could not be delivered : " + kafkaMsg + ". Cause: "
+                + exception.getMessage());
+          }
+        });
+        LOGGER.debug("Message Sent Successfully: " + kafkaMsg);
+      } else {
+        LOGGER.error("Not able to obtain producer instance");
+      }
+    } catch (InterruptException | BufferExhaustedException | SerializationException ie) {
+      LOGGER.error("sendMessageToKafka: to Kafka server:", ie);
+    }
+  }
 }

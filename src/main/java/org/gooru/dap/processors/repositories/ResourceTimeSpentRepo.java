@@ -2,13 +2,13 @@ package org.gooru.dap.processors.repositories;
 
 public interface ResourceTimeSpentRepo {
 
-    void userStatsResourceTimeSpent();
+  void userStatsResourceTimeSpent();
 
-    void userStatsResourceContentTypeTimeSpent();
+  void userStatsResourceContentTypeTimeSpent();
 
-    void resourceContentTypeTimeSpent();
+  void resourceContentTypeTimeSpent();
 
-    void userStatsOriginalResourceTimeSpent();
+  void userStatsOriginalResourceTimeSpent();
 
-    void userStatsCCULCResourceTimeSpent();
+  void userStatsCCULCResourceTimeSpent();
 }

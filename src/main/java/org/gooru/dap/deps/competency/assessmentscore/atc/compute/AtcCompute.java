@@ -8,9 +8,9 @@ import org.gooru.dap.deps.competency.assessmentscore.atc.AtcEvent;
  */
 public interface AtcCompute {
 
-    GradeCompetencyStatsModel compute(AtcEvent scoreObject);
-    
-    static AtcCompute createInstance() {
-        return new AtcComputeImpl(DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForCoreDS());
-    }
+  GradeCompetencyStatsModel compute(AtcEvent scoreObject);
+
+  static AtcCompute createInstance() {
+    return new AtcComputeImpl(DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForCoreDS());
+  }
 }

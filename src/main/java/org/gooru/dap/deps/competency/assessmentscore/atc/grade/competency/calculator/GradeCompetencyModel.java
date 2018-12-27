@@ -1,7 +1,6 @@
 package org.gooru.dap.deps.competency.assessmentscore.atc.grade.competency.calculator;
 
 import java.util.List;
-
 import org.gooru.dap.deps.competency.assessmentscore.atc.competency.CompetencyModel;
 import org.gooru.dap.deps.competency.assessmentscore.atc.competency.DomainCode;
 import org.gooru.dap.deps.competency.assessmentscore.atc.competency.DomainModel;
@@ -12,10 +11,10 @@ import org.gooru.dap.deps.competency.assessmentscore.atc.competency.SubjectCode;
  */
 public interface GradeCompetencyModel {
 
-    SubjectCode getSubject();
+  SubjectCode getSubject();
 
-    List<DomainModel> getDomainsOrdered();
+  List<DomainModel> getDomainsOrdered();
 
-    List<CompetencyModel> getPathForDomain(DomainCode domainCode);
-	
+  List<CompetencyModel> getPathForDomain(DomainCode domainCode);
+
 }

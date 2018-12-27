@@ -7,31 +7,35 @@ import org.gooru.dap.processors.repositories.jdbi.transactions.TransactionExecut
 
 public class JdbiQuestionTimeSpentRepo implements QuestionTimeSpentRepo {
 
-    private final ProcessorContext context;
+  private final ProcessorContext context;
 
-    public JdbiQuestionTimeSpentRepo(ProcessorContext context) {
-        this.context = context;
-    }
+  public JdbiQuestionTimeSpentRepo(ProcessorContext context) {
+    this.context = context;
+  }
 
-    @Override
-    public void userStatsQuestionTimeSpent() {
-        TransactionExecutor.execute(DBQuestionTimeSpentHandlerBuilder.buildUserStatsQuestionTimeSpent(context));
-    }
+  @Override
+  public void userStatsQuestionTimeSpent() {
+    TransactionExecutor
+        .execute(DBQuestionTimeSpentHandlerBuilder.buildUserStatsQuestionTimeSpent(context));
+  }
 
-    @Override
-    public void userStatsQuestionTypeTimeSpent() {
-        TransactionExecutor.execute(DBQuestionTimeSpentHandlerBuilder.buildUserStatsQuestionTypeTimeSpent(context));
-    }
+  @Override
+  public void userStatsQuestionTypeTimeSpent() {
+    TransactionExecutor
+        .execute(DBQuestionTimeSpentHandlerBuilder.buildUserStatsQuestionTypeTimeSpent(context));
+  }
 
-    @Override
-    public void questionTypeTimeSpent() {
-        TransactionExecutor.execute(DBQuestionTimeSpentHandlerBuilder.buildQuestionTypeTimeSpent(context));
-    }
+  @Override
+  public void questionTypeTimeSpent() {
+    TransactionExecutor
+        .execute(DBQuestionTimeSpentHandlerBuilder.buildQuestionTypeTimeSpent(context));
+  }
 
-    @Override
-    public void userStatsCCULCQuestionTimeSpent() {
-        TransactionExecutor.execute(DBQuestionTimeSpentHandlerBuilder.buildUserStatsCCULCQuestionTimeSpent(context));
+  @Override
+  public void userStatsCCULCQuestionTimeSpent() {
+    TransactionExecutor
+        .execute(DBQuestionTimeSpentHandlerBuilder.buildUserStatsCCULCQuestionTimeSpent(context));
 
-    }
+  }
 
 }

@@ -5,6 +5,6 @@ package org.gooru.dap.infra;
  */
 public interface Deployable {
 
-    String getDeploymentName();
+  String getDeploymentName();
 
 }
