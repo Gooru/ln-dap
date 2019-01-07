@@ -38,14 +38,8 @@ public class AtcPreProcessor {
 
 			//Check if Class == Premium. If class != Premium - Don't go any further.
 			//To reduce Processing, we might also put a check of score > 80. 
-			if (classId != null && courseId != null & userId != null) {				
-				if (service.CheckifClassPremium(classId)) {
-					LOGGER.info("Class " + classId + " is Premium, Continue ..");
-					new AtcProcessor(assessmentScoreEvent).compute();
-				} else {
-					LOGGER.info("Class " + classId + " is NOT Premium. No further processing");
-					return;
-				}
+			if (classId != null && courseId != null & userId != null) {					
+					new AtcProcessor(assessmentScoreEvent).compute(); 
 			}
 			
 		} catch (Throwable t) {

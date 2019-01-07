@@ -1,5 +1,6 @@
 package org.gooru.dap.deps.competency.assessmentscore.atc;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -17,6 +18,4 @@ public interface AtcDao {
 
 	  @SqlQuery("select grade_upper_bound from class where id = :classId and course_id = :courseId")
 		  Integer fetcheGradefromClass(@Bind("classId") UUID classId, @Bind("courseId") UUID courseId);
-
-
 }

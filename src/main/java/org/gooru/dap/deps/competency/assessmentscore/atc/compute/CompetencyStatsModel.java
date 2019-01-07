@@ -20,9 +20,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 "completedCompetencies",
 "inprogressCompetencies",
 "percentCompletion",
-"percentScore"
+"percentScore",
+"month",
+"year"
 })
-public class GradeCompetencyStatsModel {
+public class CompetencyStatsModel {
 
 @JsonProperty("userId")
 private String userId;
@@ -44,12 +46,16 @@ private Integer inprogressCompetencies;
 private Double percentCompletion;
 @JsonProperty("percentScore")
 private Double percentScore;
+@JsonProperty("month")
+private Integer month;
+@JsonProperty("year")
+private Integer year;
 
 /**
 * No args constructor for use in serialization
 *
 */
-public GradeCompetencyStatsModel() {
+public CompetencyStatsModel() {
 }
 
 /**
@@ -63,8 +69,8 @@ public GradeCompetencyStatsModel() {
 * @param totalCompetencies
 * @param courseId
 */
-public GradeCompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId, String subjectCode, Integer totalCompetencies, 
-		Integer completedCompetencies, Integer inprogressCompetencies, Double percentCompletion, Double percentScore) {
+public CompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId, String subjectCode, Integer totalCompetencies, 
+		Integer completedCompetencies, Integer inprogressCompetencies, Double percentCompletion, Double percentScore, Integer month, Integer year) {
 super();
 this.userId = userId;
 this.classId = classId;
@@ -76,6 +82,8 @@ this.completedCompetencies = completedCompetencies;
 this.inprogressCompetencies = inprogressCompetencies;
 this.percentCompletion = percentCompletion;
 this.percentScore = percentScore;
+this.month = month;
+this.year = year;
 }
 
 @JsonProperty("userId")
@@ -88,7 +96,7 @@ public void setUserId(String userId) {
 this.userId = userId;
 }
 
-public GradeCompetencyStatsModel withUserId(String userId) {
+public CompetencyStatsModel withUserId(String userId) {
 this.userId = userId;
 return this;
 }
@@ -103,7 +111,7 @@ public void setClassId(String classId) {
 this.classId = classId;
 }
 
-public GradeCompetencyStatsModel withClassId(String classId) {
+public CompetencyStatsModel withClassId(String classId) {
 this.classId = classId;
 return this;
 }
@@ -118,7 +126,7 @@ public void setCourseId(String courseId) {
 this.courseId = courseId;
 }
 
-public GradeCompetencyStatsModel withCourseId(String courseId) {
+public CompetencyStatsModel withCourseId(String courseId) {
 this.courseId = courseId;
 return this;
 }
@@ -133,7 +141,7 @@ public void setGradeId(Integer gradeId) {
 this.gradeId = gradeId;
 }
 
-public GradeCompetencyStatsModel withGradeId(Integer gradeId) {
+public CompetencyStatsModel withGradeId(Integer gradeId) {
 this.gradeId = gradeId;
 return this;
 }
@@ -148,7 +156,7 @@ public void setSubjectCode(String subjectCode) {
 this.subjectCode = subjectCode;
 }
 
-public GradeCompetencyStatsModel withGradeId(String subjectCode) {
+public CompetencyStatsModel withGradeId(String subjectCode) {
 this.subjectCode = subjectCode;
 return this;
 }
@@ -163,7 +171,7 @@ public void setTotalCompetencies(Integer totalCompetencies) {
 this.totalCompetencies = totalCompetencies;
 }
 
-public GradeCompetencyStatsModel withTotalCompetencies(Integer totalCompetencies) {
+public CompetencyStatsModel withTotalCompetencies(Integer totalCompetencies) {
 this.totalCompetencies = totalCompetencies;
 return this;
 }
@@ -178,7 +186,7 @@ public void setCompletedCompetencies(Integer completedCompetencies) {
 this.completedCompetencies = completedCompetencies;
 }
 
-public GradeCompetencyStatsModel withCompletedCompetencies(Integer completedCompetencies) {
+public CompetencyStatsModel withCompletedCompetencies(Integer completedCompetencies) {
 this.completedCompetencies = completedCompetencies;
 return this;
 }
@@ -193,7 +201,7 @@ public void setInprogressCompetencies(Integer inprogressCompetencies) {
 this.inprogressCompetencies = inprogressCompetencies;
 }
 
-public GradeCompetencyStatsModel withInprogressCompetencies(Integer inprogressCompetencies) {
+public CompetencyStatsModel withInprogressCompetencies(Integer inprogressCompetencies) {
 this.inprogressCompetencies = inprogressCompetencies;
 return this;
 }
@@ -208,7 +216,7 @@ public void setPercentCompletion(Double percentCompletion) {
 this.percentCompletion = percentCompletion;
 }
 
-public GradeCompetencyStatsModel withPercentCompletion(Double percentCompletion) {
+public CompetencyStatsModel withPercentCompletion(Double percentCompletion) {
 this.percentCompletion = percentCompletion;
 return this;
 }
@@ -223,8 +231,38 @@ public void setPercentScore(Double percentScore) {
 this.percentScore = percentScore;
 }
 
-public GradeCompetencyStatsModel withPercentScore(Double percentScore) {
+public CompetencyStatsModel withPercentScore(Double percentScore) {
 this.percentScore = percentScore;
+return this;
+}
+
+@JsonProperty("month")
+public Integer getMonth() {
+return month;
+}
+
+@JsonProperty("month")
+public void setMonth(Integer month) {
+this.month = month;
+}
+
+public CompetencyStatsModel withMonth(Integer month) {
+this.month = month;
+return this;
+}
+
+@JsonProperty("year")
+public Integer getYear() {
+return year;
+}
+
+@JsonProperty("year")
+public void setYear(Integer year) {
+this.year = year;
+}
+
+public CompetencyStatsModel withYear(Integer year) {
+this.year = year;
 return this;
 }
 }

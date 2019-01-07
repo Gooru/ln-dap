@@ -14,25 +14,25 @@ import org.slf4j.LoggerFactory;
 /**
  * @author mukul@gooru
  */
-public class CompetencyCompletionService {
+public class GradeCompetencyCompletionService {
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(CompetencyCompletionService.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GradeCompetencyCompletionService.class);
 	private static final int IN_PROGRESS = 1;
 	private static final int INFERRED = 2;
 	private static final int ASSERTED = 3;
 	private static final int COMPLETED = 4;
 	private static final int MASTERED = 5;
 	private final CompetencyCompletionDao competencyCompletionDao;
-	private final UserSkylineDao userSkylineDao;
+	private final SkylineDao userSkylineDao;
 	private Integer completionCount;
-	private GradeCompetencyStatsModel gradeCompetencyStatsModel = new GradeCompetencyStatsModel();
+	private CompetencyStatsModel gradeCompetencyStatsModel = new CompetencyStatsModel();
 
-	CompetencyCompletionService(DBI dbi) {
+	GradeCompetencyCompletionService(DBI dbi) {
 		this.competencyCompletionDao = dbi.onDemand(CompetencyCompletionDao.class);
-		this.userSkylineDao = dbi.onDemand(UserSkylineDao.class);
+		this.userSkylineDao = dbi.onDemand(SkylineDao.class);
 	}
 	
-	GradeCompetencyStatsModel fetchUserCompetencyStatus(String user, String subjectCode, List<String> competencyCodes) {	
+	CompetencyStatsModel fetchUserCompetencyStatus(String user, String subjectCode, List<String> competencyCodes) {	
 
 		completionCount = 0;
 		List<CompetencyModel> userGradeCompetencyStatusModels = new ArrayList<>();
