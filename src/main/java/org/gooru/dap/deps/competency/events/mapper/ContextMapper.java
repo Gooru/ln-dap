@@ -15,7 +15,6 @@ public class ContextMapper {
   private int questionCount;
   private long pathId;
   private String pathType;
-
   private String contextCollectionType;
   private String contextCollectionId;
 

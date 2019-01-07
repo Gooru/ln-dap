@@ -101,7 +101,6 @@ class GradeCompetencyCalculatorService implements GradeCompetencyCalculator {
 
   private void fetchDestinationGutCodes() {
     CompetencyFetcher competencyFetcher = CompetencyFetcher.build(coreDSDbi);
-    LOGGER.info("gradeId " + model.getGradeId() + " subjectCode " + model.getSubjectCode());
     destinationGutCodes =
         competencyFetcher.fetchCompetenciesForGrade(model.getGradeId(), model.getSubjectCode());
     if (destinationGutCodes == null || destinationGutCodes.isEmpty()) {
