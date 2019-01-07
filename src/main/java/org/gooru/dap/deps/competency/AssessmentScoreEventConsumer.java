@@ -4,7 +4,6 @@ import java.io.IOException;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
-import org.gooru.dap.deps.competency.assessmentscore.atc.preprocessor.AtcPreProcessor;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.gooru.dap.deps.competency.processors.AssessmentScoreEventProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;

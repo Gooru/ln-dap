@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class AtcProcessor {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(AtcProcessor.class);
-
   private final AssessmentScoreEventMapper assessmentScoreEvent;
   private String classId;
   private String courseId;
@@ -28,7 +27,6 @@ public class AtcProcessor {
   private AtcService atcService = new AtcService(DBICreator.getDbiForCoreDS());
   private CompetencyStatsService gradeCompetencyStatsService =
       new CompetencyStatsService(DBICreator.getDbiForDefaultDS());
-
 
   public AtcProcessor(AssessmentScoreEventMapper assessmentScoreEvent) {
     this.assessmentScoreEvent = assessmentScoreEvent;
@@ -79,9 +77,7 @@ public class AtcProcessor {
         gradeCompetencyStatsService.insertUserClassCompetencyStats(gradeCompetencyStats);
 
       } else {
-        LOGGER.info("Subject is not set for user " + userId + "at class " + classId
-            + ".No further processing will be done!");
-
+        LOGGER.info("No Learner Profile for " + userId + "at class " + classId);;
         return;
       }
     } catch (Throwable t) {
