@@ -2,11 +2,11 @@ package org.gooru.dap.processors.repositories;
 
 public interface QuestionTimeSpentRepo {
 
-    void userStatsQuestionTimeSpent();
+  void userStatsQuestionTimeSpent();
 
-    void userStatsQuestionTypeTimeSpent();
+  void userStatsQuestionTypeTimeSpent();
 
-    void questionTypeTimeSpent();
+  void questionTypeTimeSpent();
 
-    void userStatsCCULCQuestionTimeSpent();
+  void userStatsCCULCQuestionTimeSpent();
 }

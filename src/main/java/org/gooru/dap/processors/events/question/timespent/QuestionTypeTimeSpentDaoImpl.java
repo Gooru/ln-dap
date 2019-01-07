@@ -11,37 +11,38 @@ import org.slf4j.LoggerFactory;
 
 class QuestionTypeTimeSpentDaoImpl extends Repository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(QuestionTypeTimeSpentDaoImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(QuestionTypeTimeSpentDaoImpl.class);
 
-    private final ProcessorContext context;
+  private final ProcessorContext context;
 
-    QuestionTypeTimeSpentDaoImpl(ProcessorContext context) {
-        this.context = context;
+  QuestionTypeTimeSpentDaoImpl(ProcessorContext context) {
+    this.context = context;
+  }
+
+  private ContentBean contentBean;
+
+  public ExecutionStatus validateRequest() {
+    final String questionId =
+        context.getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
+    final ContentDao contentDao = getDbiForCoreDS().onDemand(ContentDao.class);
+    final ContentBean contentBean = contentDao.findContentById(questionId);
+    if (contentBean == null) {
+      LOGGER.error("content does not exist  for this question instance {}", questionId);
+      return ExecutionStatus.FAILED;
     }
 
-    private ContentBean contentBean;
+    this.contentBean = contentBean;
 
-    public ExecutionStatus validateRequest() {
-        final String questionId = context.getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final ContentDao contentDao = getDbiForCoreDS().onDemand(ContentDao.class);
-        final ContentBean contentBean = contentDao.findContentById(questionId);
-        if (contentBean == null) {
-            LOGGER.error("content does not exist  for this question instance {}", questionId);
-            return ExecutionStatus.FAILED;
-        }
+    return ExecutionStatus.SUCCESSFUL;
+  }
 
-        this.contentBean = contentBean;
+  public void executeRequest() {
+    QuestionTypeTimeSpentBean resourceContentTypeTimeSpentBean =
+        QuestionTypeTimeSpentBean.createInstance(context.getEventJsonNode(), contentBean);
+    QuestionTypeTimeSpentDao QuestionTypeTimeSpentDao =
+        getDbiForDefaultDS().onDemand(QuestionTypeTimeSpentDao.class);
+    QuestionTypeTimeSpentDao.save(resourceContentTypeTimeSpentBean);
 
-        return ExecutionStatus.SUCCESSFUL;
-    }
-
-    public void executeRequest() {
-        QuestionTypeTimeSpentBean resourceContentTypeTimeSpentBean =
-            QuestionTypeTimeSpentBean.createInstance(context.getEventJsonNode(), contentBean);
-        QuestionTypeTimeSpentDao QuestionTypeTimeSpentDao =
-            getDbiForDefaultDS().onDemand(QuestionTypeTimeSpentDao.class);
-        QuestionTypeTimeSpentDao.save(resourceContentTypeTimeSpentBean);
-
-    }
+  }
 
 }

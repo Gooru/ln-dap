@@ -1,65 +1,69 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender" target="System.out">
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"
+		target="System.out">
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>dap.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>dap.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
-    
-    <appender name="COMPETENCY-LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>competency.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>competency.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-        </encoder>
-    </appender>
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>dap.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>dap.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<append>true</append>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-    <appender name="XMISSION-ERRORS" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>dap-xmission-errors.log</file>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>dap-xmission-errors.%d{yyyy-MM-dd}.log</fileNamePattern>
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <append>true</append>
-        <encoder>
-            <pattern>%msg%n</pattern>
-        </encoder>
-    </appender>
+	<appender name="COMPETENCY-LOG"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>competency.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>competency.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<append>true</append>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
 
-    <logger name="xmission.error" level="debug" additivity="false">
-        <appender-ref ref="XMISSION-ERRORS"/>
-    </logger>
+	<appender name="XMISSION-ERRORS"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>dap-xmission-errors.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>dap-xmission-errors.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<append>true</append>
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
 
-    <!--
-        To create proper separation, it is recommended that each listener should use its own file appender. Currently
-        we are using the same one but this needs to be changed while doing the deployment
-    -->
-    <logger name="org.gooru.dap" level="trace" additivity="false">
-        <appender-ref ref="FILE"/>
-    </logger>
-
-	<logger name="org.gooru.dap.deps.competency" level="debug" additivity="false">
-		<appender-ref ref="COMPETENCY-LOG"/>
+	<logger name="xmission.error" level="debug" additivity="false">
+		<appender-ref ref="XMISSION-ERRORS" />
 	</logger>
 
-    <root level="info">
-        <appender-ref ref="STDOUT"/>
-    </root>
+	<!-- To create proper separation, it is recommended that each listener should 
+		use its own file appender. Currently we are using the same one but this needs 
+		to be changed while doing the deployment -->
+	<logger name="org.gooru.dap" level="trace" additivity="false">
+		<appender-ref ref="FILE" />
+	</logger>
+
+	<logger name="org.gooru.dap.deps.competency" level="debug"
+		additivity="false">
+		<appender-ref ref="COMPETENCY-LOG" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
 </configuration>

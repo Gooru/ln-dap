@@ -5,22 +5,22 @@ package org.gooru.dap.deps.competency.db.mapper;
  */
 public class GutCode {
 
-	private String gutCode;
-	private String taxonomyCode;
+  private String gutCode;
+  private String taxonomyCode;
 
-	public String getGutCode() {
-		return gutCode;
-	}
+  public String getGutCode() {
+    return gutCode;
+  }
 
-	public void setGutCode(String gutCode) {
-		this.gutCode = gutCode;
-	}
+  public void setGutCode(String gutCode) {
+    this.gutCode = gutCode;
+  }
 
-	public String getTaxonomyCode() {
-		return taxonomyCode;
-	}
+  public String getTaxonomyCode() {
+    return taxonomyCode;
+  }
 
-	public void setTaxonomyCode(String taxonomyCode) {
-		this.taxonomyCode = taxonomyCode;
-	}
+  public void setTaxonomyCode(String taxonomyCode) {
+    this.taxonomyCode = taxonomyCode;
+  }
 }

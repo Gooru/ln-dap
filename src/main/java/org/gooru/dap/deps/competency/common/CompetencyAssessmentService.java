@@ -3,7 +3,6 @@ package org.gooru.dap.deps.competency.common;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.gooru.dap.deps.competency.db.mapper.AssessmentCompetency;
 import org.gooru.dap.deps.competency.db.mapper.GutCode;
 import org.skife.jdbi.v2.DBI;
@@ -13,28 +12,28 @@ import org.skife.jdbi.v2.DBI;
  */
 public class CompetencyAssessmentService {
 
-	private final CompetencyAssessmentDao competencyAssessmentDao;
+  private final CompetencyAssessmentDao competencyAssessmentDao;
 
-	public CompetencyAssessmentService(DBI dbi) {
-		competencyAssessmentDao = dbi.onDemand(CompetencyAssessmentDao.class);
-	}
+  public CompetencyAssessmentService(DBI dbi) {
+    competencyAssessmentDao = dbi.onDemand(CompetencyAssessmentDao.class);
+  }
 
-	public AssessmentCompetency getAssessmentCompetency(String assessmentId) {
-		return competencyAssessmentDao.getAssessmentCompetency(assessmentId);
-	}
+  public AssessmentCompetency getAssessmentCompetency(String assessmentId) {
+    return competencyAssessmentDao.getAssessmentCompetency(assessmentId);
+  }
 
-	public Map<String, String> getGutCodeMapping(String taxonomyIds) {
-		List<GutCode> gutCodes = competencyAssessmentDao.fetchGutCodes(taxonomyIds);
-		Map<String, String> fwCodeMap = new HashMap<>();
-		
-		gutCodes.forEach(gutcode -> {
-			fwCodeMap.put(gutcode.getTaxonomyCode(), gutcode.getGutCode());
-		});
-		
-		return fwCodeMap;
-	}
+  public Map<String, String> getGutCodeMapping(String taxonomyIds) {
+    List<GutCode> gutCodes = competencyAssessmentDao.fetchGutCodes(taxonomyIds);
+    Map<String, String> fwCodeMap = new HashMap<>();
 
-	public List<String> fetchSignatureAssessmentGutCodes(String assessmentId) {
-		return competencyAssessmentDao.fetchSignatureAssessment(assessmentId);
-	}
+    gutCodes.forEach(gutcode -> {
+      fwCodeMap.put(gutcode.getTaxonomyCode(), gutcode.getGutCode());
+    });
+
+    return fwCodeMap;
+  }
+
+  public List<String> fetchSignatureAssessmentGutCodes(String assessmentId) {
+    return competencyAssessmentDao.fetchSignatureAssessment(assessmentId);
+  }
 }

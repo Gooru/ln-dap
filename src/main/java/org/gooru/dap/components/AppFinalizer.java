@@ -5,11 +5,11 @@ package org.gooru.dap.components;
  */
 public final class AppFinalizer {
 
-    private AppFinalizer() {
-        throw new AssertionError();
-    }
+  private AppFinalizer() {
+    throw new AssertionError();
+  }
 
-    public static void finalizeApp() {
+  public static void finalizeApp() {
 
-    }
+  }
 }

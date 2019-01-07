@@ -10,17 +10,19 @@ import org.slf4j.LoggerFactory;
  */
 public interface AtcCompute {
 
-    CompetencyStatsModel compute(AtcEvent scoreObject);
-    
-    public static final Logger LOGGER = LoggerFactory.getLogger(AtcCompute.class);
-    
-    static AtcCompute createInstance(AtcEvent scoreObject) {
-    	if (scoreObject.getGradeId() != null && scoreObject.getGradeId() > 0) {
-    		LOGGER.info("Computing Grade based Competency Stats for grade " + scoreObject.getGradeId());
-    		return new AtcComputeGradeBased(DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForCoreDS());    		
-    	} else {
-    		LOGGER.info("Computing Competency Stats based on User's Learner Profile");
-    		return new AtcComputeSkylineBased(DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForCoreDS());
-    	}        
+  CompetencyStatsModel compute(AtcEvent scoreObject);
+
+  public static final Logger LOGGER = LoggerFactory.getLogger(AtcCompute.class);
+
+  static AtcCompute createInstance(AtcEvent scoreObject) {
+    if (scoreObject.getGradeId() != null && scoreObject.getGradeId() > 0) {
+      LOGGER.info("Computing Grade based Competency Stats for grade " + scoreObject.getGradeId());
+      return new AtcComputeGradeBased(DBICreator.getDbiForDefaultDS(),
+          DBICreator.getDbiForCoreDS());
+    } else {
+      LOGGER.info("Computing Competency Stats based on User's Learner Profile");
+      return new AtcComputeSkylineBased(DBICreator.getDbiForDefaultDS(),
+          DBICreator.getDbiForCoreDS());
     }
+  }
 }

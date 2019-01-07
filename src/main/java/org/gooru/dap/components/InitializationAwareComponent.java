@@ -5,6 +5,6 @@ package org.gooru.dap.components;
  */
 public interface InitializationAwareComponent {
 
-    void initializeComponent();
+  void initializeComponent();
 
 }

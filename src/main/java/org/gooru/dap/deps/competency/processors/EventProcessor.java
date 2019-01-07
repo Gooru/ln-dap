@@ -5,5 +5,5 @@ package org.gooru.dap.deps.competency.processors;
  */
 public interface EventProcessor {
 
-	public void process();
+  public void process();
 }

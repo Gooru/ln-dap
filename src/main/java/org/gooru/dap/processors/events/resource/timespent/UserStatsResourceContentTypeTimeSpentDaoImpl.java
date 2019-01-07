@@ -11,37 +11,40 @@ import org.slf4j.LoggerFactory;
 
 class UserStatsResourceContentTypeTimeSpentDaoImpl extends Repository {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserStatsResourceContentTypeTimeSpentDaoImpl.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(UserStatsResourceContentTypeTimeSpentDaoImpl.class);
 
-    private final ProcessorContext context;
+  private final ProcessorContext context;
 
-    UserStatsResourceContentTypeTimeSpentDaoImpl(ProcessorContext context) {
-        this.context = context;
+  UserStatsResourceContentTypeTimeSpentDaoImpl(ProcessorContext context) {
+    this.context = context;
+  }
+
+  private ContentBean contentBean;
+
+  public ExecutionStatus validateRequest() {
+    final ContentDao contentDao = getDbiForCoreDS().onDemand(ContentDao.class);
+    final String resourceId =
+        context.getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
+    final ContentBean contentBean = contentDao.findContentById(resourceId);
+    if (contentBean == null) {
+      LOGGER.error("content does not exist  for this resource instance {}", resourceId);
+      return ExecutionStatus.FAILED;
     }
 
-    private ContentBean contentBean;
+    this.contentBean = contentBean;
 
-    public ExecutionStatus validateRequest() {
-        final ContentDao contentDao = getDbiForCoreDS().onDemand(ContentDao.class);
-        final String resourceId = context.getEventJsonNode().get(EventMessageConstant.RESOURCE_ID).textValue();
-        final ContentBean contentBean = contentDao.findContentById(resourceId);
-        if (contentBean == null) {
-            LOGGER.error("content does not exist  for this resource instance {}", resourceId);
-            return ExecutionStatus.FAILED;
-        }
+    return ExecutionStatus.SUCCESSFUL;
+  }
 
-        this.contentBean = contentBean;
+  public void executeRequest() {
+    UserStatsResourceContentTypeTimeSpentBean userStatsResourceContentTypeTimeSpentBean =
+        UserStatsResourceContentTypeTimeSpentBean.createInstance(context.getEventJsonNode(),
+            contentBean);
+    UserStatsResourceContentTypeTimeSpentDao userStatsResourceContentTypeTimeSpentDao =
+        getDbiForDefaultDS().onDemand(UserStatsResourceContentTypeTimeSpentDao.class);
+    userStatsResourceContentTypeTimeSpentDao.save(userStatsResourceContentTypeTimeSpentBean);
 
-        return ExecutionStatus.SUCCESSFUL;
-    }
-
-    public void executeRequest() {
-        UserStatsResourceContentTypeTimeSpentBean userStatsResourceContentTypeTimeSpentBean =
-            UserStatsResourceContentTypeTimeSpentBean.createInstance(context.getEventJsonNode(), contentBean);
-        UserStatsResourceContentTypeTimeSpentDao userStatsResourceContentTypeTimeSpentDao =
-            getDbiForDefaultDS().onDemand(UserStatsResourceContentTypeTimeSpentDao.class);
-        userStatsResourceContentTypeTimeSpentDao.save(userStatsResourceContentTypeTimeSpentBean);
-
-    }
+  }
 
 }
