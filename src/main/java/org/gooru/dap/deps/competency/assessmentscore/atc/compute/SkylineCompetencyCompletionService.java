@@ -37,8 +37,7 @@ public class SkylineCompetencyCompletionService {
     if (userSkylineModels.isEmpty()) {
       LOGGER.info("The User Skyline is empty");
       return null;
-    } else {
-      Map<String, Map<String, CompetencyModel>> completedCompMap = new HashMap<>();
+    } else {      
       Map<String, Map<String, CompetencyModel>> skylineCompletedCompMap = new HashMap<>();
       totalCompetencies = userSkylineModels.size();
       skylineCompetencyStatsModel.setTotalCompetencies(totalCompetencies);
@@ -71,8 +70,8 @@ public class SkylineCompetencyCompletionService {
         int sequence = model.getCompetencySeq();
         int status = model.getStatus();
 
-        if (completedCompMap.containsKey(domainCode)) {
-          Map<String, CompetencyModel> competencies = completedCompMap.get(domainCode);
+        if (skylineCompletedCompMap.containsKey(domainCode)) {
+          Map<String, CompetencyModel> competencies = skylineCompletedCompMap.get(domainCode);
           for (Map.Entry<String, CompetencyModel> entry : competencies.entrySet()) {
             CompetencyModel compModel = entry.getValue();
             int compSeq = compModel.getCompetencySeq();
