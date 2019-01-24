@@ -2,7 +2,10 @@ package org.gooru.dap.deps.competency.assessmentscore.atc.compute;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.components.jdbi.PGArrayUtils;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcEvent;
@@ -20,8 +23,11 @@ public class AtcComputeSkylineBased implements AtcCompute {
   private final DBI dbi;
   private final DBI coreDbi;
   private CompetencyPerformanceDao competencyPerformanceDao;
+  private SkylineDao userSkylineDao;
   private AtcEvent atcEventObject;
   private final CompetencyStatsModel skylineCompetencyStatsModel = new CompetencyStatsModel();
+  private static final int IN_PROGRESS = 1;
+  private List<String> skylineCompetencyCodes = new ArrayList<>();
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AtcComputeSkylineBased.class);
 
@@ -47,7 +53,9 @@ public class AtcComputeSkylineBased implements AtcCompute {
           + " for class " + atcEventObject.getClassId());
       LOGGER.debug("Compute User Competency Completion");
       computeSkylineBasedCompetencyCompletion();
-      LOGGER.debug("Compute User Competency Performance");
+      LOGGER.debug("Fetch Skyline Competencies");
+      fetchSkylineComptencies();
+      LOGGER.debug("Compute User Competency Performance");      
       computeSkylineBasedUserCompetencyPerformance();
       return skylineCompetencyStatsModel;
     } catch (IllegalStateException ex) {
@@ -91,14 +99,33 @@ public class AtcComputeSkylineBased implements AtcCompute {
   }
 
   private void computeSkylineBasedUserCompetencyPerformance() {
-
     Double userAvgScore = 0.0;
     competencyPerformanceDao = dbi.onDemand(CompetencyPerformanceDao.class);
-    userAvgScore =
-        competencyPerformanceDao.fetchSkylineCompetencyPerformance(atcEventObject.getUserId());
+    if (skylineCompetencyCodes != null && !skylineCompetencyCodes.isEmpty()) {
+      userAvgScore =
+          competencyPerformanceDao.fetchSkylineCompetencyPerformance(atcEventObject.getUserId(), 
+              PGArrayUtils.convertFromListStringToSqlArrayOfString(skylineCompetencyCodes));
+      if (userAvgScore != null) {
+        skylineCompetencyStatsModel.setPercentScore(userAvgScore);
+      }      
+    }
+  }
+  
+  private void fetchSkylineComptencies() {
+    this.userSkylineDao = dbi.onDemand(SkylineDao.class);
+    List<CompetencyModel> userSkylineModels = new ArrayList<>();
+    userSkylineModels = userSkylineDao.fetchUserDomainCompetencyStatus(atcEventObject.getUserId(), atcEventObject.getSubjectCode());
 
-    if (userAvgScore != null) {
-      skylineCompetencyStatsModel.setPercentScore(userAvgScore);
+    if (userSkylineModels.isEmpty()) {
+      LOGGER.info("The User Skyline is empty");
+    } else {      
+      List<CompetencyModel> competencies = userSkylineModels.stream()
+          .filter(skymodel -> skymodel.getStatus() >= IN_PROGRESS).collect(Collectors.toList());      
+      competencies.forEach(model -> {
+        String compCode = model.getCompetencyCode();
+        LOGGER.debug("Skyline Competencies Code" + compCode);
+        skylineCompetencyCodes.add(compCode);       
+      });
     }
   }
 
