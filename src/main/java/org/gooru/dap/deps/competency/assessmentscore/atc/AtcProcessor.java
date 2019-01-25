@@ -39,19 +39,17 @@ public class AtcProcessor {
       userId = this.assessmentScoreEvent.getUserId();
 
       // Calculate gradeId for this student
-      // If the gradeId of the Student is not set,
-      // then store the Global Skyline for the user
-
-      // It is assumed that the Setter system has taken care of the fact that
-      // Student grade for this class is always lower than that upper bound of the
-      // class.
+      // If the gradeId of the Student is not set, then get the gradeId of the Class
+      // If that is also not set then store the Global Skyline for the user
 
       Integer gradeId = atcService.fetchGradefromClassMembers(userId, classId);
+      if (gradeId == null) {
+          gradeId = atcService.fetchGradefromClass(classId, courseId);
+      }
       LOGGER.debug("Fetching subject code");
       initializeSubjectCode();
 
       if (gradeId == null || gradeId <= 0) {
-        // gradeId = atcService.fetchGradefromClass(classId, courseId);
         AtcEvent atcEventObject = new AtcEvent(classId, courseId, userId, null, subjectCode);
 
         AtcCompute atcComputeInstance = AtcCompute.createInstance(atcEventObject);
@@ -76,7 +74,8 @@ public class AtcProcessor {
         // Persist Aggregated Data into a DB Table
         gradeCompetencyStatsService.insertUserClassCompetencyStats(gradeCompetencyStats);
 
-      } else {
+      } 
+      else {
         LOGGER.info("No Learner Profile for " + userId + "at class " + classId);;
         return;
       }
