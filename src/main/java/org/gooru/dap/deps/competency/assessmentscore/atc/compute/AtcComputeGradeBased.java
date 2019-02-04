@@ -2,7 +2,7 @@ package org.gooru.dap.deps.competency.assessmentscore.atc.compute;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.components.jdbi.PGArrayUtils;
@@ -87,6 +87,10 @@ public class AtcComputeGradeBased implements AtcCompute {
       LocalDate today = LocalDate.now();
       gradeCompetencyStatsModel.setMonth(today.getMonthValue());
       gradeCompetencyStatsModel.setYear(today.getYear());
+      LocalDate localDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
+      Date statsDate = Date.valueOf(localDate);
+      LOGGER.info("The date is " + statsDate);
+      gradeCompetencyStatsModel.setStatsDate(statsDate);      
       CompetencyStatsModel stats = competencyCompletionService.fetchUserCompetencyStatus(cm,
           atcEventObject.getSubjectCode(), gradeCompetencyList);
       if (stats != null) {

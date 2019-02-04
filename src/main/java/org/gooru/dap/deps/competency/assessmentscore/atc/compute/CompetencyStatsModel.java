@@ -1,6 +1,7 @@
 package org.gooru.dap.deps.competency.assessmentscore.atc.compute;
 
 
+import java.sql.Date;
 /**
  * @author mukul@gooru
  * 
@@ -11,7 +12,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({"userId", "classId", "courseId", "gradeId", "subjectCode", "totalCompetencies",
-    "completedCompetencies", "inprogressCompetencies", "percentCompletion", "percentScore", "month",
+    "completedCompetencies", "inprogressCompetencies", "percentCompletion", "percentScore", "statsDate", "month",
     "year"})
 public class CompetencyStatsModel {
 
@@ -35,6 +36,8 @@ public class CompetencyStatsModel {
   private Double percentCompletion;
   @JsonProperty("percentScore")
   private Double percentScore;
+  @JsonProperty("statsDate")
+  private Date statsDate;
   @JsonProperty("month")
   private Integer month;
   @JsonProperty("year")
@@ -59,7 +62,7 @@ public class CompetencyStatsModel {
    */
   public CompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId,
       String subjectCode, Integer totalCompetencies, Integer completedCompetencies,
-      Integer inprogressCompetencies, Double percentCompletion, Double percentScore, Integer month,
+      Integer inprogressCompetencies, Double percentCompletion, Double percentScore, Date statsDate, Integer month,
       Integer year) {
     super();
     this.userId = userId;
@@ -72,6 +75,7 @@ public class CompetencyStatsModel {
     this.inprogressCompetencies = inprogressCompetencies;
     this.percentCompletion = percentCompletion;
     this.percentScore = percentScore;
+    this.statsDate = statsDate;
     this.month = month;
     this.year = year;
   }
@@ -223,6 +227,21 @@ public class CompetencyStatsModel {
 
   public CompetencyStatsModel withPercentScore(Double percentScore) {
     this.percentScore = percentScore;
+    return this;
+  }
+  
+  @JsonProperty("statsDate")
+  public Date getStatsDate() {
+    return statsDate;
+  }
+
+  @JsonProperty("statsDate")
+  public void setStatsDate(Date statsDate) {
+    this.statsDate = statsDate;
+  }
+
+  public CompetencyStatsModel withStatsDate(Date statsDate) {
+    this.statsDate = statsDate;
     return this;
   }
 
