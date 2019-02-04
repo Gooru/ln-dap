@@ -1,5 +1,6 @@
 package org.gooru.dap.deps.competency.assessmentscore.atc.compute;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +81,10 @@ public class AtcComputeSkylineBased implements AtcCompute {
     LocalDate today = LocalDate.now();
     skylineCompetencyStatsModel.setMonth(today.getMonthValue());
     skylineCompetencyStatsModel.setYear(today.getYear());
-
+    LocalDate localDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
+    Date statsDate = Date.valueOf(localDate);
+    LOGGER.info("The date is " + statsDate);
+    skylineCompetencyStatsModel.setStatsDate(statsDate);      
     CompetencyStatsModel stats = competencyCompletionService.fetchUserSkylineCompetencyStatus(
         atcEventObject.getUserId(), atcEventObject.getSubjectCode());
     if (stats != null) {
