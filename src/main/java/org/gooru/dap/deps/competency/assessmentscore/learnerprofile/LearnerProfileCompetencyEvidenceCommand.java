@@ -16,10 +16,12 @@ public class LearnerProfileCompetencyEvidenceCommand {
   private Double collectionScore;
   private String collectionType;
   private long activityTime;
+  private String contentSource;
 
   public LearnerProfileCompetencyEvidenceCommand(String userId, String classId, String courseId,
       String unitId, String lessonId, String latestSessionId, String collectionId,
-      Long collectionPathId, Double collectionScore, String collectionType, long activityTime) {
+      Long collectionPathId, Double collectionScore, String collectionType, long activityTime,
+      String contentSource) {
     this.userId = userId;
     this.classId = classId;
     this.courseId = courseId;
@@ -31,6 +33,7 @@ public class LearnerProfileCompetencyEvidenceCommand {
     this.collectionScore = collectionScore;
     this.collectionType = collectionType;
     this.activityTime = activityTime;
+    this.contentSource = contentSource;
   }
 
   public String getUserId() {
@@ -77,4 +80,8 @@ public class LearnerProfileCompetencyEvidenceCommand {
     return activityTime;
   }
 
+  public String getContentSource() {
+    return contentSource;
+  }
+  
 }

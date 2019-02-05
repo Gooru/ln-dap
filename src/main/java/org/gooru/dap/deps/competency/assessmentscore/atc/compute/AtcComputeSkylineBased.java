@@ -83,7 +83,6 @@ public class AtcComputeSkylineBased implements AtcCompute {
     skylineCompetencyStatsModel.setYear(today.getYear());
     LocalDate localDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
     Date statsDate = Date.valueOf(localDate);
-    LOGGER.info("The date is " + statsDate);
     skylineCompetencyStatsModel.setStatsDate(statsDate);      
     CompetencyStatsModel stats = competencyCompletionService.fetchUserSkylineCompetencyStatus(
         atcEventObject.getUserId(), atcEventObject.getSubjectCode());

@@ -28,6 +28,7 @@ public final class LearnerProfileCompetencyEvidenceCommandBuilder {
     String lessonId = context.getLessonId();
     String sessionId = context.getSessionId();
     long pathId = context.getPathId();
+    String contentSource = context.getContentSource();
 
     ResultMapper result = assessmentScoreEvent.getResult();
     Double score = null;
@@ -37,7 +38,7 @@ public final class LearnerProfileCompetencyEvidenceCommandBuilder {
 
     LearnerProfileCompetencyEvidenceCommand command =
         new LearnerProfileCompetencyEvidenceCommand(userId, classId, courseId, unitId, lessonId,
-            sessionId, collectionId, pathId, score, collectionType, activityTime);
+            sessionId, collectionId, pathId, score, collectionType, activityTime, contentSource);
     return command;
 
   }

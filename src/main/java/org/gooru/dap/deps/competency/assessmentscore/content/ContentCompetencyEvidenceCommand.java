@@ -14,11 +14,12 @@ public class ContentCompetencyEvidenceCommand {
   private Long collectionPathId;
   private Double collectionScore;
   private String collectionType;
+  private String contentSource;
   private long activityTime;
 
   public ContentCompetencyEvidenceCommand(String userId, String classId, String courseId,
       String unitId, String lessonId, String latestSessionId, String collectionId,
-      long collectionPathId, Double collectionScore, String collectionType, long activityTime) {
+      long collectionPathId, Double collectionScore, String collectionType, long activityTime, String contentSource) {
     this.userId = userId;
     this.classId = classId;
     this.courseId = courseId;
@@ -30,6 +31,7 @@ public class ContentCompetencyEvidenceCommand {
     this.collectionScore = collectionScore;
     this.collectionType = collectionType;
     this.activityTime = activityTime;
+    this.contentSource = contentSource;
   }
 
   public String getUserId() {
@@ -76,4 +78,7 @@ public class ContentCompetencyEvidenceCommand {
     return activityTime;
   }
 
+  public String getContentSource() {
+    return contentSource;
+  }
 }
