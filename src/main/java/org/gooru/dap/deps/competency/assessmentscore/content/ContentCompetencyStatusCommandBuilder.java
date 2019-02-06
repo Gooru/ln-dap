@@ -8,19 +8,19 @@ import org.gooru.dap.deps.competency.events.mapper.CollectionStartEventMapper;
  */
 public final class ContentCompetencyStatusCommandBuilder {
 
-	private ContentCompetencyStatusCommandBuilder() {
-		throw new AssertionError();
-	}
+  private ContentCompetencyStatusCommandBuilder() {
+    throw new AssertionError();
+  }
 
-	public static ContentCompetencyStatusCommand build(AssessmentScoreEventMapper assessmentScore,
-			String competencyCode) {
+  public static ContentCompetencyStatusCommand build(AssessmentScoreEventMapper assessmentScore,
+      String competencyCode) {
 
-		String userId = assessmentScore.getUserId();
-		long activityTime = assessmentScore.getActivityTime();
+    String userId = assessmentScore.getUserId();
+    long activityTime = assessmentScore.getActivityTime();
 
-		ContentCompetencyStatusCommand command = new ContentCompetencyStatusCommand(userId, competencyCode,
-				activityTime);
-		return command;
-	}
-	
+    ContentCompetencyStatusCommand command =
+        new ContentCompetencyStatusCommand(userId, competencyCode, activityTime);
+    return command;
+  }
+
 }

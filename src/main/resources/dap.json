@@ -22,7 +22,7 @@
 		"org.gooru.dap.deps.CompetencyConsumer",
 		"org.gooru.dap.deps.QuestionConsumer",
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer",
-		"org.gooru.dap.deps.competency.CollectionStartEventConsumer",	
+		"org.gooru.dap.deps.competency.CollectionStartEventConsumer",
 		"org.gooru.dap.deps.competency.CompetencyStatsEventConsumer"
 	],
 	"deps.config": {
@@ -105,7 +105,7 @@
 					"org.gooru.da.sink.dap.competency.stats"
 				]
 			}
-		}		
+		}
 	},
 	"kafkaproducers": {
 		"kafka.producer.config": {

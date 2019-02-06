@@ -6,8 +6,8 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapper;
 
 public abstract class ContentDao {
 
-    @SqlQuery("SELECT original_content_id, content_subformat::text from content where id = :id::uuid")
-    @RegisterMapper(ContentMapper.class)
-    public abstract ContentBean findContentById(@Bind("id") String  id);
-    
+  @SqlQuery("SELECT original_content_id, content_subformat::text from content where id = :id::uuid")
+  @RegisterMapper(ContentMapper.class)
+  public abstract ContentBean findContentById(@Bind("id") String id);
+
 }

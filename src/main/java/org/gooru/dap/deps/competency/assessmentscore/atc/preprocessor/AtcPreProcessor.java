@@ -13,46 +13,45 @@ import org.slf4j.LoggerFactory;
  * @author mukul@gooru
  */
 public class AtcPreProcessor {
-	
-	private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
-	private String classId;
-	private String courseId;
-	private String userId;
 
-	private final AssessmentScoreEventMapper assessmentScoreEvent;
-	private AtcPreProcessorService service = new AtcPreProcessorService(DBICreator.getDbiForCoreDS());
+  private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
+  private String classId;
+  private String courseId;
+  private String userId;
 
-	public AtcPreProcessor (AssessmentScoreEventMapper assessmentScoreEvent) {
-		this.assessmentScoreEvent = assessmentScoreEvent;
-	}
+  private final AssessmentScoreEventMapper assessmentScoreEvent;
+  private AtcPreProcessorService service = new AtcPreProcessorService(DBICreator.getDbiForCoreDS());
 
-	public void process() {
-			processAssessmentScore();
-	}
+  public AtcPreProcessor(AssessmentScoreEventMapper assessmentScoreEvent) {
+    this.assessmentScoreEvent = assessmentScoreEvent;
+  }
 
-	private void processAssessmentScore() {
-		try {
-			classId = this.assessmentScoreEvent.getContext().getClassId();
-			courseId = this.assessmentScoreEvent.getContext().getCourseId();
-			userId = this.assessmentScoreEvent.getUserId();
+  public void process() {
+    processAssessmentScore();
+  }
 
-			//Check if Class == Premium. If class != Premium - Don't go any further.
-			//To reduce Processing, we might also put a check of score > 80. 
-			if (classId != null && courseId != null & userId != null) {				
-				if (service.CheckifClassPremium(classId)) {
-					LOGGER.info("Class " + classId + " is Premium, Continue ..");
-					new AtcProcessor(assessmentScoreEvent).compute();
-				} else {
-					LOGGER.info("Class " + classId + " is NOT Premium. No further processing");
-					return;
-				}
-			}
-			
-		} catch (Throwable t) {
-			LOGGER.error("Exception while processing event", t);
-			return;
-		}
-		
-	}
+  private void processAssessmentScore() {
+    try {
+      classId = this.assessmentScoreEvent.getContext().getClassId();
+      courseId = this.assessmentScoreEvent.getContext().getCourseId();
+      userId = this.assessmentScoreEvent.getUserId();
+
+      // Check if Class == Premium. If class != Premium - Don't go any further.
+      if (classId != null && courseId != null & userId != null) {
+        if (service.CheckifClassPremium(classId)) {
+          LOGGER.info("Class " + classId + " is Premium, Continue ..");
+          new AtcProcessor(assessmentScoreEvent).compute();
+      } else {
+          LOGGER.info("Class " + classId + " is NOT Premium. No further processing");
+          return;          
+      }
+      }
+
+    } catch (Throwable t) {
+      LOGGER.error("Exception while processing event", t);
+      return;
+    }
+
+  }
 
 }

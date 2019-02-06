@@ -5,6 +5,6 @@ package org.gooru.dap.components;
  */
 interface FinalizationAwareComponent {
 
-    void finalizeComponent();
+  void finalizeComponent();
 
 }

@@ -6,22 +6,22 @@ import org.gooru.dap.processors.repositories.jdbi.Repository;
 
 public final class TransactionExecutor {
 
-    private TransactionExecutor() {
-        throw new AssertionError();
-    }
+  private TransactionExecutor() {
+    throw new AssertionError();
+  }
 
-    public static void execute(DBHandler handler) {
-        ExecutionStatus doSanityCheck = handler.checkSanity();
-        if (doSanityCheck.isSuccessFul()) {
-            executeWithTransaction(handler);
-        }
+  public static void execute(DBHandler handler) {
+    ExecutionStatus doSanityCheck = handler.checkSanity();
+    if (doSanityCheck.isSuccessFul()) {
+      executeWithTransaction(handler);
     }
+  }
 
-    private static void executeWithTransaction(DBHandler handler) {
-        Repository repository = handler.getRepository();
-        if (repository.validateRequest().isSuccessFul()) {
-            repository.executeRequest();
-        }
+  private static void executeWithTransaction(DBHandler handler) {
+    Repository repository = handler.getRepository();
+    if (repository.validateRequest().isSuccessFul()) {
+      repository.executeRequest();
     }
+  }
 
 }

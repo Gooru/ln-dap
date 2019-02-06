@@ -6,13 +6,13 @@ import org.gooru.dap.processors.repositories.RepoBuilder;
 
 public class ResourceContentTypeTimeSpentProcessor extends AbstractEventProcessor {
 
-    public ResourceContentTypeTimeSpentProcessor(ProcessorContext context) {
-        super(context);
-    }
+  public ResourceContentTypeTimeSpentProcessor(ProcessorContext context) {
+    super(context);
+  }
 
-    @Override
-    protected void processEvent() {
-       RepoBuilder.buildResourceTimeSpentRepo(context).resourceContentTypeTimeSpent();
-    }
+  @Override
+  protected void processEvent() {
+    RepoBuilder.buildResourceTimeSpentRepo(context).resourceContentTypeTimeSpent();
+  }
 
 }

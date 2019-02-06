@@ -7,37 +7,41 @@ import org.gooru.dap.processors.repositories.jdbi.transactions.TransactionExecut
 
 public class JdbiResourceTimeSpentRepo implements ResourceTimeSpentRepo {
 
-    private final ProcessorContext context;
+  private final ProcessorContext context;
 
-    public JdbiResourceTimeSpentRepo(ProcessorContext context) {
-        this.context = context;
-    }
+  public JdbiResourceTimeSpentRepo(ProcessorContext context) {
+    this.context = context;
+  }
 
-    @Override
-    public void userStatsResourceTimeSpent() {
-        TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsResourceTimeSpent(context));
-    }
+  @Override
+  public void userStatsResourceTimeSpent() {
+    TransactionExecutor
+        .execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsResourceTimeSpent(context));
+  }
 
-    @Override
-    public void userStatsResourceContentTypeTimeSpent() {
-        TransactionExecutor
-            .execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsResourceContentTypeTimeSpent(context));
-    }
+  @Override
+  public void userStatsResourceContentTypeTimeSpent() {
+    TransactionExecutor.execute(
+        DBResourceTimeSpentHandlerBuilder.buildUserStatsResourceContentTypeTimeSpent(context));
+  }
 
-    @Override
-    public void resourceContentTypeTimeSpent() {
-        TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildResourceContentTypeTimeSpent(context));
-    }
+  @Override
+  public void resourceContentTypeTimeSpent() {
+    TransactionExecutor
+        .execute(DBResourceTimeSpentHandlerBuilder.buildResourceContentTypeTimeSpent(context));
+  }
 
-    @Override
-    public void userStatsOriginalResourceTimeSpent() {
-        TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsOriginalResourceTimeSpent(context));
-    }
+  @Override
+  public void userStatsOriginalResourceTimeSpent() {
+    TransactionExecutor.execute(
+        DBResourceTimeSpentHandlerBuilder.buildUserStatsOriginalResourceTimeSpent(context));
+  }
 
-    @Override
-    public void userStatsCCULCResourceTimeSpent() {
-        TransactionExecutor.execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsCCULCResourceTimeSpent(context));
+  @Override
+  public void userStatsCCULCResourceTimeSpent() {
+    TransactionExecutor
+        .execute(DBResourceTimeSpentHandlerBuilder.buildUserStatsCCULCResourceTimeSpent(context));
 
-    }
+  }
 
 }

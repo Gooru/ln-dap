@@ -7,34 +7,34 @@ import java.util.regex.Pattern;
  */
 public class ContentCompetencyStatusCommand {
 
-	private static final Pattern PERIOD_PATTERN = Pattern.compile("\\.");
+  private static final Pattern PERIOD_PATTERN = Pattern.compile("\\.");
 
-	private String userId;
-	private String competencyCode;
-	private String frameworkCode;
-	private long activityTime;
+  private String userId;
+  private String competencyCode;
+  private String frameworkCode;
+  private long activityTime;
 
-	public ContentCompetencyStatusCommand(String userId, String competencyCode, long activityTime) {
-		this.userId = userId;
-		this.competencyCode = competencyCode;
-		this.frameworkCode = PERIOD_PATTERN.split(competencyCode)[0];
-		this.activityTime = activityTime;
-	}
+  public ContentCompetencyStatusCommand(String userId, String competencyCode, long activityTime) {
+    this.userId = userId;
+    this.competencyCode = competencyCode;
+    this.frameworkCode = PERIOD_PATTERN.split(competencyCode)[0];
+    this.activityTime = activityTime;
+  }
 
-	public String getUserId() {
-		return userId;
-	}
+  public String getUserId() {
+    return userId;
+  }
 
-	public String getCompetencyCode() {
-		return competencyCode;
-	}
+  public String getCompetencyCode() {
+    return competencyCode;
+  }
 
-	public String getFrameworkCode() {
-		return frameworkCode;
-	}
+  public String getFrameworkCode() {
+    return frameworkCode;
+  }
 
-	public long getActivityTime() {
-		return activityTime;
-	}
+  public long getActivityTime() {
+    return activityTime;
+  }
 
 }
