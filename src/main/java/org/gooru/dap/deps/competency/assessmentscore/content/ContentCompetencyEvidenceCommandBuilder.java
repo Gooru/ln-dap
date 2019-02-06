@@ -27,7 +27,8 @@ public final class ContentCompetencyEvidenceCommandBuilder {
     String lessonId = context.getLessonId();
     String sessionId = context.getSessionId();
     long pathId = context.getPathId();
-
+    String contentSource = context.getContentSource();
+    
     ResultMapper result = assessmentScoreEvent.getResult();
     Double score = null;
     if (result != null) {
@@ -36,7 +37,7 @@ public final class ContentCompetencyEvidenceCommandBuilder {
 
     ContentCompetencyEvidenceCommand command =
         new ContentCompetencyEvidenceCommand(userId, classId, courseId, unitId, lessonId, sessionId,
-            collectionId, pathId, score, collectionType, activityTime);
+            collectionId, pathId, score, collectionType, activityTime, contentSource);
     // TODO: validation for the collection type ??
     return command;
   }

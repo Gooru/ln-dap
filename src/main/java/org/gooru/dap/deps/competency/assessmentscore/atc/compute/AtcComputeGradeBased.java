@@ -89,7 +89,6 @@ public class AtcComputeGradeBased implements AtcCompute {
       gradeCompetencyStatsModel.setYear(today.getYear());
       LocalDate localDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
       Date statsDate = Date.valueOf(localDate);
-      LOGGER.info("The date is " + statsDate);
       gradeCompetencyStatsModel.setStatsDate(statsDate);      
       CompetencyStatsModel stats = competencyCompletionService.fetchUserCompetencyStatus(cm,
           atcEventObject.getSubjectCode(), gradeCompetencyList);

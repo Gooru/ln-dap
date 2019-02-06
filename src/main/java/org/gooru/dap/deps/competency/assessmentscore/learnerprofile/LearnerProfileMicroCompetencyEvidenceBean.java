@@ -17,6 +17,7 @@ public class LearnerProfileMicroCompetencyEvidenceBean {
   private long collectionPathId;
   private double collectionScore;
   private String collectionType;
+  private String contentSource;
   private int status;
   private Timestamp createdAt;
   private Timestamp updatedAt;
@@ -35,6 +36,7 @@ public class LearnerProfileMicroCompetencyEvidenceBean {
     this.collectionPathId = command.getCollectionPathId();
     this.collectionScore = command.getCollectionScore();
     this.collectionType = command.getCollectionType();
+    this.contentSource = command.getContentSource();
     Timestamp ts = new Timestamp(command.getActivityTime());
     this.createdAt = ts;
     this.updatedAt = ts;
@@ -126,6 +128,14 @@ public class LearnerProfileMicroCompetencyEvidenceBean {
 
   public void setCollectionType(String collectionType) {
     this.collectionType = collectionType;
+  }
+  
+  public String getContentSource() {
+    return contentSource;
+  }
+
+  public void setContentSource(String contentSource) {
+    this.contentSource = contentSource;
   }
 
   public int getStatus() {

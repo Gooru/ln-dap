@@ -20,6 +20,7 @@ public class ContentCompetencyEvidenceBean {
   private Long collectionPathId;
   private Double collectionScore;
   private String collectionType;
+  private String contentSource;
   private int status;
   private Timestamp createdAt;
   private Timestamp updatedAt;
@@ -37,6 +38,7 @@ public class ContentCompetencyEvidenceBean {
     this.collectionPathId = command.getCollectionPathId();
     this.collectionScore = command.getCollectionScore();
     this.collectionType = command.getCollectionType();
+    this.contentSource = command.getContentSource();
 
     Timestamp now = new Timestamp(System.currentTimeMillis());
     this.createdAt = now;
@@ -153,6 +155,14 @@ public class ContentCompetencyEvidenceBean {
 
   public void setCollectionType(String collectionType) {
     this.collectionType = collectionType;
+  }
+  
+  public String getContentSource() {
+    return contentSource;
+  }
+
+  public void setContentSource(String contentSource) {
+    this.contentSource = contentSource;
   }
 
   public int getStatus() {

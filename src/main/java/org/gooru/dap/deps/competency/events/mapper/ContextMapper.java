@@ -17,7 +17,8 @@ public class ContextMapper {
   private String pathType;
   private String contextCollectionType;
   private String contextCollectionId;
-
+  private String contentSource;
+  
   public String getCourseId() {
     return courseId;
   }
@@ -113,12 +114,21 @@ public class ContextMapper {
   public void setContextCollectionId(String contextCollectionId) {
     this.contextCollectionId = contextCollectionId;
   }
+  
+  public String getContentSource() {
+    return contentSource;
+  }
+
+  public void setContentSource(String contentSource) {
+    this.contentSource = contentSource;
+  }
+
 
   @Override
   public String toString() {
     return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId
         + ", lessonId=" + lessonId + ", sessionId=" + sessionId + ", tenantId=" + tenantId
-        + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId
+        + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId + ", contentSource=" + contentSource
         + ", contextCollectionType=" + contextCollectionType + ", " + "contextCollectionId="
         + contextCollectionId + "]";
   }
