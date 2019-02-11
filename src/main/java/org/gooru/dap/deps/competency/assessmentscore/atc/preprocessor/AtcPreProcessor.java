@@ -4,8 +4,6 @@ import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcProcessor;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
-import org.gooru.dap.deps.competency.processors.AssessmentScoreEventProcessor;
-import org.gooru.dap.deps.competency.processors.EventProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +33,12 @@ public class AtcPreProcessor {
       classId = this.assessmentScoreEvent.getContext().getClassId();
       courseId = this.assessmentScoreEvent.getContext().getCourseId();
       userId = this.assessmentScoreEvent.getUserId();
+      
+      //If courseId obtained from the event is NULL, fallback to the courseId 
+      //stored in the class table 
+      if (courseId == null) {
+        courseId = service.fetchCourseFromClass(classId);
+      }
 
       // Check if Class == Premium. If class != Premium - Don't go any further.
       if (classId != null && courseId != null & userId != null) {

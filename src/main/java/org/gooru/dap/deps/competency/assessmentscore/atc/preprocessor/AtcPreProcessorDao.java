@@ -14,4 +14,7 @@ interface AtcPreProcessorDao {
       + "(select course_id from class where id = :classId and is_deleted = false and is_archived = false)")
   String isClassPremium(@Bind("classId") UUID classId);
 
+  @SqlQuery("select course_id from class where id = :classId")
+  String fetchCoursefromClass(@Bind("classId") UUID classId);
+
 }
