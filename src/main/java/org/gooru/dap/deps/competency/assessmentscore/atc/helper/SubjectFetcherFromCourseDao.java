@@ -7,7 +7,7 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 /**
  * @author ashish.
  */
-interface SubjectInfererDao {
+interface SubjectFetcherFromCourseDao {
   @SqlQuery("select subject_bucket from course where id = :courseId and is_deleted = false")
   String fetchSubjectBucketForCourse(@Bind("courseId") UUID courseId);
 
