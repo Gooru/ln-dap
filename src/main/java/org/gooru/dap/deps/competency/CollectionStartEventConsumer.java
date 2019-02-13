@@ -19,6 +19,7 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
 
   private static final String DEPLOYMENT_NAME =
       "org.gooru.dap.deps.competency.CollectionStartEventConsumer";
+  private static final String DIAGNOSTIC = "diagnostic";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
@@ -61,11 +62,18 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
        * 
        * new CollectionStartEventProcessor(collectionStartEventMapper).process();
        */
+      //DO NOT STORE COMPETENCY STATUS IF THIS IS A DIAGNOSTIC ASSESSMENT
       AssessmentScoreEventMapper eventMapper =
           mapper.readValue(event, AssessmentScoreEventMapper.class);
       LOGGER.debug("event has been mapped to object:== {}", eventMapper.toString());
-
-      new CollectionStartEventProcessor(eventMapper).process();
+      if (eventMapper.getContext().getContentSource() != null && 
+          eventMapper.getContext().getContentSource().equalsIgnoreCase(DIAGNOSTIC)) {
+        LOGGER.info("Diagnostic Assesment, no further processing");
+        return;                
+      } else {
+        new CollectionStartEventProcessor(eventMapper).process();
+      }
+      
     } catch (IOException e) {
       LOGGER.error("unable to parse the event", e);
       // Just in case if we need the event

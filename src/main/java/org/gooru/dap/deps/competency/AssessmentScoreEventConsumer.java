@@ -19,6 +19,7 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
 
   private static final String DEPLOYMENT_NAME =
       "org.gooru.dap.deps.competency.AssessmentScoreEventConsumer";
+  private static final String DIAGNOSTIC = "diagnostic";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
@@ -57,11 +58,17 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
       AssessmentScoreEventMapper assessmentScore =
           mapper.readValue(event, AssessmentScoreEventMapper.class);
       LOGGER.debug("event has been mapped to object:== {}", assessmentScore.toString());
-      new AssessmentScoreEventProcessor(assessmentScore).process();
-
-      // Produce Event for the CompetencyStatsConsumer
-      KafkaMessageProducer.getInstance().sendEvents(PRODUCER_TOPIC, event);
-      LOGGER.info("Successfully dispatched Collection Assessment Score Event to Kafka..");
+      //DO NOT STORE COMPETENCY STATUS IF THIS IS A DIAGNOSTIC ASSESSMENT
+      if (assessmentScore.getContext().getContentSource() != null && 
+          assessmentScore.getContext().getContentSource().equalsIgnoreCase(DIAGNOSTIC)) {
+        LOGGER.info("Diagnostic Assesment {}, no further processing", assessmentScore.getCollectionId());
+        return;
+      } else {
+        new AssessmentScoreEventProcessor(assessmentScore).process();
+        // Produce Event for the CompetencyStatsConsumer
+        KafkaMessageProducer.getInstance().sendEvents(PRODUCER_TOPIC, event);
+        LOGGER.info("Successfully dispatched Collection Assessment Score Event to Kafka.."); 
+      }
     } catch (IOException e) {
       LOGGER.error("unable to parse the event", e);
       // Just in case if we need the event
