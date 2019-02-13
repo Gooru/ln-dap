@@ -31,7 +31,7 @@ public abstract class LearnerProfileCompetencyEvidenceDao {
    * Need to maintain the evidence for in progress as well
    */
   @SqlUpdate("INSERT INTO learner_profile_competency_evidence_ts(user_id, gut_code, class_id, course_id, unit_id, lesson_id, latest_session_id,"
-      + " collection_id, collection_path_id, collection_score, collection_type, contentSource, status, created_at, updated_at) VALUES (:userId, :gutCode, :classId,"
+      + " collection_id, collection_path_id, collection_score, collection_type, content_source, status, created_at, updated_at) VALUES (:userId, :gutCode, :classId,"
       + " :courseId, :unitId, :lessonId, :latestSessionId, :collectionId, :collectionPathId, :collectionScore, :collectionType, :contentSource, :status, :createdAt,"
       + " :updatedAt) ON CONFLICT (user_id, gut_code, collection_id, status) DO UPDATE SET latest_session_id = :latestSessionId,"
       + " collection_path_id = :collectionPathId, collection_score = :collectionScore, content_source = :contentSource, updated_at = :updatedAt")
