@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class AssessmentScoreEventProcessor implements EventProcessor {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
+  public static final String COMPETENCY_MASTERY = "competencyMastery";
+  public static final String ROUTE0 = "route0";
 
   private final AssessmentScoreEventMapper assessmentScoreEvent;
   private CompetencyAssessmentService service =
@@ -77,54 +79,119 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
     Long pathId = this.assessmentScoreEvent.getContext().getPathId();
     LOGGER.debug("pathId value received:{}", pathId);
     if (pathId == null || pathId == 0) {
-      LOGGER.debug("No pathId present, executing logic for non signature items");
+      if (this.assessmentScoreEvent.getContext().getContentSource()
+          .equalsIgnoreCase(COMPETENCY_MASTERY)) {
+        // (contentSource = competency_mastery) indicates that student has played a Standalone
+        // Signature Assessment by inspecting
+        // competencies. Since this is not a suggestion to the Student, path_id will be null or 0
+        LOGGER.debug("Inferred as Standalone Signature Assessment Play");
 
-      JsonNode taxonomy = competency.getTaxonomy();
-      if (taxonomy != null && taxonomy.size() > 0) {
-        // Fetch gut code mapping of the competency
-        Map<String, String> fwToGutCodeMapping =
-            service.getGutCodeMapping(CompetencyUtils.toPostgresArrayString(taxonomy.fieldNames()));
+        // Fetch signature gut codes of the assessment
+        final List<String> signatureGutCodes =
+            service.fetchSignatureAssessmentGutCodes(collectionId);
+        LOGGER.debug("'{}' gut codes found in signature assessment for '{}'",
+            signatureGutCodes.size(), collectionId);
 
-        Iterator<String> fields = taxonomy.fieldNames();
-        while (fields.hasNext()) {
-          String tc = fields.next();
-          String gc = fwToGutCodeMapping.get(tc);
-
-          new ContentCompetencyStatusProcessor(assessmentScoreEvent, tc).process();
-          new ContentCompetencyEvidenceProcessor(assessmentScoreEvent, tc, (gc != null) ? gc : null)
-              .process();
-        }
-      } else {
-        LOGGER.debug(
-            "no taxonomy tags are applied to assessment, skipping content competency status updates");
-      }
-
-      List<String> gutCodes = competency.getGutCodes();
-      if (gutCodes != null && !gutCodes.isEmpty()) {
-        gutCodes.forEach(gc -> {
-          // Always update the status and evidence of the learner profile, logic for
-          // mastery and completed will be in respective processors
-          new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, false).process();
-          new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, false).process();
+        // For every gut code of the signature item, persist status
+        signatureGutCodes.forEach(gc -> {
+          LOGGER.debug("persisting LP competency status for signature competency:{}", gc);
+          new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, true).process();
+          new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, true).process();
         });
       } else {
-        LOGGER
-            .debug("no gut codes found for the assessment, skipping leaner profile status updates");
+        LOGGER.debug("No pathId present, executing logic for non signature items");
+
+        JsonNode taxonomy = competency.getTaxonomy();
+        if (taxonomy != null && taxonomy.size() > 0) {
+          // Fetch gut code mapping of the competency
+          Map<String, String> fwToGutCodeMapping = service
+              .getGutCodeMapping(CompetencyUtils.toPostgresArrayString(taxonomy.fieldNames()));
+
+          Iterator<String> fields = taxonomy.fieldNames();
+          while (fields.hasNext()) {
+            String tc = fields.next();
+            String gc = fwToGutCodeMapping.get(tc);
+
+            new ContentCompetencyStatusProcessor(assessmentScoreEvent, tc).process();
+            new ContentCompetencyEvidenceProcessor(assessmentScoreEvent, tc,
+                (gc != null) ? gc : null).process();
+          }
+        } else {
+          LOGGER.debug(
+              "no taxonomy tags are applied to assessment, skipping content competency status updates");
+        }
+
+        List<String> gutCodes = competency.getGutCodes();
+        if (gutCodes != null && !gutCodes.isEmpty()) {
+          gutCodes.forEach(gc -> {
+            // Always update the status and evidence of the learner profile, logic for
+            // mastery and completed will be in respective processors
+            new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, false).process();
+            new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, false)
+                .process();
+          });
+        } else {
+          LOGGER.debug(
+              "no gut codes found for the assessment, skipping leaner profile status updates");
+        }
       }
     } else {
-      LOGGER.debug("pathId value present, executing logic for signature items");
+      if (this.assessmentScoreEvent.getContext().getPathType().equalsIgnoreCase(ROUTE0)) {
+        // Suggestions from route0 will not be treated as Signature Assessments
+        LOGGER.debug(
+            "pathId is present and pathType is route0, executing logic for non signature items");
 
-      // Fetch signature gut codes of the assessment
-      final List<String> signatureGutCodes = service.fetchSignatureAssessmentGutCodes(collectionId);
-      LOGGER.debug("'{}' gut codes found in signature assessment for '{}'",
-          signatureGutCodes.size(), collectionId);
+        JsonNode taxonomy = competency.getTaxonomy();
+        if (taxonomy != null && taxonomy.size() > 0) {
+          // Fetch gut code mapping of the competency
+          Map<String, String> fwToGutCodeMapping = service
+              .getGutCodeMapping(CompetencyUtils.toPostgresArrayString(taxonomy.fieldNames()));
 
-      // For every gut code of the signature item, persist status
-      signatureGutCodes.forEach(gc -> {
-        LOGGER.debug("persisting LP competency status for signature competency:{}", gc);
-        new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, true).process();
-        new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, true).process();
-      });
+          Iterator<String> fields = taxonomy.fieldNames();
+          while (fields.hasNext()) {
+            String tc = fields.next();
+            String gc = fwToGutCodeMapping.get(tc);
+
+            new ContentCompetencyStatusProcessor(assessmentScoreEvent, tc).process();
+            new ContentCompetencyEvidenceProcessor(assessmentScoreEvent, tc,
+                (gc != null) ? gc : null).process();
+          }
+        } else {
+          LOGGER.debug(
+              "no taxonomy tags are applied to assessment, skipping content competency status updates");
+        }
+
+        List<String> gutCodes = competency.getGutCodes();
+        if (gutCodes != null && !gutCodes.isEmpty()) {
+          gutCodes.forEach(gc -> {
+            // Always update the status and evidence of the learner profile, logic for
+            // mastery and completed will be in respective processors
+            new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, false).process();
+            new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, false)
+                .process();
+          });
+        } else {
+          LOGGER.debug(
+              "no gut codes found for the assessment, skipping leaner profile status updates");
+        }
+      } else {
+        // Signature Assessments will be suggested ONLY by (pathType = system/teacher) and not
+        // by (pathType = route0)
+        LOGGER.debug("pathId value present, executing logic for signature items");
+
+        // Fetch signature gut codes of the assessment
+        final List<String> signatureGutCodes =
+            service.fetchSignatureAssessmentGutCodes(collectionId);
+        LOGGER.debug("'{}' gut codes found in signature assessment for '{}'",
+            signatureGutCodes.size(), collectionId);
+
+        // For every gut code of the signature item, persist status
+        signatureGutCodes.forEach(gc -> {
+          LOGGER.debug("persisting LP competency status for signature competency:{}", gc);
+          new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, true).process();
+          new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, true).process();
+        });
+      }
     }
   }
 }

@@ -13,7 +13,6 @@ import org.gooru.dap.deps.competency.common.CompetencyAssessmentService;
 import org.gooru.dap.deps.competency.common.CompetencyUtils;
 import org.gooru.dap.deps.competency.db.mapper.AssessmentCompetency;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
-import org.gooru.dap.deps.competency.events.mapper.ContextMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -24,9 +23,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class CollectionStartEventProcessor implements EventProcessor {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
-
-  private final static String PATHTYPE_SYSTEM = "system";
-  private final static String FORMAT_ASSESSMENT = "assessment";
 
   // private final CollectionStartEventMapper collectionStartEvent;
   private final AssessmentScoreEventMapper collectionStartEvent;
@@ -59,57 +55,46 @@ public class CollectionStartEventProcessor implements EventProcessor {
     // 'system' and its assessment then its signature item and skipping it from
     // persisting status. For rest of all cases, we will persist status and evidence
     // as IN progress
-    if (doProcessing()) {
-      String collectionId = this.collectionStartEvent.getCollectionId();
 
-      // Fetch competencies tagged with assessment
-      LOGGER.debug("fetching competency for assessment: '{}'", collectionId);
-      AssessmentCompetency competency = coreService.getAssessmentCompetency(collectionId);
+    // 07-March-19: We should store the in-progress status for Signature Assessments alsoSo the
+    // corresponding checks have been removed.
+    String collectionId = this.collectionStartEvent.getCollectionId();
 
-      JsonNode taxonomy = competency.getTaxonomy();
-      if (taxonomy != null && taxonomy.size() > 0) {
-        // Fetch gut code mapping of the competency
-        Map<String, String> fwToGutCodeMapping = coreService
-            .getGutCodeMapping(CompetencyUtils.toPostgresArrayString(taxonomy.fieldNames()));
+    // Fetch competencies tagged with assessment
+    LOGGER.debug("fetching competency for assessment: '{}'", collectionId);
+    AssessmentCompetency competency = coreService.getAssessmentCompetency(collectionId);
 
-        Iterator<String> fields = taxonomy.fieldNames();
-        while (fields.hasNext()) {
-          String tc = fields.next();
-          String gc = fwToGutCodeMapping.get(tc);
+    JsonNode taxonomy = competency.getTaxonomy();
+    if (taxonomy != null && taxonomy.size() > 0) {
+      // Fetch gut code mapping of the competency
+      Map<String, String> fwToGutCodeMapping = coreService
+          .getGutCodeMapping(CompetencyUtils.toPostgresArrayString(taxonomy.fieldNames()));
 
-          new ContentCompetencyStatusProcessor(collectionStartEvent, tc).process();
-          new ContentCompetencyEvidenceProcessor(collectionStartEvent, tc, (gc != null) ? gc : null)
-              .process();
-        }
-      } else {
-        LOGGER.debug(
-            "no taxonomy tags are applied to assessment, skipping content competency status updates");
-      }
+      Iterator<String> fields = taxonomy.fieldNames();
+      while (fields.hasNext()) {
+        String tc = fields.next();
+        String gc = fwToGutCodeMapping.get(tc);
 
-      List<String> gutCodes = competency.getGutCodes();
-      if (gutCodes != null && !gutCodes.isEmpty()) {
-        gutCodes.forEach(gc -> {
-          // Always update the status and evidence of the learner profile, logic for
-          // mastery and completed will be in respective processors
-          new LearnerProfileCompetencyStatusProcessor(collectionStartEvent, gc, false).process();
-          new LearnerProfileCompetencyEvidenceProcessor(collectionStartEvent, gc, false).process();
-        });
-      } else {
-        LOGGER
-            .debug("no gut codes found for the assessment, skipping leaner profile status updates");
+        new ContentCompetencyStatusProcessor(collectionStartEvent, tc).process();
+        new ContentCompetencyEvidenceProcessor(collectionStartEvent, tc, (gc != null) ? gc : null)
+            .process();
       }
     } else {
-      LOGGER.info("signature item flow, skipping..");
+      LOGGER.debug(
+          "no taxonomy tags are applied to assessment, skipping content competency status updates");
     }
-  }
 
-  private boolean doProcessing() {
-    String collectionType = this.collectionStartEvent.getCollectionType();
-    ContextMapper context = this.collectionStartEvent.getContext();
-    String pathType = context.getPathType();
-    Long pathId = context.getPathId();
-    return !(pathId != null && pathType != null && pathType.equalsIgnoreCase(PATHTYPE_SYSTEM)
-        && collectionType != null && collectionType.equalsIgnoreCase(FORMAT_ASSESSMENT));
+    List<String> gutCodes = competency.getGutCodes();
+    if (gutCodes != null && !gutCodes.isEmpty()) {
+      gutCodes.forEach(gc -> {
+        // Always update the status and evidence of the learner profile, logic for
+        // mastery and completed will be in respective processors
+        new LearnerProfileCompetencyStatusProcessor(collectionStartEvent, gc, false).process();
+        new LearnerProfileCompetencyEvidenceProcessor(collectionStartEvent, gc, false).process();
+      });
+    } else {
+      LOGGER.debug("no gut codes found for the assessment, skipping leaner profile status updates");
+    }
   }
 
 }
