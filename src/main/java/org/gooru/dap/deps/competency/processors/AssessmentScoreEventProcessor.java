@@ -79,8 +79,8 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
     Long pathId = this.assessmentScoreEvent.getContext().getPathId();
     LOGGER.debug("pathId value received:{}", pathId);
     if (pathId == null || pathId == 0) {
-      if (this.assessmentScoreEvent.getContext().getContentSource()
-          .equalsIgnoreCase(COMPETENCY_MASTERY)) {
+      String contentSource = this.assessmentScoreEvent.getContext().getContentSource();
+      if (contentSource != null && contentSource.equalsIgnoreCase(COMPETENCY_MASTERY)) {
         // (contentSource = competency_mastery) indicates that student has played a Standalone
         // Signature Assessment by inspecting
         // competencies. Since this is not a suggestion to the Student, path_id will be null or 0
