@@ -1,18 +1,19 @@
 package org.gooru.dap.deps.competency.assessmentscore.atc.compute;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.components.jdbi.PGArrayUtils;
+import org.gooru.dap.deps.competency.assessmentscore.atc.AtcDao;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcEvent;
 import org.gooru.dap.deps.competency.assessmentscore.atc.compute.processor.GradeCompetencyProcessor;
+//import org.gooru.dap.deps.competency.assessmentscore.atc.postprocessor.ClassDao;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 /**
  * @author mukul@gooru
@@ -25,6 +26,7 @@ public class AtcComputeGradeBased implements AtcCompute {
   private AtcEvent atcEventObject;
   private final CompetencyStatsModel gradeCompetencyStatsModel = new CompetencyStatsModel();
   List<String> gradeCompetencyList = new ArrayList<>();
+  List<String> classCompetencyList = new ArrayList<>();
 
   private static final Logger LOGGER = LoggerFactory.getLogger(AtcComputeGradeBased.class);
 
@@ -50,6 +52,8 @@ public class AtcComputeGradeBased implements AtcCompute {
           + atcEventObject.getGradeId() + " for class " + atcEventObject.getClassId());
       LOGGER.debug("Compute User Competency Completion for User " + atcEventObject.getUserId());
       computeGradeBasedUserCompetencyCompletion();
+      LOGGER.debug("Compute Class Competencies");
+      computeClassCurrentGradeCompetency();
       LOGGER.debug("Compute User Competency Performance");
       computeGradeBasedUserCompetencyPerformance();
       return gradeCompetencyStatsModel;
@@ -72,9 +76,6 @@ public class AtcComputeGradeBased implements AtcCompute {
         atcEventObject.getSubjectCode());
 
     if (gradeCompetencyList != null && !gradeCompetencyList.isEmpty()) {
-      for (String cc : gradeCompetencyList) {
-        LOGGER.debug("The list of competencies is" + cc);
-      }
       totalCompetencies = gradeCompetencyList.size();
 
       LOGGER.debug("The UserId is" + cm);
@@ -106,6 +107,25 @@ public class AtcComputeGradeBased implements AtcCompute {
       }
 
     }
+  }
+  
+  private void computeClassCurrentGradeCompetency() {
+    
+    AtcDao atcDao = coreDbi.onDemand(AtcDao.class);
+    Integer gradeId = atcDao.fetchClassCurrentGrade(UUID.fromString(atcEventObject.getClassId()), 
+        UUID.fromString(atcEventObject.getCourseId()));
+
+    if (gradeId != null && gradeId > 0) {
+      Integer classCompetencies = 0;
+      GradeCompetencyProcessor gradeCompetencyProcessor = new GradeCompetencyProcessor();
+      classCompetencyList = gradeCompetencyProcessor.getGradeCompetency(gradeId,
+          atcEventObject.getSubjectCode());
+      
+      classCompetencies = classCompetencyList.size();
+      gradeCompetencyStatsModel.setClassCompetencies(classCompetencies);
+      gradeCompetencyStatsModel.setClassGradeId(gradeId);      
+    }
+    
   }
 
   private void computeGradeBasedUserCompetencyPerformance() {
