@@ -24,7 +24,7 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
   public static final String COMPETENCY_MASTERY = "competencyMastery";
-  public static final String ROUTE0 = "route0";
+  public static final String SYSTEM_PATHTYPE = "system";
 
   private final AssessmentScoreEventMapper assessmentScoreEvent;
   private CompetencyAssessmentService service =
@@ -136,7 +136,9 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
         }
       }
     } else {
-      if (this.assessmentScoreEvent.getContext().getPathType().equalsIgnoreCase(ROUTE0)) {
+      // Update - 18-Mar-2019: Mastery should be only in context where path type is system, for rest
+      // of the path type it should consider for completion only.
+      if (!this.assessmentScoreEvent.getContext().getPathType().equalsIgnoreCase(SYSTEM_PATHTYPE)) {
         // Suggestions from route0 will not be treated as Signature Assessments
         LOGGER.debug(
             "pathId is present and pathType is route0, executing logic for non signature items");
@@ -175,8 +177,8 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
               "no gut codes found for the assessment, skipping leaner profile status updates");
         }
       } else {
-        // Signature Assessments will be suggested ONLY by (pathType = system/teacher) and not
-        // by (pathType = route0)
+        // Signature Assessments will be suggested ONLY by (pathType = system) and not
+        // by (pathType = route0 and teacher)
         LOGGER.debug("pathId value present, executing logic for signature items");
 
         // Fetch signature gut codes of the assessment
