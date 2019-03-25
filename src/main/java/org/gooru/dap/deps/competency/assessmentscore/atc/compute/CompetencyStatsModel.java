@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"userId", "classId", "courseId", "gradeId", "subjectCode", "totalCompetencies",
+@JsonPropertyOrder({"userId", "classId", "courseId", "gradeId", "classGradeId", "subjectCode", "totalCompetencies", "classCompetencies",
     "completedCompetencies", "inprogressCompetencies", "percentCompletion", "percentScore", "statsDate", "month",
     "year"})
 public class CompetencyStatsModel {
@@ -24,10 +24,14 @@ public class CompetencyStatsModel {
   private String courseId;
   @JsonProperty("gradeId")
   private Integer gradeId;
+  @JsonProperty("classGradeId")
+  private Integer classGradeId;
   @JsonProperty("subjectCode")
   private String subjectCode;
   @JsonProperty("totalCompetencies")
   private Integer totalCompetencies;
+  @JsonProperty("classCompetencies")
+  private Integer classCompetencies;
   @JsonProperty("completedCompetencies")
   private Integer completedCompetencies;
   @JsonProperty("inprogressCompetencies")
@@ -60,8 +64,8 @@ public class CompetencyStatsModel {
    * @param totalCompetencies
    * @param courseId
    */
-  public CompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId,
-      String subjectCode, Integer totalCompetencies, Integer completedCompetencies,
+  public CompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId, Integer classGradeId,
+      String subjectCode, Integer totalCompetencies, Integer classCompetencies, Integer completedCompetencies,
       Integer inprogressCompetencies, Double percentCompletion, Double percentScore, Date statsDate, Integer month,
       Integer year) {
     super();
@@ -69,8 +73,10 @@ public class CompetencyStatsModel {
     this.classId = classId;
     this.courseId = courseId;
     this.gradeId = gradeId;
+    this.classGradeId = classGradeId;
     this.subjectCode = subjectCode;
     this.totalCompetencies = totalCompetencies;
+    this.classCompetencies = classCompetencies;
     this.completedCompetencies = completedCompetencies;
     this.inprogressCompetencies = inprogressCompetencies;
     this.percentCompletion = percentCompletion;
@@ -140,6 +146,21 @@ public class CompetencyStatsModel {
     return this;
   }
 
+  @JsonProperty("classGradeId")
+  public Integer getClassGradeId() {
+    return classGradeId;
+  }
+
+  @JsonProperty("classGradeId")
+  public void setClassGradeId(Integer classGradeId) {
+    this.classGradeId = classGradeId;
+  }
+
+  public CompetencyStatsModel withClassGradeId(Integer classGradeId) {
+    this.classGradeId = classGradeId;
+    return this;
+  }
+  
   @JsonProperty("subjectCode")
   public String getSubjectCode() {
     return subjectCode;
@@ -167,6 +188,21 @@ public class CompetencyStatsModel {
 
   public CompetencyStatsModel withTotalCompetencies(Integer totalCompetencies) {
     this.totalCompetencies = totalCompetencies;
+    return this;
+  }
+
+  @JsonProperty("classCompetencies")
+  public Integer getClassCompetencies() {
+    return classCompetencies;
+  }
+
+  @JsonProperty("classCompetencies")
+  public void setClassCompetencies(Integer classCompetencies) {
+    this.classCompetencies = classCompetencies;
+  }
+
+  public CompetencyStatsModel withClassCompetencies(Integer classCompetencies) {
+    this.classCompetencies = classCompetencies;
     return this;
   }
 
