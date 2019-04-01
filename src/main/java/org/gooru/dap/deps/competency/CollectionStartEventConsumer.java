@@ -6,6 +6,8 @@ import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.gooru.dap.deps.competency.events.mapper.CollectionStartEventMapper;
+import org.gooru.dap.deps.competency.preprocessors.AssessmentScoreEventPreProcessor;
+import org.gooru.dap.deps.competency.preprocessors.DCAContentModel;
 import org.gooru.dap.deps.competency.processors.CollectionStartEventProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;
 import org.slf4j.Logger;
@@ -71,6 +73,22 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
         LOGGER.info("Diagnostic Assesment, no further processing");
         return;                
       } else {
+        //TODO: Currently, Selective Mastery Accrual is only supported by Teacher Add-Data Feature
+        //which doesn't generate Collection Start Events. So we don't need to process Additional Context
+        //in Collection Start event as of now. 
+        //If & When Selective Mastery Accrual will be supported for DCA as a whole, then simply uncomment the 
+        //following code to enable processing of Additional Context.
+        //******************************************************************************************************
+//        if (eventMapper.getContext().getAdditionalContext() != null) {
+//          DCAContentModel dcaContent = new AssessmentScoreEventPreProcessor(eventMapper).process();
+//          if (dcaContent != null) {            
+//            eventMapper.setCollectionId(dcaContent.getContentId());
+//          } else {
+//            LOGGER.info("DCA Content Info cannot be obtained. No further processing for this event {}", event);
+//            return;
+//          }
+//        }        
+        //*******************************************************************************************************
         new CollectionStartEventProcessor(eventMapper).process();
       }
       
