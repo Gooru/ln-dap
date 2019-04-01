@@ -3,6 +3,7 @@ package org.gooru.dap.deps.competency.assessmentscore.atc.preprocessor;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcProcessor;
+import org.gooru.dap.deps.competency.assessmentscore.atc.postprocessor.AtcPostProcessor;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,6 +46,7 @@ public class AtcPreProcessor {
         if (service.CheckifClassPremium(classId)) {
           LOGGER.info("Class " + classId + " is Premium, Continue ..");
           new AtcProcessor(assessmentScoreEvent).compute();
+          new AtcPostProcessor(assessmentScoreEvent).compute();
       } else {
           LOGGER.info("Class " + classId + " is NOT Premium. No further processing");
           return;          
