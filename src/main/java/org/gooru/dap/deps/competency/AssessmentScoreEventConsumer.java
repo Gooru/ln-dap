@@ -5,6 +5,8 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.preprocessors.AssessmentScoreEventPreProcessor;
+import org.gooru.dap.deps.competency.preprocessors.DCAContentModel;
 import org.gooru.dap.deps.competency.processors.AssessmentScoreEventProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;
 import org.gooru.dap.infra.KafkaMessageProducer;
@@ -64,6 +66,15 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
         LOGGER.info("Diagnostic Assesment {}, no further processing", assessmentScore.getCollectionId());
         return;
       } else {
+        if (assessmentScore.getContext().getAdditionalContext() != null) {
+          DCAContentModel dcaContent = new AssessmentScoreEventPreProcessor(assessmentScore).process();
+          if (dcaContent != null) {            
+            assessmentScore.setCollectionId(dcaContent.getContentId());
+          } else {
+            LOGGER.info("DCA Content Info cannot be obtained. No further processing for this event {}", event);
+            return;
+          }
+        }        
         new AssessmentScoreEventProcessor(assessmentScore).process();
         // Produce Event for the CompetencyStatsConsumer
         KafkaMessageProducer.getInstance().sendEvents(PRODUCER_TOPIC, event);
