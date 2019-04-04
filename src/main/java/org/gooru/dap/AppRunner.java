@@ -1,14 +1,20 @@
 package org.gooru.dap;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import org.gooru.dap.components.AppFinalizer;
 import org.gooru.dap.components.AppInitializer;
 import org.gooru.dap.configuration.AppConfiguration;
 import org.gooru.dap.infra.ConsumersDeployer;
+import org.gooru.dap.jobs.schedular.init.JobChain;
+import org.gooru.dap.jobs.schedular.init.JobChainOne;
+import org.gooru.dap.jobs.schedular.init.JobChainRunner;
+import org.gooru.dap.jobs.schedular.init.Schedulers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
@@ -38,6 +44,7 @@ public class AppRunner {
     setupSystemProperties();
     setupLoggerMachinery();
     AppInitializer.initializeApp();
+    createSchedulers();
   }
 
   private void finalizeApplication() {
@@ -82,6 +89,30 @@ public class AppRunner {
       throw new IllegalArgumentException("Invalid logback config file");
     }
 
+  }
+
+  private void createSchedulers() {
+    try {
+      JsonNode schedulerConfig = AppConfiguration.fetchJobsConfig();
+      LOGGER.debug(schedulerConfig.toString());
+      Schedulers schedulers =
+          new ObjectMapper().readValue(schedulerConfig.toString(), Schedulers.class);
+      List<JobChain> jobChainConfigs = schedulers.getJobChain();
+      if (jobChainConfigs != null && !jobChainConfigs.isEmpty()) {
+        for (JobChain jobChainConfig : jobChainConfigs) {
+          JobChainRunner jobChain = getJobChainInstance(jobChainConfig.getChainId());
+          jobChain.ruun(jobChainConfig);
+        }
+      }
+    } catch (Exception e) {
+      LOGGER.error("Invalid Schedule Configuration", e);
+    }
+  }
+
+  private JobChainRunner getJobChainInstance(String jobChainId) {
+    // So far there is only one job is scheduled and configured to run via this code. In case of
+    // multiple jobs, verify the jobChainId and initialize the chain
+    return new JobChainOne();
   }
 
 }

@@ -1,6 +1,7 @@
 package org.gooru.dap.deps.competency;
 
 import java.io.IOException;
+import java.util.List;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
@@ -22,14 +23,14 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
   private static final String DEPLOYMENT_NAME =
       "org.gooru.dap.deps.competency.AssessmentScoreEventConsumer";
   private static final String DIAGNOSTIC = "diagnostic";
-
+  private final KafkaConsumerConfig kafkaConsumerConfig;
   private static final Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
-  public static final String PRODUCER_TOPIC = "org.gooru.da.sink.dap.competency.stats";
 
 
   public AssessmentScoreEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
     super(id, kafkaConsumerConfig);
+    this.kafkaConsumerConfig = kafkaConsumerConfig;
   }
 
   @Override
@@ -76,8 +77,15 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
           }
         }        
         new AssessmentScoreEventProcessor(assessmentScore).process();
-        // Produce Event for the CompetencyStatsConsumer
-        KafkaMessageProducer.getInstance().sendEvents(PRODUCER_TOPIC, event);
+        
+        // Produce Event for further processing
+        List<String> producerTopics = this.kafkaConsumerConfig.getProducerTopics();
+        if (producerTopics != null && !producerTopics.isEmpty()) {
+          producerTopics.forEach(topic -> {
+            KafkaMessageProducer.getInstance().sendEvents(topic, event);    
+          });
+        }
+        
         LOGGER.info("Successfully dispatched Collection Assessment Score Event to Kafka.."); 
       }
     } catch (IOException e) {
