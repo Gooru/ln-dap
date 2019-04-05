@@ -22,6 +22,7 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
   private static final String DEPLOYMENT_NAME =
       "org.gooru.dap.deps.competency.AssessmentScoreEventConsumer";
   private static final String DIAGNOSTIC = "diagnostic";
+  private static final String DCA = "dailyclassactivity";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
@@ -66,7 +67,8 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
         LOGGER.info("Diagnostic Assesment {}, no further processing", assessmentScore.getCollectionId());
         return;
       } else {
-        if (assessmentScore.getContext().getAdditionalContext() != null) {
+        if (assessmentScore.getContext().getContentSource().equalsIgnoreCase(DCA) && 
+            assessmentScore.getContext().getAdditionalContext() != null) {
           DCAContentModel dcaContent = new AssessmentScoreEventPreProcessor(assessmentScore).process();
           if (dcaContent != null) {            
             assessmentScore.setCollectionId(dcaContent.getContentId());
@@ -74,7 +76,11 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
             LOGGER.info("DCA Content Info cannot be obtained. No further processing for this event {}", event);
             return;
           }
-        }        
+        } else if (assessmentScore.getContext().getContentSource().equalsIgnoreCase(DCA) && 
+            assessmentScore.getContext().getAdditionalContext() == null) {
+          LOGGER.info("Additional Context is null. No further processing for this event {}", event);
+          return;
+        }
         new AssessmentScoreEventProcessor(assessmentScore).process();
         // Produce Event for the CompetencyStatsConsumer
         KafkaMessageProducer.getInstance().sendEvents(PRODUCER_TOPIC, event);
