@@ -1,6 +1,6 @@
 package org.gooru.dap.jobs.schedular.init;
 
-import org.gooru.dap.jobs.GroupReportsDataAggregatorExecutor;
+import org.gooru.dap.jobs.GroupPerformanceReportsJobExecutor;
 import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -26,7 +26,7 @@ public class JobChainOne implements JobChainRunner {
     try {
       JobChainingJobListener jobListener1 = new JobChainingJobListener("ChainListenerOne");
 
-      JobDetail timeSpentJob = JobBuilder.newJob(GroupReportsDataAggregatorExecutor.class)
+      JobDetail performanceReportJob = JobBuilder.newJob(GroupPerformanceReportsJobExecutor.class)
           .withIdentity("groupReportsJob", "group1").storeDurably(true).build();
 
       Trigger jobTrigger = TriggerBuilder.newTrigger().withIdentity("trig", "group1")
@@ -34,7 +34,7 @@ public class JobChainOne implements JobChainRunner {
           .build();
 
       Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
-      scheduler.scheduleJob(timeSpentJob, jobTrigger);
+      scheduler.scheduleJob(performanceReportJob, jobTrigger);
 
       scheduler.getListenerManager().addJobListener(jobListener1);
       scheduler.start();

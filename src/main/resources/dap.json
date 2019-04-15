@@ -157,7 +157,9 @@
 					"cronExpression": "0 */1 * ? * *",
 					"jobConfigs": [
 						{
-							"jobId": "org.gooru.dap.jobs.GroupReportsDataAggregatorExecutor"
+							"jobId": "org.gooru.dap.jobs.GroupReportsDataAggregatorExecutor",
+							"fetchClassCMPerfReqUri" : "http://localhost:8080/api/nucleus-insights-internal/v2/classes/performance",
+							"fetchClassCAPerfReqUri" : "http://localhost:8080/api/nucleus-insights-internal/v2/dca/classes/performance"
 						}
 					]
 				}

@@ -2,6 +2,7 @@
 package org.gooru.dap.deps.group.processors;
 
 import org.gooru.dap.components.jdbi.DBICreator;
+import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.deps.competency.processors.EventProcessor;
 import org.gooru.dap.deps.group.dbhelpers.GroupReortsAggregationQueueService;
 import org.slf4j.Logger;
@@ -44,8 +45,9 @@ public class GroupReportsEventProcessor implements EventProcessor {
   private void processAssessmentScore() {
     // Fetch group hierarchy based on the class id from the event
     ContextObject context = this.eventMapper.getContext();
-    if (context.getClassId() != null) {
-      this.queueService.insertIntoQueue(context.getClassId(), context.getTenantId());
+    if (context.getClassId() != null && EventMessageConstant.VALID_CONTENT_SOURCE_FOR_GROUP_REPORTS
+        .contains(context.getContentSource())) {
+      this.queueService.insertIntoQueue(context);
     }
   }
 

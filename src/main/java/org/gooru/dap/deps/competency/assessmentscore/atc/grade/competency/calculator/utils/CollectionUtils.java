@@ -58,6 +58,14 @@ public class CollectionUtils {
   public static <T, U> U[] convertArray(T[] from, Function<T, U> func, IntFunction<U[]> generator) {
     return Arrays.stream(from).map(func).toArray(generator);
   }
+  
+  public static PGArray<Integer> convertToSqlArrayOfInteger(List<Integer> input) {
+    return PGArray.arrayOf(Integer.class, input);
+  }
+  
+  public static PGArray<Long> convertToSqlArrayOfLong(Set<Long> input) {
+    return PGArray.arrayOf(Long.class, input);
+  }
 
   public static PGArray<String> convertToSqlArrayOfString(List<String> input) {
     return PGArray.arrayOf(String.class, input);

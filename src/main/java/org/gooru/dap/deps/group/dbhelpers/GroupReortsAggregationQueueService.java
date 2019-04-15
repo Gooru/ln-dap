@@ -2,6 +2,8 @@
 package org.gooru.dap.deps.group.dbhelpers;
 
 import java.util.List;
+import org.gooru.dap.deps.competency.assessmentscore.atc.grade.competency.calculator.utils.CollectionUtils;
+import org.gooru.dap.deps.group.processors.ContextObject;
 import org.skife.jdbi.v2.DBI;
 
 /**
@@ -15,16 +17,16 @@ public class GroupReortsAggregationQueueService {
     this.queueDao = dbi.onDemand(GroupReortsAggregationQueueDao.class);
   }
   
-  public void insertIntoQueue(String classId, String tenant) {
-    this.queueDao.insertIntoQueue(classId, tenant);
+  public void insertIntoQueue(ContextObject context) {
+    this.queueDao.insertIntoQueue(context);
   }
 
-  public List<GroupReortsAggregationQueueModel> fetchClassesForProcessing() {
-    return this.queueDao.fetchClassesForProcessing();
+  public List<GroupReortsAggregationQueueModel> fetchClassesForProcessing(Integer limit, Integer offset) {
+    return this.queueDao.fetchClassesForProcessing(limit, offset);
   }
 
-  public void removeFromQueue(String classId, String tenant) {
-    this.queueDao.removeFromQueue(classId, tenant);
+  public void removeFromQueue(List<String> classIds) {
+    this.queueDao.removeFromQueue(CollectionUtils.convertToSqlArrayOfString(classIds));
     
   }
 }

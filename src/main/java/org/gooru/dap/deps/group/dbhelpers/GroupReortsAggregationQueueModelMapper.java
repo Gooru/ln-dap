@@ -17,7 +17,10 @@ public class GroupReortsAggregationQueueModelMapper
       throws SQLException {
     GroupReortsAggregationQueueModel model = new GroupReortsAggregationQueueModel();
     model.setClassId(r.getString("class_id"));
+    model.setCourseId(r.getString("course_id"));
+    model.setContentSource(r.getString("content_source"));
     model.setTenant(r.getString("tenant"));
+    model.setStatus(r.getString("status"));
     return model;
   }
 

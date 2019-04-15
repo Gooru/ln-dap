@@ -27,7 +27,7 @@ public class AtcPostProcessorCoreService {
     this.classDao = coreDbi.onDemand(ClassDao.class);
   }
 
-  String fetchCoursefromClass(@Bind("classId") String classId) {
+  public String fetchCoursefromClass(@Bind("classId") String classId) {
     return classDao.fetchCoursefromClass(UUID.fromString(classId));
   }
   

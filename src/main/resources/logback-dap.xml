@@ -76,7 +76,7 @@
 		<appender-ref ref="COMPETENCY-LOG" />
 	</logger>
 	
-	<logger name="job.execution.logs" level="debug" additivity="false">
+	<logger name="org.gooru.dap.jobs" level="debug" additivity="false">
 		<appender-ref ref="JOB-LOGS" />
 	</logger>
 
