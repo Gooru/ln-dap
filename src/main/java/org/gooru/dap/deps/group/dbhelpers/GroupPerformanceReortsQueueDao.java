@@ -13,18 +13,18 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 /**
  * @author szgooru Created On 03-Apr-2019
  */
-public interface GroupReortsAggregationQueueDao {
+public interface GroupPerformanceReortsQueueDao {
 
-  @SqlUpdate("INSERT INTO group_level_data_aggregation_queue(class_id, course_id, content_source, tenant, status) VALUES (:classId, :courseId,"
+  @SqlUpdate("INSERT INTO performance_data_reports_queue (class_id, course_id, content_source, tenant, status) VALUES (:classId, :courseId,"
       + " :contentSource, :tenantId, 'pending') ON CONFLICT (class_id, content_source) DO UPDATE SET course_id = :courseId")
   void insertIntoQueue(@BindBean ContextObject context);
 
   @Mapper(GroupReortsAggregationQueueModelMapper.class)
-  @SqlQuery("SELECT class_id, course_id, content_source, tenant, status FROM group_level_data_aggregation_queue ORDER BY updated_at asc limit :limit"
+  @SqlQuery("SELECT class_id, course_id, content_source, tenant, status FROM performance_data_reports_queue ORDER BY updated_at asc limit :limit"
       + " offset :offset")
   List<GroupReortsAggregationQueueModel> fetchClassesForProcessing(@Bind("limit") Integer limit,
       @Bind("offset") Integer offset);
 
-  @SqlUpdate("DELETE FROM group_level_data_aggregation_queue WHERE class_id = ANY(:classIds) AND status = 'completed'")
+  @SqlUpdate("DELETE FROM performance_data_reports_queue WHERE class_id = ANY(:classIds) AND status = 'completed'")
   void removeFromQueue(@Bind("classIds") PGArray<String> classIds);
 }

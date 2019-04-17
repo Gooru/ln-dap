@@ -9,12 +9,12 @@ import org.skife.jdbi.v2.DBI;
 /**
  * @author szgooru Created On 03-Apr-2019
  */
-public class GroupReortsAggregationQueueService {
+public class GroupPerformanceReortsQueueService {
 
-  private final GroupReortsAggregationQueueDao queueDao;
+  private final GroupPerformanceReortsQueueDao queueDao;
 
-  public GroupReortsAggregationQueueService(DBI dbi) {
-    this.queueDao = dbi.onDemand(GroupReortsAggregationQueueDao.class);
+  public GroupPerformanceReortsQueueService(DBI dbi) {
+    this.queueDao = dbi.onDemand(GroupPerformanceReortsQueueDao.class);
   }
   
   public void insertIntoQueue(ContextObject context) {

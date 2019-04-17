@@ -6,13 +6,13 @@ import java.util.List;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.deps.group.dbhelpers.GroupReortsAggregationQueueModel;
-import org.gooru.dap.deps.group.dbhelpers.GroupReortsAggregationQueueService;
+import org.gooru.dap.deps.group.dbhelpers.GroupPerformanceReortsQueueService;
 import org.gooru.dap.jobs.http.HttpRequestHelper;
 import org.gooru.dap.jobs.http.request.ClassJson;
 import org.gooru.dap.jobs.http.request.ClassPerformanceRequest;
 import org.gooru.dap.jobs.http.response.ClassPerformanceResponse;
 import org.gooru.dap.jobs.http.response.UsageData;
-import org.gooru.dap.jobs.processors.GroupReportsDataAggregationProcessor;
+import org.gooru.dap.jobs.processors.GroupPerformanceReportsProcessor;
 import org.gooru.dap.jobs.schedular.init.JobConfig;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -30,8 +30,8 @@ public class GroupPerformanceReportsJobExecutor implements Job {
 
   private static final String JOBCONFIG = "jobConfig";
 
-  private final GroupReortsAggregationQueueService queueService =
-      new GroupReortsAggregationQueueService(DBICreator.getDbiForDefaultDS());
+  private final GroupPerformanceReortsQueueService queueService =
+      new GroupPerformanceReortsQueueService(DBICreator.getDbiForDefaultDS());
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -98,7 +98,7 @@ public class GroupPerformanceReportsJobExecutor implements Job {
           allUsageData.add(usage);
         });
 
-        new GroupReportsDataAggregationProcessor(allUsageData).process();
+        new GroupPerformanceReportsProcessor(allUsageData).process();
 
         // Queue cleanup
         // Execution for the class has been finished, remove the record from the queue

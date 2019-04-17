@@ -4,7 +4,7 @@ package org.gooru.dap.deps.group.processors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.deps.competency.processors.EventProcessor;
-import org.gooru.dap.deps.group.dbhelpers.GroupReortsAggregationQueueService;
+import org.gooru.dap.deps.group.dbhelpers.GroupPerformanceReortsQueueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +15,8 @@ public class GroupReportsEventProcessor implements EventProcessor {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(GroupReportsEventProcessor.class);
   private final GroupReportsEventMapper eventMapper;
-  private final GroupReortsAggregationQueueService queueService =
-      new GroupReortsAggregationQueueService(DBICreator.getDbiForDefaultDS());
+  private final GroupPerformanceReortsQueueService queueService =
+      new GroupPerformanceReortsQueueService(DBICreator.getDbiForDefaultDS());
 
   public GroupReportsEventProcessor(GroupReportsEventMapper eventMapper) {
     this.eventMapper = eventMapper;

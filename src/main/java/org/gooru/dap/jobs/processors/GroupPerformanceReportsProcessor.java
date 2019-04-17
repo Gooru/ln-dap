@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
 /**
  * @author szgooru Created On 05-Apr-2019
  */
-public class GroupReportsDataAggregationProcessor {
+public class GroupPerformanceReportsProcessor {
 
   private final static Logger LOGGER =
-      LoggerFactory.getLogger(GroupReportsDataAggregationProcessor.class);
+      LoggerFactory.getLogger(GroupPerformanceReportsProcessor.class);
 
   private final List<UsageData> allUsageData;
 
@@ -35,17 +35,19 @@ public class GroupReportsDataAggregationProcessor {
   private final GroupPerformanceReportsService reportsService =
       new GroupPerformanceReportsService(DBICreator.getDbiForDefaultDS());
 
-  public GroupReportsDataAggregationProcessor(List<UsageData> allUsageData) {
+  public GroupPerformanceReportsProcessor(List<UsageData> allUsageData) {
     this.allUsageData = allUsageData;
   }
 
   public void process() {
+    LOGGER.debug("## performance report processing started ##");
     // Find the list of distinct classes
     List<String> distinctClassIds = new ArrayList<>(allUsageData.size());
-
     allUsageData.forEach(usage -> {
       distinctClassIds.add(usage.getClassId());
     });
+
+    LOGGER.debug("number of distinct classes to process {}", distinctClassIds.size());
 
     // Fetch class to school mapping
     Map<String, Long> classSchoolMap = this.groupsService.fetchClassSchoolMapping(distinctClassIds);
@@ -60,6 +62,7 @@ public class GroupReportsDataAggregationProcessor {
     // Fetch details of all groups mapped with schools above
     Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
 
+    LOGGER.debug("class, school and group mapping is fetched, now usage data processing started");
     // Now iterate on usage data objects to prepare bean object and persist the assessment
     // performance and time spent data of the each class. Insert or update will happen for class and
     // group level tables. Inserting or updating KPI data in class level table is straightforward as
@@ -73,12 +76,14 @@ public class GroupReportsDataAggregationProcessor {
       if (schoolId == null) {
         // If the school id does not present for the given class then the class is not yet grouped.
         // We can skip and move ahead
+        LOGGER.warn("class '{}' is not grouped under school, skipping", classId);
         continue;
       }
 
       Long groupId = schoolGroupMap.get(schoolId);
       if (groupId == null) {
         // If the group id is null, then the schools has not been grouped, skip and move ahead
+        LOGGER.debug("school '{}' is not associated with any group, skipping", schoolId);
         continue;
       }
 
@@ -86,14 +91,18 @@ public class GroupReportsDataAggregationProcessor {
       ClassPerformanceDataReportsBean bean =
           prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource());
 
+      LOGGER.debug("persisting performances at class and group level");
       processClassLevelAssessmentPerf(bean);
       processGroupLevelAssessmentPerf(bean);
+      
+      LOGGER.debug("performance data has been persisted");
       usage.setProcessed(true);
     }
   }
 
   private void processClassLevelAssessmentPerf(ClassPerformanceDataReportsBean bean) {
     this.reportsService.insertOrUpdateClassLevelAssessmentPerfAndTimespent(bean);
+    LOGGER.debug("class level assessment performance is saved.");
   }
 
   private void processGroupLevelAssessmentPerf(ClassPerformanceDataReportsBean bean) {
@@ -105,6 +114,7 @@ public class GroupReportsDataAggregationProcessor {
       computeAndPersistBlockPerfData(bean);
       computeAndPersistDistrictPerfData(bean);
     }
+    LOGGER.debug("group level assessment performances are saved");
   }
 
   private void computeAndPersistSchoolDistrictPerfData(ClassPerformanceDataReportsBean bean) {
@@ -112,6 +122,7 @@ public class GroupReportsDataAggregationProcessor {
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, averagePerf, bean.getSchoolDistrictId());
     this.reportsService.insertOrUpdateGroupLevelAssessmentPerf(groupBean);
+    LOGGER.debug("school district '{}' performance has been saved", bean.getSchoolDistrictId());
   }
 
   private void computeAndPersistClusterPerfData(ClassPerformanceDataReportsBean bean) {
@@ -119,26 +130,29 @@ public class GroupReportsDataAggregationProcessor {
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, averagePerf, bean.getClusterId());
     this.reportsService.insertOrUpdateGroupLevelAssessmentPerf(groupBean);
+    LOGGER.debug("cluster '{}' performance has been saved", bean.getClusterId());
   }
 
   private void computeAndPersistBlockPerfData(ClassPerformanceDataReportsBean bean) {
-    Set<Long> blockChildIds = this.reportsService.fetchGroupChilds(bean.getBlockId());
+    Set<Long> blockChildIds = this.groupsService.fetchGroupChilds(bean.getBlockId());
     List<AssessmentPerfByGroupModel> perfByBlock =
         this.reportsService.fetchAssessmentPerfByGroup(blockChildIds);
     Double blockPerf = computeAssessmentPerformance(perfByBlock);
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, blockPerf, bean.getBlockId());
     this.reportsService.insertOrUpdateGroupLevelAssessmentPerf(groupBean);
+    LOGGER.debug("block '{}' performance has been saved", bean.getBlockId());
   }
 
   private void computeAndPersistDistrictPerfData(ClassPerformanceDataReportsBean bean) {
-    Set<Long> districtChildIds = this.reportsService.fetchGroupChilds(bean.getDistrictId());
+    Set<Long> districtChildIds = this.groupsService.fetchGroupChilds(bean.getDistrictId());
     List<AssessmentPerfByGroupModel> perfByDistrict =
         this.reportsService.fetchAssessmentPerfByGroup(districtChildIds);
     Double districtPerf = computeAssessmentPerformance(perfByDistrict);
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, districtPerf, bean.getDistrictId());
     this.reportsService.insertOrUpdateGroupLevelAssessmentPerf(groupBean);
+    LOGGER.debug("district '{}' performance has been saved", bean.getDistrictId());
   }
 
   private Double computeAssessmentPerformanceBySchool(Long groupId) {
@@ -149,6 +163,8 @@ public class GroupReportsDataAggregationProcessor {
   }
 
   private Double computeAssessmentPerformance(List<AssessmentPerfByGroupModel> perfData) {
+    // average performance is computed by adding up all the performances of the child's and divide
+    // by number of child's
     Double totalPerformance =
         perfData.stream().collect(Collectors.summingDouble(o -> o.getPerformance()));
     Double averagePerformance = totalPerformance / perfData.size();
@@ -163,6 +179,8 @@ public class GroupReportsDataAggregationProcessor {
     bean.setStateId(clsLevelBean.getStateId());
     bean.setCountryId(clsLevelBean.getCountryId());
 
+    // As this is a generic pojo used for all type of groups, this group id will be of type which is
+    // passed from the caller of the method. It can be School District, District and so on.
     bean.setGroupId(groupId);
 
     bean.setAssessmentPerformance(perf);
@@ -177,12 +195,19 @@ public class GroupReportsDataAggregationProcessor {
     return bean;
   }
 
+  // Populate the bean from usage data, and group information
   private ClassPerformanceDataReportsBean prepareClassLevelDataReportsBean(UsageData perfData,
       Long schoolId, GroupModel group, String contentSource) {
 
-    // Populate the bean from usage data, and group information
     ClassPerformanceDataReportsBean bean = new ClassPerformanceDataReportsBean();
+
+    // Performance value is cumulative received from the class performance API so we are persisting
+    // as is
     bean.setAssessmentPerformance(perfData.getScoreInPercentage());
+
+    // Here we are receiving the cumulative time spent from the class performance API and hence we
+    // are updating as is. To compute the month on month timespent, it should heppen at read API of
+    // the groups reports.
     bean.setAssessmentTimespent(perfData.getTimeSpent());
     bean.setClassId(perfData.getClassId());
     bean.setSchoolId(schoolId);
@@ -198,7 +223,9 @@ public class GroupReportsDataAggregationProcessor {
 
     // If the group type is school district, then set the group id as school district id in bean and
     // return. Otherwise if its cluster we need to fetch the parent hierarchy and set the block and
-    // district ids accordingly
+    // district id's accordingly.
+    // Here we need to fetch the group hierarchy and set the appropriate id's to be used in further
+    // processing of the report generation
     if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_SCHOOL_DISTRICT)) {
       bean.setSchoolDistrictId(group.getId());
     } else if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_CLUSTER)) {
