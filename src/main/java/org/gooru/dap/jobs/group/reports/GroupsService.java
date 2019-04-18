@@ -33,8 +33,15 @@ public class GroupsService {
         break;
       }
       GroupModel model = fetchGroupById(parentGroupId);
-      groupModels.add(model);
-      parentGroupId = model.getParentId();
+      if (model != null) {
+        LOGGER.debug("non null group model for id '{}'", parentGroupId);
+        groupModels.add(model);
+        parentGroupId = model.getParentId();
+      } else {
+        LOGGER.debug("null group model for id '{}'", parentGroupId);
+        parentGroupId = null;
+      }
+      
     }
 
     return groupModels;
@@ -44,19 +51,22 @@ public class GroupsService {
     // Fetch Class to School mapping
     List<ClassSchoolMappingModel> schools = this.dao
         .fetchClassSchoolMapping(CollectionUtils.convertToSqlArrayOfString(distinctClassIds));
+    LOGGER.debug("# schools returned {}", schools.size());
     Map<String, Long> resultMap = new HashMap<>();
     schools.forEach(school -> {
       resultMap.put(school.getClassId(), school.getSchoolId());
     });
 
+    LOGGER.debug("map size while returning {}", resultMap.size());
     return resultMap;
   }
 
   // Fetch School to Group Mapping
   public Map<Long, Long> fetchSchoolGroupMapping(Set<Long> schoolIds) {
+    LOGGER.debug("fetching group mapping for schools:{}", schoolIds.size());
     Map<Long, Long> resultMap = new HashMap<>();
     List<SchoolGroupMappingModel> groups =
-        this.dao.fetchSchoolGroupMapping(CollectionUtils.convertToSqlArrayOfLong(schoolIds));
+        this.dao.fetchSchoolGroupMapping(CollectionUtils.longSetToPGArrayOfString(schoolIds));
     groups.forEach(group -> {
       resultMap.put(group.getSchoolId(), group.getGroupId());
     });
@@ -68,7 +78,7 @@ public class GroupsService {
   public Map<Long, GroupModel> fetchGroupsByIds(Set<Long> groupIds) {
     Map<Long, GroupModel> resultMap = new HashMap<>();
     List<GroupModel> groupModels =
-        this.dao.fetchGroupsByIds(CollectionUtils.convertToSqlArrayOfLong(groupIds));
+        this.dao.fetchGroupsByIds(CollectionUtils.longSetToPGArrayOfString(groupIds));
     groupModels.forEach(group -> {
       resultMap.put(group.getId(), group);
     });

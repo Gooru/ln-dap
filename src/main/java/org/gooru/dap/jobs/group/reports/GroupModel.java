@@ -69,4 +69,12 @@ public class GroupModel {
     this.tenant = tenant;
   }
 
+  @Override
+  public String toString() {
+    return "GroupModel [id=" + id + ", type=" + type + ", subType=" + subType + ", parentId="
+        + parentId + ", stateId=" + stateId + ", countryId=" + countryId + ", tenant=" + tenant
+        + "]";
+  }
+  
+
 }

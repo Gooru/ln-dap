@@ -2,7 +2,6 @@
 package org.gooru.dap.deps.group.dbhelpers;
 
 import java.util.List;
-import org.gooru.dap.deps.competency.assessmentscore.atc.grade.competency.calculator.utils.CollectionUtils;
 import org.gooru.dap.deps.group.processors.ContextObject;
 import org.skife.jdbi.v2.DBI;
 
@@ -24,9 +23,12 @@ public class GroupPerformanceReortsQueueService {
   public List<GroupReortsAggregationQueueModel> fetchClassesForProcessing(Integer limit, Integer offset) {
     return this.queueDao.fetchClassesForProcessing(limit, offset);
   }
+  
+  public void updateQueueStatusToCompleted(String classId, String contentSource) {
+    this.queueDao.updateQueueStatusToCompleted(classId, contentSource);
+  }
 
-  public void removeFromQueue(List<String> classIds) {
-    this.queueDao.removeFromQueue(CollectionUtils.convertToSqlArrayOfString(classIds));
-    
+  public void deleteCompletedFromQueue() {
+    this.queueDao.deleteCompletedFromQueue();
   }
 }

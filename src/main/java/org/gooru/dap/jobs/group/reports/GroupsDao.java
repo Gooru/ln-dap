@@ -17,20 +17,20 @@ public interface GroupsDao {
   List<ClassSchoolMappingModel> fetchClassSchoolMapping(@Bind("classIds") PGArray<String> classIds);
 
   @Mapper(SchoolGroupMappingModelMapper.class)
-  @SqlQuery("SELECT group_id, school_id FROM group_school_mapping WHERE school_id = ANY(:schoolIds)")
-  List<SchoolGroupMappingModel> fetchSchoolGroupMapping(@Bind("schoolIds") PGArray<Long> schoolIds);
+  @SqlQuery("SELECT group_id, school_id FROM group_school_mapping WHERE school_id = ANY(:schoolIds::bigint[])")
+  List<SchoolGroupMappingModel> fetchSchoolGroupMapping(@Bind("schoolIds") String schoolIds);
 
   @Mapper(GroupModelMapper.class)
-  @SqlQuery("SELECT id, type, sub_type, parent_id, state_id, country_id, tenant FROM groups where group_id = ANY(:groupIds)")
-  List<GroupModel> fetchGroupsByIds(@Bind("groupIds") PGArray<Long> groupIds);
+  @SqlQuery("SELECT id, type, sub_type, parent_id, state_id, country_id, tenant FROM groups WHERE id = ANY(:groupIds::bigint[])")
+  List<GroupModel> fetchGroupsByIds(@Bind("groupIds") String groupIds);
 
   @Mapper(GroupModelMapper.class)
-  @SqlQuery("SELECT id, type, sub_type, parent_id, state_id, country_id, tenant FROM groups where group_id = :groupId")
+  @SqlQuery("SELECT id, type, sub_type, parent_id, state_id, country_id, tenant FROM groups WHERE id = :groupId")
   GroupModel fetchGroupById(@Bind("groupId") Long groupId);
 
   @SqlQuery("SELECT school_id FROM group_school_mapping WHERE group_id = :groupId")
   Set<Long> fetchAllSchoolsOfGroup(@Bind("groupId") Long groupId);
   
-  @SqlQuery("SELECT id FROM groups WHERE parent_id = :parentId")
+  @SqlQuery("SELECT id FROM groups WHERE parent_id = :groupId")
   Set<Long> fetchGroupChilds(@Bind("groupId") Long groupId);
 }

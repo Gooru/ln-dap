@@ -2,7 +2,6 @@
 package org.gooru.dap.jobs.group.reports.performance;
 
 import java.util.List;
-import org.gooru.dap.components.jdbi.PGArray;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
@@ -19,20 +18,20 @@ public interface GroupPerformanceReportsDao {
 
   @Mapper(AssessmentPerfByGroupModelMapper.class)
   @SqlQuery("SELECT AVG(assessment_performance) as performance, school_id as id FROM class_performance_data_reports"
-      + " WHERE school_id = ANY(:schoolIds) GROUP BY school_id")
+      + " WHERE school_id = ANY(:schoolIds::bigint[]) GROUP BY school_id")
   List<AssessmentPerfByGroupModel> fetchAssessmentPerfBySchool(
-      @Bind("schoolIds") PGArray<Long> schoolIds);
+      @Bind("schoolIds") String schoolIds);
 
   @Mapper(AssessmentPerfByGroupModelMapper.class)
-  @SqlQuery("SELECT AVG(assessment_performance) as performance, group_id as id FROM group_performance_data_reports WHERE group_id = ANY(:groupIds)"
-      + " GROUP BY group_id")
+  @SqlQuery("SELECT AVG(assessment_performance) as performance, group_id as id FROM group_performance_data_reports"
+      + " WHERE group_id = ANY(:groupIds::bigint[]) GROUP BY group_id")
   List<AssessmentPerfByGroupModel> fetchGroupLevelAssessmentPerf(
-      @Bind("groupIds") PGArray<Long> groupIds);
+      @Bind("groupIds") String groupIds);
 
   @SqlUpdate("INSERT INTO class_performance_data_reports(class_id, assessment_timespent, assessment_performance, school_id, state_id, country_id,"
       + " month, year, content_source, tenant) VALUES (:classId, :assessmentTimespent, :assessmentPerformance, :schoolId, :stateId, :countryId,"
       + " :month, :year, :contentSource, :tenant) ON CONFLICT (class_id, content_source, month, year) DO UPDATE SET assessment_timespent ="
-      + " assessmentTimespent, assessment_performance = :assessmentPerformnace, updated_at = now()")
+      + " :assessmentTimespent, assessment_performance = :assessmentPerformance, updated_at = now()")
   void insertOrUpdateClassLevelAssessmentPerfAndTimespent(
       @BindBean ClassPerformanceDataReportsBean bean);
 

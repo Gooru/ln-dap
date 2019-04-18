@@ -25,6 +25,7 @@ public class HttpRequestHelper {
   private final static Logger LOGGER = LoggerFactory.getLogger(HttpRequestHelper.class);
   
   public ClassPerformanceResponse fetchClassPerformances(String uri, String requestData) {
+    LOGGER.debug("fetching class performances");
     ClassPerformanceResponse response = null;
 
     try (CloseableHttpClient httpClient = HttpClientBuilder.create().build()) {
@@ -37,11 +38,12 @@ public class HttpRequestHelper {
       final StringEntity requestPayload = new StringEntity(requestData.toString());
       postRequest.setEntity(requestPayload);
       
+      LOGGER.debug("request is created and now executing");
       // Execute request
       try (CloseableHttpResponse httpResponse = httpClient.execute(postRequest)) {
         final int statusCode = httpResponse.getStatusLine().getStatusCode();
         HttpEntity responseEntity = httpResponse.getEntity();
-
+        LOGGER.debug("executed request, parsing response");
         String responseBody =
             responseEntity != null ? readResponseBody(responseEntity.getContent()) : null;
         if (statusCode == HttpConstants.HttpStatus.SUCCESS.getCode()) {

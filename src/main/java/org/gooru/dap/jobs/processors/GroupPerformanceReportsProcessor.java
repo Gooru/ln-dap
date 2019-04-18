@@ -3,13 +3,13 @@ package org.gooru.dap.jobs.processors;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.group.GroupConstants;
+import org.gooru.dap.deps.group.dbhelpers.GroupPerformanceReortsQueueService;
 import org.gooru.dap.jobs.group.reports.GroupModel;
 import org.gooru.dap.jobs.group.reports.GroupsService;
 import org.gooru.dap.jobs.group.reports.performance.AssessmentPerfByGroupModel;
@@ -35,69 +35,91 @@ public class GroupPerformanceReportsProcessor {
   private final GroupPerformanceReportsService reportsService =
       new GroupPerformanceReportsService(DBICreator.getDbiForDefaultDS());
 
+  private final GroupPerformanceReortsQueueService queueService =
+      new GroupPerformanceReortsQueueService(DBICreator.getDbiForDefaultDS());
+
   public GroupPerformanceReportsProcessor(List<UsageData> allUsageData) {
     this.allUsageData = allUsageData;
   }
 
   public void process() {
-    LOGGER.debug("## performance report processing started ##");
-    // Find the list of distinct classes
-    List<String> distinctClassIds = new ArrayList<>(allUsageData.size());
-    allUsageData.forEach(usage -> {
-      distinctClassIds.add(usage.getClassId());
-    });
+    try {
+      LOGGER.debug("## performance report processing started ##");
+      // Find the list of distinct classes
+      List<String> distinctClassIds = new ArrayList<>(allUsageData.size());
+      allUsageData.forEach(usage -> {
+        distinctClassIds.add(usage.getClassId());
+        LOGGER.debug("class id added:'{}'", usage.getClassId());
+      });
+      LOGGER.debug("number of distinct classes to process {}", distinctClassIds.size());
 
-    LOGGER.debug("number of distinct classes to process {}", distinctClassIds.size());
+      // Fetch class to school mapping
+      // Here the assumption is that the classes are mapped with the schools. We are inserting only
+      // those classes in the queue for the processing which are mapped to school.
+      Map<String, Long> classSchoolMap =
+          this.groupsService.fetchClassSchoolMapping(distinctClassIds);
+      Set<Long> schoolIds = classSchoolMap.values().stream().collect(Collectors.toSet());
+      LOGGER.debug("number of schools returned {}", schoolIds.size());
 
-    // Fetch class to school mapping
-    Map<String, Long> classSchoolMap = this.groupsService.fetchClassSchoolMapping(distinctClassIds);
-    Set<Long> schoolIds = new HashSet<>();
-    classSchoolMap.entrySet().stream().filter(entry -> schoolIds.add(entry.getValue()));
+      // Fetch school to group mapping
+      Map<Long, Long> schoolGroupMap = this.groupsService.fetchSchoolGroupMapping(schoolIds);
+      Set<Long> groupIds = schoolGroupMap.values().stream().collect(Collectors.toSet());
+      LOGGER.debug("number of groups returned {}", groupIds.size());
 
-    // Fetch school to group mapping
-    Map<Long, Long> schoolGroupMap = this.groupsService.fetchSchoolGroupMapping(schoolIds);
-    Set<Long> groupIds = new HashSet<>();
-    schoolGroupMap.entrySet().stream().filter(entry -> groupIds.add(entry.getValue()));
-
-    // Fetch details of all groups mapped with schools above
-    Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
-
-    LOGGER.debug("class, school and group mapping is fetched, now usage data processing started");
-    // Now iterate on usage data objects to prepare bean object and persist the assessment
-    // performance and time spent data of the each class. Insert or update will happen for class and
-    // group level tables. Inserting or updating KPI data in class level table is straightforward as
-    // we receive cumulative data till date from the upstream class performance APIs. For the group
-    // level data report updates will happen after computing the average performances of the child
-    // elements. We are not considering assessment time spent data to be aggregated for group
-    // levels.
-    for (UsageData usage : allUsageData) {
-      String classId = usage.getClassId();
-      Long schoolId = classSchoolMap.get(classId);
-      if (schoolId == null) {
-        // If the school id does not present for the given class then the class is not yet grouped.
-        // We can skip and move ahead
-        LOGGER.warn("class '{}' is not grouped under school, skipping", classId);
-        continue;
-      }
-
-      Long groupId = schoolGroupMap.get(schoolId);
-      if (groupId == null) {
-        // If the group id is null, then the schools has not been grouped, skip and move ahead
-        LOGGER.debug("school '{}' is not associated with any group, skipping", schoolId);
-        continue;
-      }
-
-      GroupModel group = groupsMap.get(groupId);
-      ClassPerformanceDataReportsBean bean =
-          prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource());
-
-      LOGGER.debug("persisting performances at class and group level");
-      processClassLevelAssessmentPerf(bean);
-      processGroupLevelAssessmentPerf(bean);
+      // TODO: If not school is mapped to group then need to handle and update queue status accordingly
       
-      LOGGER.debug("performance data has been persisted");
-      usage.setProcessed(true);
+      // Fetch details of all groups mapped with schools above
+      Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
+
+      LOGGER.debug("class, school and group mapping is fetched, now usage data processing started");
+      // Now iterate on usage data objects to prepare bean object and persist the assessment
+      // performance and time spent data of the each class. Insert or update will happen for class
+      // and group level tables. Inserting or updating KPI data in class level table is
+      // straightforward as we receive cumulative data till date from the upstream class performance
+      // APIs. For the group level data report updates will happen after computing the average
+      // performances of the child elements. We are not considering assessment time spent data to be
+      // aggregated for group levels.
+      for (UsageData usage : allUsageData) {
+        String classId = usage.getClassId();
+        Long schoolId = classSchoolMap.get(classId);
+        if (schoolId == null) {
+          // If the school id does not present for the given class then the class is not yet
+          // grouped.
+          // We can skip and move ahead
+          LOGGER.warn("class '{}' is not grouped under school, skipping", classId);
+          continue;
+        }
+
+        Long groupId = schoolGroupMap.get(schoolId);
+        if (groupId == null) {
+          // If the group id is null, then the schools has not been grouped, skip and move ahead
+          LOGGER.debug("school '{}' is not associated with any group, skipping", schoolId);
+          continue;
+        }
+
+        GroupModel group = groupsMap.get(groupId);
+        LOGGER.debug("{}", group.toString());
+        ClassPerformanceDataReportsBean bean =
+            prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource());
+
+        // persist the class and group level data. 
+        LOGGER.debug("persisting performances at class and group level");
+        processClassLevelAssessmentPerf(bean);
+        processGroupLevelAssessmentPerf(bean);
+
+        LOGGER.debug("performance data has been persisted");
+        
+        // Update the status of the queue record to complete for the queue cleanup
+        updateQueueStatusToCompleted(usage);
+      }
+    } catch (Throwable t) {
+      LOGGER.error("job execution has been intrupted by the error", t);
     }
+  }
+  
+  private void updateQueueStatusToCompleted(UsageData usage) {
+    this.queueService.updateQueueStatusToCompleted(usage.getClassId(),
+        usage.getContentSource());
   }
 
   private void processClassLevelAssessmentPerf(ClassPerformanceDataReportsBean bean) {

@@ -2,7 +2,6 @@
 package org.gooru.dap.deps.group.dbhelpers;
 
 import java.util.List;
-import org.gooru.dap.components.jdbi.PGArray;
 import org.gooru.dap.deps.group.processors.ContextObject;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.BindBean;
@@ -25,6 +24,9 @@ public interface GroupPerformanceReortsQueueDao {
   List<GroupReortsAggregationQueueModel> fetchClassesForProcessing(@Bind("limit") Integer limit,
       @Bind("offset") Integer offset);
 
-  @SqlUpdate("DELETE FROM performance_data_reports_queue WHERE class_id = ANY(:classIds) AND status = 'completed'")
-  void removeFromQueue(@Bind("classIds") PGArray<String> classIds);
+  @SqlUpdate("DELETE FROM performance_data_reports_queue WHERE status = 'completed'")
+  void deleteCompletedFromQueue();
+
+  @SqlUpdate("UPDATE performance_data_reports_queue SET status = 'completed' WHERE class_id = :classId AND content_source = :contentSource")
+  void updateQueueStatusToCompleted(@Bind("classId") String classId, @Bind("contentSource") String contentSource);
 }

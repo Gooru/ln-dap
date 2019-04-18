@@ -26,11 +26,11 @@ public class GroupPerformanceReportsService {
   }
 
   public List<AssessmentPerfByGroupModel> fetchAssessmentPerfBySchool(Set<Long> schoolIds) {
-    return this.dao.fetchAssessmentPerfBySchool(CollectionUtils.convertToSqlArrayOfLong(schoolIds));
+    return this.dao.fetchAssessmentPerfBySchool(CollectionUtils.longSetToPGArrayOfString(schoolIds));
   }
 
   public List<AssessmentPerfByGroupModel> fetchAssessmentPerfByGroup(Set<Long> groupIds) {
     return this.dao
-        .fetchGroupLevelAssessmentPerf(CollectionUtils.convertToSqlArrayOfLong(groupIds));
+        .fetchGroupLevelAssessmentPerf(CollectionUtils.longSetToPGArrayOfString(groupIds));
   }
 }
