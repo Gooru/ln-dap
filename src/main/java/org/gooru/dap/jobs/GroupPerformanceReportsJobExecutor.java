@@ -10,7 +10,8 @@ import org.gooru.dap.deps.group.dbhelpers.GroupReortsAggregationQueueModel;
 import org.gooru.dap.deps.group.dbhelpers.GroupPerformanceReortsQueueService;
 import org.gooru.dap.jobs.http.HttpRequestHelper;
 import org.gooru.dap.jobs.http.request.ClassJson;
-import org.gooru.dap.jobs.http.request.ClassPerformanceRequest;
+import org.gooru.dap.jobs.http.request.CAClassPerformanceRequest;
+import org.gooru.dap.jobs.http.request.CMClassPerformanceRequest;
 import org.gooru.dap.jobs.http.response.ClassPerformanceResponse;
 import org.gooru.dap.jobs.http.response.UsageData;
 import org.gooru.dap.jobs.processors.GroupPerformanceReportsProcessor;
@@ -58,7 +59,7 @@ public class GroupPerformanceReportsJobExecutor implements Job {
         // These lists are used to store the request data for coursemap and classactivities
         // separately.
         List<ClassJson> classesForCM = new ArrayList<>(dataModels.size());
-        List<ClassJson> classesForCA = new ArrayList<>(dataModels.size());
+        List<String> classesForCA = new ArrayList<>(dataModels.size());
 
         // Iterate on records from queue and separate the coursemap and classactivities source
         // classes to prepare the request using specific classes. The APIs to fetch performance data
@@ -69,8 +70,7 @@ public class GroupPerformanceReportsJobExecutor implements Job {
             classesForCM.add(clsJson);
           } else if (model.getContentSource()
               .equalsIgnoreCase(EventMessageConstant.CONTENT_SOURCE_CA)) {
-            ClassJson clsJson = new ClassJson(model.getClassId(), null);
-            classesForCA.add(clsJson);
+            classesForCA.add(model.getClassId());
           }
         });
 
@@ -87,7 +87,7 @@ public class GroupPerformanceReportsJobExecutor implements Job {
         // performance data from analytics read API. Use the performance data returned by the API
         // for further processing.
         if (classesForCM != null && !classesForCM.isEmpty()) {
-          ClassPerformanceRequest cmRequest = new ClassPerformanceRequest();
+          CMClassPerformanceRequest cmRequest = new CMClassPerformanceRequest();
           cmRequest.setClasses(classesForCM);
 
           LOGGER.debug("request url:{}", config.getFetchClassCMPerfReqUri());
@@ -114,8 +114,8 @@ public class GroupPerformanceReportsJobExecutor implements Job {
         // and fetch the performance data from analytics read API. Use the performance data returned
         // by the API for further processing.
         if (classesForCA != null && !classesForCA.isEmpty()) {
-          ClassPerformanceRequest caRequest = new ClassPerformanceRequest();
-          caRequest.setClasses(classesForCA);
+          CAClassPerformanceRequest caRequest = new CAClassPerformanceRequest();
+          caRequest.setClassIds(classesForCA);
 
           ClassPerformanceResponse caClassPerformances = httpHelper.fetchClassPerformances(
               config.getFetchClassCAPerfReqUri(), objectMapper.writeValueAsString(caRequest));

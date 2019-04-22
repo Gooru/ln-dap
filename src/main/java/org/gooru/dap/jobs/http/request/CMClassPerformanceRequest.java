@@ -7,14 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * @author szgooru Created On 04-Apr-2019
  */
-public class ClassPerformanceRequest {
+public class CMClassPerformanceRequest {
 
   @JsonProperty("classes")
   private List<ClassJson> classes;
 
-  public ClassPerformanceRequest() {}
+  public CMClassPerformanceRequest() {}
 
-  public ClassPerformanceRequest(List<ClassJson> classes) {
+  public CMClassPerformanceRequest(List<ClassJson> classes) {
     this.classes = classes;
   }
 
