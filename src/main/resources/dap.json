@@ -3,9 +3,9 @@
 		"defaultDataSource": {
 			"ds.type": "hikari",
 			"username": "dsuser",
-			"password": "dsuser",
+			"password": "dspass",
 			"autoCommit": true,
-			"jdbcUrl": "jdbc:postgresql://localhost:5434/dsdb",
+			"jdbcUrl": "jdbc:postgresql://localhost:5433/dsdb",
 			"maximumPoolSize": 5
 		},
 		"coreDataSource": {
@@ -23,7 +23,8 @@
 		"org.gooru.dap.deps.QuestionConsumer",
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer",
 		"org.gooru.dap.deps.competency.CollectionStartEventConsumer",
-		"org.gooru.dap.deps.competency.CompetencyStatsEventConsumer"
+		"org.gooru.dap.deps.competency.CompetencyStatsEventConsumer",
+		"org.gooru.dap.deps.group.GroupReportsEventConsumer"
 	],
 	"deps.config": {
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer": {
@@ -39,6 +40,10 @@
 				},
 				"consumer.topics": [
 					"org.gooru.da.sink.gep.assessment.score"
+				],
+				"producer.topics": [
+					"org.gooru.da.sink.dap.competency.stats",
+					"org.gooru.da.sink.dap.group.reports"
 				]
 			}
 		},
@@ -105,6 +110,22 @@
 					"org.gooru.da.sink.dap.competency.stats"
 				]
 			}
+		},
+		"org.gooru.dap.deps.group.GroupReportsEventConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-6",
+					"max.poll.records": 1,
+					"max.poll.interval.ms": 1000,
+					"enable.auto.commit": true
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.dap.group.reports"
+				]
+			}
 		}
 	},
 	"kafkaproducers": {
@@ -126,5 +147,23 @@
 	},
 	"systemProperties": {
 		"logback.configurationFile": "src/main/resources/logback-dap.xml"
+	},
+	"comment": "cron expr (0 0 6 * * ?) runs every day 6 am. for dev testing use 0 */2 * ? * * (runs every 2 min)",
+	"jobs.config": {
+		"jobChain": [
+			{
+				"chainId": "org.gooru.dap.jobs.schedular.init.JobChainOne",
+				"config": {
+					"cronExpression": "0 */1 * ? * *",
+					"jobConfigs": [
+						{
+							"jobId": "org.gooru.dap.jobs.GroupPerformanceReportsJobExecutor",
+							"fetchClassCMPerfReqUri" : "http://localhost:8082/api/nucleus-insights-internal/v2/classes/performance",
+							"fetchClassCAPerfReqUri" : "http://localhost:8082/api/nucleus-insights-internal/v2/dca/classes/performance"
+						}
+					]
+				}
+			}
+		]
 	}
 }

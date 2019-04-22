@@ -3,6 +3,7 @@ package org.gooru.dap.deps.competency.assessmentscore.atc.grade.competency.calcu
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -58,7 +59,7 @@ public class CollectionUtils {
   public static <T, U> U[] convertArray(T[] from, Function<T, U> func, IntFunction<U[]> generator) {
     return Arrays.stream(from).map(func).toArray(generator);
   }
-
+  
   public static PGArray<String> convertToSqlArrayOfString(List<String> input) {
     return PGArray.arrayOf(String.class, input);
   }
@@ -70,6 +71,24 @@ public class CollectionUtils {
 
   public static PGArray<UUID> convertFromListUUIDToSqlArrayOfUUID(List<UUID> input) {
     return PGArray.arrayOf(UUID.class, input);
+  }
+  
+  public static String longSetToPGArrayOfString(Set<Long> input) {
+    Iterator<Long> it = input.iterator();
+    if (!it.hasNext()) {
+      return "{}";
+    }
+
+    StringBuilder sb = new StringBuilder();
+    sb.append('{');
+    for (;;) {
+      Long l = it.next();
+      sb.append(l);
+      if (!it.hasNext()) {
+        return sb.append('}').toString();
+      }
+      sb.append(',');
+    }
   }
 
 }
