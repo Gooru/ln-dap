@@ -10,14 +10,15 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
  * @author szgooru Created On 25-Apr-2019
  */
 public class CollectionPerformanceModelMapper
-    implements ResultSetMapper<CollectionPerformanceModel> {
+    implements ResultSetMapper<CollectionTimespentModel> {
 
   @Override
-  public CollectionPerformanceModel map(int index, ResultSet r, StatementContext ctx)
+  public CollectionTimespentModel map(int index, ResultSet r, StatementContext ctx)
       throws SQLException {
-    CollectionPerformanceModel model = new CollectionPerformanceModel();
+    CollectionTimespentModel model = new CollectionTimespentModel();
     model.setClassId(r.getString("class_id"));
     model.setTimespent(r.getLong("timespent"));
+    model.setContentSource(r.getString("content_source"));
     return model;
   }
 

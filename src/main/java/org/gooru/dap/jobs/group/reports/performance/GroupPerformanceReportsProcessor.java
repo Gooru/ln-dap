@@ -1,5 +1,5 @@
 
-package org.gooru.dap.jobs.processors;
+package org.gooru.dap.jobs.group.reports.performance;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,10 +12,6 @@ import org.gooru.dap.deps.group.GroupConstants;
 import org.gooru.dap.deps.group.dbhelpers.GroupPerfTSReortsQueueService;
 import org.gooru.dap.jobs.group.reports.GroupModel;
 import org.gooru.dap.jobs.group.reports.GroupsService;
-import org.gooru.dap.jobs.group.reports.performance.AssessmentPerfByGroupModel;
-import org.gooru.dap.jobs.group.reports.performance.ClassPerformanceDataReportsBean;
-import org.gooru.dap.jobs.group.reports.performance.GroupPerformanceDataReportBean;
-import org.gooru.dap.jobs.group.reports.performance.GroupPerformanceReportsService;
 import org.gooru.dap.jobs.http.response.UsageData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +94,6 @@ public class GroupPerformanceReportsProcessor {
         }
 
         GroupModel group = groupsMap.get(groupId);
-        LOGGER.debug("{}", group.toString());
         ClassPerformanceDataReportsBean bean =
             prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource());
 

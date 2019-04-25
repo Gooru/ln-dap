@@ -2,6 +2,8 @@
 package org.gooru.dap.jobs.group.reports.timespent;
 
 import java.util.List;
+import java.util.Set;
+import org.gooru.dap.deps.competency.assessmentscore.atc.grade.competency.calculator.utils.CollectionUtils;
 import org.skife.jdbi.v2.DBI;
 
 /**
@@ -15,12 +17,12 @@ public class GroupTimespentReportsService {
     this.dao = dbi.onDemand(GroupTimespentReportsDao.class);
   }
 
-  public List<CollectionTimespentByGroupModel> fetchCollectionTimespentBySchool(String schoolIds) {
-    return this.dao.fetchCollectionTimespentBySchool(schoolIds);
+  public List<CollectionTimespentByGroupModel> fetchCollectionTimespentBySchool(Set<Long> schoolIds) {
+    return this.dao.fetchCollectionTimespentBySchool(CollectionUtils.longSetToPGArrayOfString(schoolIds));
   }
 
-  public List<CollectionTimespentByGroupModel> fetchGroupLevelCollectionTimespent(String groupIds) {
-    return this.dao.fetchGroupLevelCollectionTimespent(groupIds);
+  public List<CollectionTimespentByGroupModel> fetchGroupLevelCollectionTimespent(Set<Long> groupIds) {
+    return this.dao.fetchGroupLevelCollectionTimespent(CollectionUtils.longSetToPGArrayOfString(groupIds));
   }
 
   public void insertOrUpdateClassLevelCollectionTimespent(ClassTimespentDataReportBean bean) {

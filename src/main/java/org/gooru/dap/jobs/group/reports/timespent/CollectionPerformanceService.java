@@ -2,7 +2,7 @@
 package org.gooru.dap.jobs.group.reports.timespent;
 
 import java.util.List;
-import org.gooru.dap.components.jdbi.PGArray;
+import org.gooru.dap.deps.competency.assessmentscore.atc.grade.competency.calculator.utils.CollectionUtils;
 import org.skife.jdbi.v2.DBI;
 
 /**
@@ -16,8 +16,9 @@ public class CollectionPerformanceService {
     this.dao = dbi.onDemand(CollectionPerformanceDao.class);
   }
 
-  public List<CollectionPerformanceModel> fetchTimespentByClass(PGArray<String> classIds,
+  public List<CollectionTimespentModel> fetchTimespentByClass(List<String> classIds,
       String contentSource) {
-    return this.dao.fetchTimespentByClass(classIds, contentSource);
+    return this.dao.fetchTimespentByClass(CollectionUtils.convertToSqlArrayOfString(classIds),
+        contentSource);
   }
 }
