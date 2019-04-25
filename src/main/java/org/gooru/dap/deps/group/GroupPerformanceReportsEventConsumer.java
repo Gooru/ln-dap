@@ -6,7 +6,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
 import org.gooru.dap.deps.group.processors.GroupReportsEventMapper;
-import org.gooru.dap.deps.group.processors.GroupReportsEventProcessor;
+import org.gooru.dap.deps.group.processors.GroupPerformanceReportsEventProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +15,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * @author szgooru Created On 02-Apr-2019
  */
-public class GroupReportsEventConsumer extends ConsumerTemplate<String, String> {
+public class GroupPerformanceReportsEventConsumer extends ConsumerTemplate<String, String> {
 
   private static final String DEPLOYMENT_NAME =
-      "org.gooru.dap.deps.group.GroupReportsEventConsumer";
+      "org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(GroupReportsEventConsumer.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(GroupPerformanceReportsEventConsumer.class);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
 
-  public GroupReportsEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
+  public GroupPerformanceReportsEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
     super(id, kafkaConsumerConfig);
   }
 
@@ -52,7 +52,7 @@ public class GroupReportsEventConsumer extends ConsumerTemplate<String, String> 
     ObjectMapper mapper = new ObjectMapper();
     try {
       GroupReportsEventMapper eventMapper = mapper.readValue(event, GroupReportsEventMapper.class);
-      new GroupReportsEventProcessor(eventMapper).process();
+      new GroupPerformanceReportsEventProcessor(eventMapper).process();
     } catch (IOException e) {
       LOGGER.error("unable to parse the event", e);
       // Just in case if we need the event

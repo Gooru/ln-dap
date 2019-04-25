@@ -1,15 +1,16 @@
 package org.gooru.dap.deps.competency;
 
 import java.io.IOException;
+import java.util.List;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
-import org.gooru.dap.deps.competency.events.mapper.CollectionStartEventMapper;
 import org.gooru.dap.deps.competency.preprocessors.AssessmentScoreEventPreProcessor;
 import org.gooru.dap.deps.competency.preprocessors.DCAContentModel;
 import org.gooru.dap.deps.competency.processors.CollectionStartEventProcessor;
 import org.gooru.dap.infra.ConsumerTemplate;
+import org.gooru.dap.infra.KafkaMessageProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,9 +27,12 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
+  
+  private final KafkaConsumerConfig kafkaConsumerConfig;
 
   public CollectionStartEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
     super(id, kafkaConsumerConfig);
+    this.kafkaConsumerConfig = kafkaConsumerConfig;
   }
 
   @Override
@@ -88,6 +92,14 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
           return;
         }     
         new CollectionStartEventProcessor(eventMapper).process();
+      }
+      
+      // Produce Event for further processing
+      List<String> producerTopics = this.kafkaConsumerConfig.getProducerTopics();
+      if (producerTopics != null && !producerTopics.isEmpty()) {
+        producerTopics.forEach(topic -> {
+          KafkaMessageProducer.getInstance().sendEvents(topic, event);
+        });
       }
       
     } catch (IOException e) {

@@ -4,21 +4,21 @@ package org.gooru.dap.deps.group.processors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.constants.EventMessageConstant;
 import org.gooru.dap.deps.competency.processors.EventProcessor;
-import org.gooru.dap.deps.group.dbhelpers.GroupPerformanceReortsQueueService;
+import org.gooru.dap.deps.group.dbhelpers.GroupPerfTSReortsQueueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author szgooru Created On 02-Apr-2019
  */
-public class GroupReportsEventProcessor implements EventProcessor {
+public class GroupPerformanceReportsEventProcessor implements EventProcessor {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(GroupReportsEventProcessor.class);
+  private final static Logger LOGGER = LoggerFactory.getLogger(GroupPerformanceReportsEventProcessor.class);
   private final GroupReportsEventMapper eventMapper;
-  private final GroupPerformanceReortsQueueService queueService =
-      new GroupPerformanceReortsQueueService(DBICreator.getDbiForDefaultDS());
+  private final GroupPerfTSReortsQueueService queueService =
+      new GroupPerfTSReortsQueueService(DBICreator.getDbiForDefaultDS());
 
-  public GroupReportsEventProcessor(GroupReportsEventMapper eventMapper) {
+  public GroupPerformanceReportsEventProcessor(GroupReportsEventMapper eventMapper) {
     this.eventMapper = eventMapper;
   }
 
@@ -47,7 +47,7 @@ public class GroupReportsEventProcessor implements EventProcessor {
     ContextObject context = this.eventMapper.getContext();
     if (context.getClassId() != null && EventMessageConstant.VALID_CONTENT_SOURCE_FOR_GROUP_REPORTS
         .contains(context.getContentSource())) {
-      this.queueService.insertIntoQueue(context);
+      this.queueService.insertIntoPerfQueue(context);
     }
   }
 

@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.group.GroupConstants;
-import org.gooru.dap.deps.group.dbhelpers.GroupPerformanceReortsQueueService;
+import org.gooru.dap.deps.group.dbhelpers.GroupPerfTSReortsQueueService;
 import org.gooru.dap.jobs.group.reports.GroupModel;
 import org.gooru.dap.jobs.group.reports.GroupsService;
 import org.gooru.dap.jobs.group.reports.performance.AssessmentPerfByGroupModel;
@@ -35,8 +35,8 @@ public class GroupPerformanceReportsProcessor {
   private final GroupPerformanceReportsService reportsService =
       new GroupPerformanceReportsService(DBICreator.getDbiForDefaultDS());
 
-  private final GroupPerformanceReortsQueueService queueService =
-      new GroupPerformanceReortsQueueService(DBICreator.getDbiForDefaultDS());
+  private final GroupPerfTSReortsQueueService queueService =
+      new GroupPerfTSReortsQueueService(DBICreator.getDbiForDefaultDS());
 
   public GroupPerformanceReportsProcessor(List<UsageData> allUsageData) {
     this.allUsageData = allUsageData;
@@ -118,7 +118,7 @@ public class GroupPerformanceReportsProcessor {
   }
   
   private void updateQueueStatusToCompleted(UsageData usage) {
-    this.queueService.updateQueueStatusToCompleted(usage.getClassId(),
+    this.queueService.updatePerfQueueStatusToCompleted(usage.getClassId(),
         usage.getContentSource());
   }
 
