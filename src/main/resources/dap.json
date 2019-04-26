@@ -24,7 +24,8 @@
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer",
 		"org.gooru.dap.deps.competency.CollectionStartEventConsumer",
 		"org.gooru.dap.deps.competency.CompetencyStatsEventConsumer",
-		"org.gooru.dap.deps.group.GroupReportsEventConsumer"
+		"org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer",
+		"org.gooru.dap.deps.group.GroupTimespentReportsEventConsumer"
 	],
 	"deps.config": {
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer": {
@@ -43,7 +44,7 @@
 				],
 				"producer.topics": [
 					"org.gooru.da.sink.dap.competency.stats",
-					"org.gooru.da.sink.dap.group.reports"
+					"org.gooru.da.sink.dap.group.performance.reports"
 				]
 			}
 		},
@@ -92,6 +93,9 @@
 				},
 				"consumer.topics": [
 					"org.gooru.da.sink.gep.collection.start"
+				],
+				"producer.topics": [
+					"org.gooru.da.sink.dap.group.timespent.reports"
 				]
 			}
 		},
@@ -111,7 +115,7 @@
 				]
 			}
 		},
-		"org.gooru.dap.deps.group.GroupReportsEventConsumer": {
+		"org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer": {
 			"kafka.consumer.config": {
 				"instances": 1,
 				"props": {
@@ -123,7 +127,23 @@
 					"enable.auto.commit": true
 				},
 				"consumer.topics": [
-					"org.gooru.da.sink.dap.group.reports"
+					"org.gooru.da.sink.dap.group.performance.reports"
+				]
+			}
+		},
+		"org.gooru.dap.deps.group.GroupTimespentReportsEventConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-7",
+					"max.poll.records": 1,
+					"max.poll.interval.ms": 1000,
+					"enable.auto.commit": true
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.dap.group.timespent.reports"
 				]
 			}
 		}
@@ -158,8 +178,19 @@
 					"jobConfigs": [
 						{
 							"jobId": "org.gooru.dap.jobs.GroupPerformanceReportsJobExecutor",
-							"fetchClassCMPerfReqUri" : "http://localhost:8082/api/nucleus-insights-internal/v2/classes/performance",
-							"fetchClassCAPerfReqUri" : "http://localhost:8082/api/nucleus-insights-internal/v2/dca/classes/performance"
+							"fetchClassCMPerfReqUri": "http://localhost:8082/api/nucleus-insights-internal/v2/classes/performance",
+							"fetchClassCAPerfReqUri": "http://localhost:8082/api/nucleus-insights-internal/v2/dca/classes/performance"
+						}
+					]
+				}
+			},
+			{
+				"chainId": "org.gooru.dap.jobs.schedular.init.JobChainTwo",
+				"config": {
+					"cronExpression": "0 */5 * ? * *",
+					"jobConfigs": [
+						{
+							"jobId": "org.gooru.dap.jobs.GroupTimespentReportsJobExecutor"
 						}
 					]
 				}

@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.constants.EventMessageConstant;
-import org.gooru.dap.deps.group.dbhelpers.GroupReortsAggregationQueueModel;
-import org.gooru.dap.deps.group.dbhelpers.GroupPerformanceReortsQueueService;
+import org.gooru.dap.deps.group.dbhelpers.GroupPerfTSReortsQueueModel;
+import org.gooru.dap.deps.group.dbhelpers.GroupPerfTSReortsQueueService;
+import org.gooru.dap.jobs.group.reports.performance.GroupPerformanceReportsProcessor;
 import org.gooru.dap.jobs.http.HttpRequestHelper;
 import org.gooru.dap.jobs.http.request.ClassJson;
 import org.gooru.dap.jobs.http.request.CAClassPerformanceRequest;
 import org.gooru.dap.jobs.http.request.CMClassPerformanceRequest;
 import org.gooru.dap.jobs.http.response.ClassPerformanceResponse;
 import org.gooru.dap.jobs.http.response.UsageData;
-import org.gooru.dap.jobs.processors.GroupPerformanceReportsProcessor;
 import org.gooru.dap.jobs.schedular.init.JobConfig;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
@@ -33,8 +33,8 @@ public class GroupPerformanceReportsJobExecutor implements Job {
 
   private static final String JOBCONFIG = "jobConfig";
 
-  private final GroupPerformanceReortsQueueService queueService =
-      new GroupPerformanceReortsQueueService(DBICreator.getDbiForDefaultDS());
+  private final GroupPerfTSReortsQueueService queueService =
+      new GroupPerfTSReortsQueueService(DBICreator.getDbiForDefaultDS());
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -47,8 +47,8 @@ public class GroupPerformanceReportsJobExecutor implements Job {
       Integer offset = 0;
 
       while (true) {
-        List<GroupReortsAggregationQueueModel> dataModels =
-            this.queueService.fetchClassesForProcessing(limit, offset);
+        List<GroupPerfTSReortsQueueModel> dataModels =
+            this.queueService.fetchClassesForPerfProcessing(limit, offset);
 
         // If there are no more records to process, exit the job.
         if (dataModels == null || dataModels.isEmpty()) {
@@ -144,7 +144,7 @@ public class GroupPerformanceReportsJobExecutor implements Job {
         // Queue cleanup
         // Execution for the current set of classes has been finished, now we can delete the records
         // from the queue which are marked as completed by the report processor
-        this.queueService.deleteCompletedFromQueue();
+        this.queueService.deleteCompletedFromPerfQueue();
 
         // Increase offset count to fetch next set of records from the queue
         offset = offset + limit;

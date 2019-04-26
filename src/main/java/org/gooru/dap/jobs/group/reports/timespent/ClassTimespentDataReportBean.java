@@ -1,14 +1,13 @@
 
-package org.gooru.dap.jobs.group.reports.performance;
+package org.gooru.dap.jobs.group.reports.timespent;
 
 /**
- * @author szgooru Created On 09-Apr-2019
+ * @author szgooru Created On 25-Apr-2019
  */
-public class ClassPerformanceDataReportsBean {
-
+public class ClassTimespentDataReportBean {
+  
   private String classId;
-  private Long assessmentTimespent;
-  private Double assessmentPerformance;
+  private Long collectionTimespent;
   private String groupSubtype;
   private Long schoolDistrictId;
   private Long districtId;
@@ -21,7 +20,7 @@ public class ClassPerformanceDataReportsBean {
   private Integer year;
   private String contentSource;
   private String tenant;
-  
+
   public String getClassId() {
     return classId;
   }
@@ -30,20 +29,12 @@ public class ClassPerformanceDataReportsBean {
     this.classId = classId;
   }
 
-  public Long getAssessmentTimespent() {
-    return assessmentTimespent;
+  public Long getCollectionTimespent() {
+    return collectionTimespent;
   }
 
-  public void setAssessmentTimespent(Long assessmentTimespent) {
-    this.assessmentTimespent = assessmentTimespent;
-  }
-
-  public Double getAssessmentPerformance() {
-    return assessmentPerformance;
-  }
-
-  public void setAssessmentPerformance(Double assessmentPerformance) {
-    this.assessmentPerformance = assessmentPerformance;
+  public void setCollectionTimespent(Long collectionTimespent) {
+    this.collectionTimespent = collectionTimespent;
   }
 
   public String getGroupSubtype() {
