@@ -24,7 +24,7 @@ public class GroupTimespentReportsEventConsumer extends ConsumerTemplate<String,
       LoggerFactory.getLogger(GroupTimespentReportsEventConsumer.class);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
 
-  protected GroupTimespentReportsEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
+  public GroupTimespentReportsEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
     super(id, kafkaConsumerConfig);
   }
 
