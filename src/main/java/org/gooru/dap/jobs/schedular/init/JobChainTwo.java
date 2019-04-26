@@ -8,6 +8,7 @@ import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -34,7 +35,6 @@ public class JobChainTwo implements JobChainRunner {
       JobDataMap timespentJobDataMap = new JobDataMap();
       List<JobConfig> jobConfigs = config.getConfig().getJobConfigs();
       jobConfigs.forEach(jc -> {
-        LOGGER.debug("Iterating through jobConfigs");
         LOGGER.debug("jobId := ", jc.getJobId());
 
         if (StringUtils.equalsIgnoreCase(jc.getJobId(),
@@ -43,17 +43,18 @@ public class JobChainTwo implements JobChainRunner {
         }
       });
 
-      JobDetail timespentReportJob = JobBuilder.newJob(GroupTimespentReportsJobExecutor.class)
-          .withIdentity("groupTimespentReportsJob", "group2").storeDurably(true)
-          .setJobData(timespentJobDataMap).build();
+      JobKey jobKey = JobKey.jobKey("groupTimespentReportsJob", "group2");
 
-      Trigger jobTrigger = TriggerBuilder.newTrigger().withIdentity("groupTimespentReportsJobTrigger", "group2")
+      JobDetail timespentReportJob = JobBuilder.newJob(GroupTimespentReportsJobExecutor.class)
+          .withIdentity(jobKey).storeDurably(true).setJobData(timespentJobDataMap).build();
+
+      Trigger jobTrigger = TriggerBuilder.newTrigger()
+          .withIdentity("groupTimespentReportsJobTrigger", "group2")
           .withSchedule(CronScheduleBuilder.cronSchedule(config.getConfig().getCronExpression()))
           .build();
 
       Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
       scheduler.scheduleJob(timespentReportJob, jobTrigger);
-
       scheduler.getListenerManager().addJobListener(jobListener1);
       scheduler.start();
       LOGGER.debug("Timespent Job has been scheduled successfully");

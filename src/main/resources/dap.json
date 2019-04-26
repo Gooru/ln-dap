@@ -15,6 +15,14 @@
 			"autoCommit": false,
 			"jdbcUrl": "jdbc:postgresql://localhost:5432/nucleus",
 			"maximumPoolSize": 5
+		},
+		"reportsDataSource" : {
+			"ds.type": "hikari",
+			"username": "dsuser",
+			"password": "dspass",
+			"autoCommit": false,
+			"jdbcUrl": "jdbc:postgresql://localhost:5433/dsdb",
+			"maximumPoolSize": 5
 		}
 	},
 	"deps.to.deploy": [

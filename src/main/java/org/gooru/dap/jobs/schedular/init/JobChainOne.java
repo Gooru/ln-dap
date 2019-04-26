@@ -7,6 +7,7 @@ import org.quartz.CronScheduleBuilder;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
+import org.quartz.JobKey;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
@@ -34,7 +35,6 @@ public class JobChainOne implements JobChainRunner {
       JobDataMap performanceJobDataMap = new JobDataMap();
       List<JobConfig> jobConfigs = config.getConfig().getJobConfigs();
       jobConfigs.forEach(jc -> {
-        LOGGER.debug("Iterating through jobConfigs");
         LOGGER.debug("jobId := ", jc.getJobId());
 
         if (StringUtils.equalsIgnoreCase(jc.getJobId(),
@@ -43,9 +43,10 @@ public class JobChainOne implements JobChainRunner {
         }
       });
 
+      JobKey jobKey = JobKey.jobKey("perfReportsJob", "group1");
+
       JobDetail performanceReportJob = JobBuilder.newJob(GroupPerformanceReportsJobExecutor.class)
-          .withIdentity("groupPerfReportsJob", "group1").storeDurably(true)
-          .setJobData(performanceJobDataMap).build();
+          .withIdentity(jobKey).storeDurably(true).setJobData(performanceJobDataMap).build();
 
       Trigger jobTrigger = TriggerBuilder.newTrigger().withIdentity("trig", "group1")
           .withSchedule(CronScheduleBuilder.cronSchedule(config.getConfig().getCronExpression()))
@@ -53,7 +54,6 @@ public class JobChainOne implements JobChainRunner {
 
       Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
       scheduler.scheduleJob(performanceReportJob, jobTrigger);
-
       scheduler.getListenerManager().addJobListener(jobListener1);
       scheduler.start();
       LOGGER.debug("Performance Job has been scheduled successfully");

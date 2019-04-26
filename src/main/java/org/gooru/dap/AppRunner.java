@@ -3,6 +3,7 @@ package org.gooru.dap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.gooru.dap.components.AppFinalizer;
 import org.gooru.dap.components.AppInitializer;
 import org.gooru.dap.configuration.AppConfiguration;
@@ -10,6 +11,7 @@ import org.gooru.dap.infra.ConsumersDeployer;
 import org.gooru.dap.jobs.schedular.init.JobChain;
 import org.gooru.dap.jobs.schedular.init.JobChainOne;
 import org.gooru.dap.jobs.schedular.init.JobChainRunner;
+import org.gooru.dap.jobs.schedular.init.JobChainTwo;
 import org.gooru.dap.jobs.schedular.init.Schedulers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,9 +112,13 @@ public class AppRunner {
   }
 
   private JobChainRunner getJobChainInstance(String jobChainId) {
-    // So far there is only one job is scheduled and configured to run via this code. In case of
-    // multiple jobs, verify the jobChainId and initialize the chain
-    return new JobChainOne();
+    JobChainRunner jobChain = null;
+    if(StringUtils.equalsIgnoreCase(jobChainId, JobChainOne.class.getCanonicalName())) {
+        jobChain = new JobChainOne();
+    }else if(StringUtils.equalsIgnoreCase(jobChainId, JobChainTwo.class.getCanonicalName())) {
+        jobChain = new JobChainTwo();
+    }
+    return jobChain;    
   }
 
 }
