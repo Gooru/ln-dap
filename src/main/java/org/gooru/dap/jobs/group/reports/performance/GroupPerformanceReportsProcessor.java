@@ -62,8 +62,9 @@ public class GroupPerformanceReportsProcessor {
       Set<Long> groupIds = schoolGroupMap.values().stream().collect(Collectors.toSet());
       LOGGER.debug("number of groups returned {}", groupIds.size());
 
-      // TODO: If not school is mapped to group then need to handle and update queue status accordingly
-      
+      // TODO: If not school is mapped to group then need to handle and update queue status
+      // accordingly
+
       // Fetch details of all groups mapped with schools above
       Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
 
@@ -97,13 +98,13 @@ public class GroupPerformanceReportsProcessor {
         ClassPerformanceDataReportsBean bean =
             prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource());
 
-        // persist the class and group level data. 
+        // persist the class and group level data.
         LOGGER.debug("persisting performances at class and group level");
         processClassLevelAssessmentPerf(bean);
         processGroupLevelAssessmentPerf(bean);
 
         LOGGER.debug("performance data has been persisted");
-        
+
         // Update the status of the queue record to complete for the queue cleanup
         updateQueueStatusToCompleted(usage);
       }
@@ -111,7 +112,7 @@ public class GroupPerformanceReportsProcessor {
       LOGGER.error("job execution has been intrupted by the error", t);
     }
   }
-  
+
   private void updateQueueStatusToCompleted(UsageData usage) {
     this.queueService.updatePerfQueueStatusToCompleted(usage.getClassId(),
         usage.getContentSource());
@@ -135,7 +136,8 @@ public class GroupPerformanceReportsProcessor {
   }
 
   private void computeAndPersistSchoolDistrictPerfData(ClassPerformanceDataReportsBean bean) {
-    Double averagePerf = computeAssessmentPerformanceBySchool(bean.getSchoolDistrictId());
+    Double averagePerf = computeAssessmentPerformanceBySchool(bean.getSchoolDistrictId(),
+        bean.getMonth(), bean.getYear());
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, averagePerf, bean.getSchoolDistrictId());
     this.reportsService.insertOrUpdateGroupLevelAssessmentPerf(groupBean);
@@ -143,7 +145,8 @@ public class GroupPerformanceReportsProcessor {
   }
 
   private void computeAndPersistClusterPerfData(ClassPerformanceDataReportsBean bean) {
-    Double averagePerf = computeAssessmentPerformanceBySchool(bean.getClusterId());
+    Double averagePerf =
+        computeAssessmentPerformanceBySchool(bean.getClusterId(), bean.getMonth(), bean.getYear());
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, averagePerf, bean.getClusterId());
     this.reportsService.insertOrUpdateGroupLevelAssessmentPerf(groupBean);
@@ -152,8 +155,8 @@ public class GroupPerformanceReportsProcessor {
 
   private void computeAndPersistBlockPerfData(ClassPerformanceDataReportsBean bean) {
     Set<Long> blockChildIds = this.groupsService.fetchGroupChilds(bean.getBlockId());
-    List<AssessmentPerfByGroupModel> perfByBlock =
-        this.reportsService.fetchAssessmentPerfByGroup(blockChildIds);
+    List<AssessmentPerfByGroupModel> perfByBlock = this.reportsService
+        .fetchAssessmentPerfByGroup(blockChildIds, bean.getMonth(), bean.getYear());
     Double blockPerf = computeAssessmentPerformance(perfByBlock);
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, blockPerf, bean.getBlockId());
@@ -163,8 +166,8 @@ public class GroupPerformanceReportsProcessor {
 
   private void computeAndPersistDistrictPerfData(ClassPerformanceDataReportsBean bean) {
     Set<Long> districtChildIds = this.groupsService.fetchGroupChilds(bean.getDistrictId());
-    List<AssessmentPerfByGroupModel> perfByDistrict =
-        this.reportsService.fetchAssessmentPerfByGroup(districtChildIds);
+    List<AssessmentPerfByGroupModel> perfByDistrict = this.reportsService
+        .fetchAssessmentPerfByGroup(districtChildIds, bean.getMonth(), bean.getYear());
     Double districtPerf = computeAssessmentPerformance(perfByDistrict);
     GroupPerformanceDataReportBean groupBean =
         prepareGroupLevelDataReportBean(bean, districtPerf, bean.getDistrictId());
@@ -172,10 +175,10 @@ public class GroupPerformanceReportsProcessor {
     LOGGER.debug("district '{}' performance has been saved", bean.getDistrictId());
   }
 
-  private Double computeAssessmentPerformanceBySchool(Long groupId) {
+  private Double computeAssessmentPerformanceBySchool(Long groupId, Integer month, Integer year) {
     Set<Long> schoolIds = this.groupsService.fetchAllSchoolsOfGroup(groupId);
     List<AssessmentPerfByGroupModel> perfDataBySchool =
-        this.reportsService.fetchAssessmentPerfBySchool(schoolIds);
+        this.reportsService.fetchAssessmentPerfBySchool(schoolIds, month, year);
     return computeAssessmentPerformance(perfDataBySchool);
   }
 

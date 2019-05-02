@@ -14,15 +14,15 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
  */
 public interface GroupPerfTSReortsQueueDao {
 
-  // For Performance processing 
-  
+  // For Performance processing
+
   @SqlUpdate("INSERT INTO perf_ts_data_reports_queue (class_id, course_id, kpi, content_source, tenant, status) VALUES (:classId, :courseId,"
       + " 'performance', :contentSource, :tenantId, 'pending') ON CONFLICT (class_id, kpi, content_source) DO UPDATE SET course_id = :courseId")
   void insertIntoPerfQueue(@BindBean ContextObject context);
 
   @Mapper(GroupPerfTSReortsQueueModelMapper.class)
-  @SqlQuery("SELECT class_id, course_id, content_source, tenant, status FROM perf_ts_data_reports_queue WHERE kpi = 'performance' ORDER BY"
-      + " updated_at asc limit :limit offset :offset")
+  @SqlQuery("SELECT class_id, course_id, content_source, tenant, status FROM perf_ts_data_reports_queue WHERE kpi = 'performance' AND status ="
+      + " 'pending' ORDER BY updated_at asc limit :limit offset :offset")
   List<GroupPerfTSReortsQueueModel> fetchClassesForPerfProcessing(@Bind("limit") Integer limit,
       @Bind("offset") Integer offset);
 
@@ -31,17 +31,18 @@ public interface GroupPerfTSReortsQueueDao {
 
   @SqlUpdate("UPDATE perf_ts_data_reports_queue SET status = 'completed' WHERE class_id = :classId AND content_source = :contentSource AND"
       + " kpi = 'performance'")
-  void updatePerfQueueStatusToCompleted(@Bind("classId") String classId, @Bind("contentSource") String contentSource);
-  
+  void updatePerfQueueStatusToCompleted(@Bind("classId") String classId,
+      @Bind("contentSource") String contentSource);
+
   // For Timespent processing
-  
+
   @SqlUpdate("INSERT INTO perf_ts_data_reports_queue (class_id, course_id, kpi, content_source, tenant, status) VALUES (:classId, :courseId,"
       + " 'timespent', :contentSource, :tenantId, 'pending') ON CONFLICT (class_id, kpi, content_source) DO UPDATE SET course_id = :courseId")
   void insertIntoTimespentQueue(@BindBean ContextObject context);
 
   @Mapper(GroupPerfTSReortsQueueModelMapper.class)
-  @SqlQuery("SELECT class_id, course_id, content_source, tenant, status FROM perf_ts_data_reports_queue WHERE kpi = 'timespent' ORDER BY"
-      + " updated_at asc limit :limit offset :offset")
+  @SqlQuery("SELECT class_id, course_id, content_source, tenant, status FROM perf_ts_data_reports_queue WHERE kpi = 'timespent' AND status ="
+      + " 'pending' ORDER BY updated_at asc limit :limit offset :offset")
   List<GroupPerfTSReortsQueueModel> fetchClassesForTimespentProcessing(@Bind("limit") Integer limit,
       @Bind("offset") Integer offset);
 
@@ -50,5 +51,6 @@ public interface GroupPerfTSReortsQueueDao {
 
   @SqlUpdate("UPDATE perf_ts_data_reports_queue SET status = 'completed' WHERE class_id = :classId AND content_source = :contentSource AND"
       + " kpi = 'timespent'")
-  void updateTimespentQueueStatusToCompleted(@Bind("classId") String classId, @Bind("contentSource") String contentSource);
+  void updateTimespentQueueStatusToCompleted(@Bind("classId") String classId,
+      @Bind("contentSource") String contentSource);
 }

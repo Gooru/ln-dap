@@ -18,15 +18,15 @@ public interface GroupPerformanceReportsDao {
 
   @Mapper(AssessmentPerfByGroupModelMapper.class)
   @SqlQuery("SELECT AVG(assessment_performance) as performance, school_id as id FROM class_performance_data_reports"
-      + " WHERE school_id = ANY(:schoolIds::bigint[]) GROUP BY school_id")
-  List<AssessmentPerfByGroupModel> fetchAssessmentPerfBySchool(
-      @Bind("schoolIds") String schoolIds);
+      + " WHERE school_id = ANY(:schoolIds::bigint[]) AND month = :month AND year = :year GROUP BY school_id")
+  List<AssessmentPerfByGroupModel> fetchAssessmentPerfBySchool(@Bind("schoolIds") String schoolIds,
+      @Bind("month") Integer month, @Bind("year") Integer year);
 
   @Mapper(AssessmentPerfByGroupModelMapper.class)
   @SqlQuery("SELECT AVG(assessment_performance) as performance, group_id as id FROM group_performance_data_reports"
-      + " WHERE group_id = ANY(:groupIds::bigint[]) GROUP BY group_id")
-  List<AssessmentPerfByGroupModel> fetchGroupLevelAssessmentPerf(
-      @Bind("groupIds") String groupIds);
+      + " WHERE group_id = ANY(:groupIds::bigint[]) AND month = :month AND year = :year GROUP BY group_id")
+  List<AssessmentPerfByGroupModel> fetchGroupLevelAssessmentPerf(@Bind("groupIds") String groupIds,
+      @Bind("month") Integer month, @Bind("year") Integer year);
 
   @SqlUpdate("INSERT INTO class_performance_data_reports(class_id, assessment_timespent, assessment_performance, school_id, state_id, country_id,"
       + " month, year, content_source, tenant) VALUES (:classId, :assessmentTimespent, :assessmentPerformance, :schoolId, :stateId, :countryId,"

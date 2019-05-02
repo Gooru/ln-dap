@@ -38,7 +38,7 @@ public class GroupPerformanceReportsJobExecutor implements Job {
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    LOGGER.debug("job execution started");
+    LOGGER.debug("performance job execution started");
     try {
       JobConfig config = (JobConfig) context.getMergedJobDataMap().get(JOBCONFIG);
       ObjectMapper objectMapper = new ObjectMapper();

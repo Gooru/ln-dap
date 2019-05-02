@@ -17,12 +17,16 @@ public class GroupTimespentReportsService {
     this.dao = dbi.onDemand(GroupTimespentReportsDao.class);
   }
 
-  public List<CollectionTimespentByGroupModel> fetchCollectionTimespentBySchool(Set<Long> schoolIds) {
-    return this.dao.fetchCollectionTimespentBySchool(CollectionUtils.longSetToPGArrayOfString(schoolIds));
+  public List<CollectionTimespentByGroupModel> fetchCollectionTimespentBySchool(Set<Long> schoolIds,
+      Integer month, Integer year) {
+    return this.dao.fetchCollectionTimespentBySchool(
+        CollectionUtils.longSetToPGArrayOfString(schoolIds), month, year);
   }
 
-  public List<CollectionTimespentByGroupModel> fetchGroupLevelCollectionTimespent(Set<Long> groupIds) {
-    return this.dao.fetchGroupLevelCollectionTimespent(CollectionUtils.longSetToPGArrayOfString(groupIds));
+  public List<CollectionTimespentByGroupModel> fetchGroupLevelCollectionTimespent(
+      Set<Long> groupIds, Integer month, Integer year) {
+    return this.dao.fetchGroupLevelCollectionTimespent(
+        CollectionUtils.longSetToPGArrayOfString(groupIds), month, year);
   }
 
   public void insertOrUpdateClassLevelCollectionTimespent(ClassTimespentDataReportBean bean) {
