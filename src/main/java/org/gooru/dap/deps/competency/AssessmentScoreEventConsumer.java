@@ -62,37 +62,41 @@ public class AssessmentScoreEventConsumer extends ConsumerTemplate<String, Strin
       AssessmentScoreEventMapper assessmentScore =
           mapper.readValue(event, AssessmentScoreEventMapper.class);
       LOGGER.debug("event has been mapped to object:== {}", assessmentScore.toString());
-      //DO NOT STORE COMPETENCY STATUS IF THIS IS A DIAGNOSTIC ASSESSMENT
-      if (assessmentScore.getContext().getContentSource() != null && 
-          assessmentScore.getContext().getContentSource().equalsIgnoreCase(DIAGNOSTIC)) {
-        LOGGER.info("Diagnostic Assesment {}, no further processing", assessmentScore.getCollectionId());
+      // DO NOT STORE COMPETENCY STATUS IF THIS IS A DIAGNOSTIC ASSESSMENT
+      if (assessmentScore.getContext().getContentSource() != null
+          && assessmentScore.getContext().getContentSource().equalsIgnoreCase(DIAGNOSTIC)) {
+        LOGGER.info("Diagnostic Assesment {}, no further processing",
+            assessmentScore.getCollectionId());
         return;
       } else {
-        if (assessmentScore.getContext().getContentSource().equalsIgnoreCase(DCA) && 
-            assessmentScore.getContext().getAdditionalContext() != null) {
-          DCAContentModel dcaContent = new AssessmentScoreEventPreProcessor(assessmentScore).process();
-          if (dcaContent != null) {            
+        if (assessmentScore.getContext().getContentSource().equalsIgnoreCase(DCA)
+            && assessmentScore.getContext().getAdditionalContext() != null) {
+          DCAContentModel dcaContent =
+              new AssessmentScoreEventPreProcessor(assessmentScore).process();
+          if (dcaContent != null) {
             assessmentScore.setCollectionId(dcaContent.getContentId());
           } else {
-            LOGGER.info("DCA Content Info cannot be obtained. No further processing for this event {}", event);
+            LOGGER.info(
+                "DCA Content Info cannot be obtained. No further processing for this event {}",
+                event);
             return;
           }
-        } else if (assessmentScore.getContext().getContentSource().equalsIgnoreCase(DCA) && 
-            assessmentScore.getContext().getAdditionalContext() == null) {
+        } else if (assessmentScore.getContext().getContentSource().equalsIgnoreCase(DCA)
+            && assessmentScore.getContext().getAdditionalContext() == null) {
           LOGGER.info("Additional Context is null. No further processing for this event {}", event);
           return;
         }
         new AssessmentScoreEventProcessor(assessmentScore).process();
-        
+
         // Produce Event for further processing
         List<String> producerTopics = this.kafkaConsumerConfig.getProducerTopics();
         if (producerTopics != null && !producerTopics.isEmpty()) {
           producerTopics.forEach(topic -> {
-            KafkaMessageProducer.getInstance().sendEvents(topic, event);    
+            KafkaMessageProducer.getInstance().sendEvents(topic, event);
           });
         }
-        
-        LOGGER.info("Successfully dispatched Collection Assessment Score Event to Kafka.."); 
+
+        LOGGER.info("Successfully dispatched Collection Assessment Score Event to Kafka..");
       }
     } catch (IOException e) {
       LOGGER.error("unable to parse the event", e);

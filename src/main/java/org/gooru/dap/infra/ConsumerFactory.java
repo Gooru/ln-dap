@@ -59,10 +59,10 @@ final class ConsumerFactory {
 
       case "org.gooru.dap.deps.competency.CompetencyStatsEventConsumer":
         return new CompetencyStatsEventConsumer(id, config);
-        
+
       case "org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer":
         return new GroupPerformanceReportsEventConsumer(id, config);
-        
+
       case "org.gooru.dap.deps.group.GroupTimespentReportsEventConsumer":
         return new GroupTimespentReportsEventConsumer(id, config);
 

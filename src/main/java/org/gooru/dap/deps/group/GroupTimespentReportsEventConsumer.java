@@ -45,8 +45,7 @@ public class GroupTimespentReportsEventConsumer extends ConsumerTemplate<String,
   }
 
   @Override
-  public void commitExceptionHandler(Exception e) {
-  }
+  public void commitExceptionHandler(Exception e) {}
 
   @Override
   public void processRecord(ConsumerRecord<String, String> record) {

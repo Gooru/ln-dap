@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * This does two operations.
- * <li> Update the user timespent on specific type of resource
- * <li> Update the learner prefs content type values for both weighted average and prefs
+ * <li>Update the user timespent on specific type of resource
+ * <li>Update the learner prefs content type values for both weighted average and prefs
  */
 class UserStatsResourceContentTypeTimeSpentDaoImpl extends Repository {
 

@@ -115,7 +115,7 @@ public class ContextObject {
   public void setContextCollectionId(String contextCollectionId) {
     this.contextCollectionId = contextCollectionId;
   }
-  
+
   public String getContentSource() {
     return contentSource;
   }
@@ -123,7 +123,7 @@ public class ContextObject {
   public void setContentSource(String contentSource) {
     this.contentSource = contentSource;
   }
-  
+
   public String getAdditionalContext() {
     return additionalContext;
   }
@@ -132,13 +132,14 @@ public class ContextObject {
     this.additionalContext = additionalContext;
   }
 
-  
+
   @Override
   public String toString() {
     return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId
         + ", lessonId=" + lessonId + ", sessionId=" + sessionId + ", tenantId=" + tenantId
-        + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId + ", contentSource=" + contentSource
-        + ", contextCollectionType=" + contextCollectionType + ", " + "contextCollectionId="
-        + contextCollectionId + ", " + "contextCollectionId=" + "+ contextCollectionId + ]";
+        + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId
+        + ", contentSource=" + contentSource + ", contextCollectionType=" + contextCollectionType
+        + ", " + "contextCollectionId=" + contextCollectionId + ", " + "contextCollectionId="
+        + "+ contextCollectionId + ]";
   }
 }

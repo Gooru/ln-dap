@@ -18,9 +18,8 @@ public interface UserPrefsContentTypeDao {
   boolean learnerPrefsForSpecifiedUserExists(@Bind("userId") String userId);
 
   @Mapper(LearnerPrefsWeightedAverageModelMapper.class)
-  @SqlQuery(
-      "SELECT user_id, video_wa, webpage_wa, interactive_wa, image_wa, text_wa, audio_wa FROM learner_prefs_weighted_average "
-          + " where user_id = :userId")
+  @SqlQuery("SELECT user_id, video_wa, webpage_wa, interactive_wa, image_wa, text_wa, audio_wa FROM learner_prefs_weighted_average "
+      + " where user_id = :userId")
   LearnerPrefsWeightedAverageModel fetchLearnerPrefsForSpecifiedUser(@Bind("userId") String userId);
 
   @SqlUpdate("insert into learner_prefs_weighted_average (user_id, video_wa, webpage_wa, interactive_wa, image_wa, text_wa, audio_wa) "
@@ -37,9 +36,8 @@ public interface UserPrefsContentTypeDao {
 
   // While selecting we are converting milliseconds to seconds and casting it to bigint/long
   @Mapper(ContentTypeTimespentModelMapper.class)
-  @SqlQuery(
-      "select content_type, (avg(time_spent)/1000)::bigint average from userstat_resource_content_type_timespent_ts "
-          + " where user_id = :userId group by content_type")
+  @SqlQuery("select content_type, (avg(time_spent)/1000)::bigint average from userstat_resource_content_type_timespent_ts "
+      + " where user_id = :userId group by content_type")
   List<ContentTypeTimespentModel> fetchCategorizedAverageTimespentForUser(
       @Bind("userId") String userId);
 

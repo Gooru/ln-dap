@@ -26,9 +26,9 @@ public class UsageData {
   private Double scoreInPercentage;
 
   private String contentSource;
-  
+
   private Boolean processed;
-  
+
   public String getClassId() {
     return classId;
   }
@@ -86,5 +86,5 @@ public class UsageData {
   }
 
 
-  
+
 }

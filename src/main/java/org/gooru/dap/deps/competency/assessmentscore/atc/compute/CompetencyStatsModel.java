@@ -11,9 +11,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({"userId", "classId", "courseId", "gradeId", "classGradeId", "subjectCode", "totalCompetencies", "classCompetencies",
-    "completedCompetencies", "inprogressCompetencies", "percentCompletion", "percentScore", "statsDate", "month",
-    "year"})
+@JsonPropertyOrder({"userId", "classId", "courseId", "gradeId", "classGradeId", "subjectCode",
+    "totalCompetencies", "classCompetencies", "completedCompetencies", "inprogressCompetencies",
+    "percentCompletion", "percentScore", "statsDate", "month", "year"})
 public class CompetencyStatsModel {
 
   @JsonProperty("userId")
@@ -64,10 +64,10 @@ public class CompetencyStatsModel {
    * @param totalCompetencies
    * @param courseId
    */
-  public CompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId, Integer classGradeId,
-      String subjectCode, Integer totalCompetencies, Integer classCompetencies, Integer completedCompetencies,
-      Integer inprogressCompetencies, Double percentCompletion, Double percentScore, Date statsDate, Integer month,
-      Integer year) {
+  public CompetencyStatsModel(String userId, String classId, String courseId, Integer gradeId,
+      Integer classGradeId, String subjectCode, Integer totalCompetencies,
+      Integer classCompetencies, Integer completedCompetencies, Integer inprogressCompetencies,
+      Double percentCompletion, Double percentScore, Date statsDate, Integer month, Integer year) {
     super();
     this.userId = userId;
     this.classId = classId;
@@ -160,7 +160,7 @@ public class CompetencyStatsModel {
     this.classGradeId = classGradeId;
     return this;
   }
-  
+
   @JsonProperty("subjectCode")
   public String getSubjectCode() {
     return subjectCode;
@@ -265,7 +265,7 @@ public class CompetencyStatsModel {
     this.percentScore = percentScore;
     return this;
   }
-  
+
   @JsonProperty("statsDate")
   public Date getStatsDate() {
     return statsDate;

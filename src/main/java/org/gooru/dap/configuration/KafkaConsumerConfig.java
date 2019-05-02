@@ -12,7 +12,7 @@ public interface KafkaConsumerConfig {
   int getInstances();
 
   List<String> getTopics();
-  
+
   List<String> getProducerTopics();
 
   Properties getProperties();

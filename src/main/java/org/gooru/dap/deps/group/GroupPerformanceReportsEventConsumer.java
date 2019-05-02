@@ -20,7 +20,8 @@ public class GroupPerformanceReportsEventConsumer extends ConsumerTemplate<Strin
   private static final String DEPLOYMENT_NAME =
       "org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer";
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(GroupPerformanceReportsEventConsumer.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(GroupPerformanceReportsEventConsumer.class);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
 
   public GroupPerformanceReportsEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {

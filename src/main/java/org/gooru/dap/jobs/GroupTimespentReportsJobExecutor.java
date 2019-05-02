@@ -74,7 +74,7 @@ public class GroupTimespentReportsJobExecutor implements Job {
             classesForCA.size());
 
         List<CollectionTimespentModel> allModels = new ArrayList<>();
-        
+
         // Fetch the timespent for the coursemap and collect the results for further processing
         if (classesForCM != null && !classesForCM.isEmpty()) {
           List<CollectionTimespentModel> timespentForCM = this.collectionPerfService
@@ -92,7 +92,7 @@ public class GroupTimespentReportsJobExecutor implements Job {
             allModels.addAll(timespentForCA);
           }
         }
-        
+
         new GroupTimespentReportsProcessor(allModels).process();
 
         // Queue cleanup

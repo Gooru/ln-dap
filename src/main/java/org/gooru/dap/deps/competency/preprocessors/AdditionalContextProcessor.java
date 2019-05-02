@@ -21,22 +21,22 @@ public class AdditionalContextProcessor {
   private String additionalContextEncoded;
   private AdditionalContextObj additionalContextObj = null;
   private DCAContentModel dcaContentModel;
-  
+
   public AdditionalContextProcessor(AssessmentScoreEventMapper event) {
     this.event = event;
   }
-  
+
   public DCAContentModel process() {
     try {
       String eventName = this.event.getEventName();
       LOGGER.debug("processing event: {}", eventName);
-          return processAssessmentScoreEvent();
+      return processAssessmentScoreEvent();
     } catch (Throwable t) {
       LOGGER.error("exception while processing event", t);
       return null;
     }
   }
-  
+
   private DCAContentModel processAssessmentScoreEvent() {
     try {
       LOGGER.debug("Get encoded Additional Context from the event");
@@ -49,60 +49,59 @@ public class AdditionalContextProcessor {
       fetchDCAContentInfo();
       LOGGER.debug("Validate DCA Assessment/Collection info obtained");
       if (validateDCAContentInfo()) {
-        return dcaContentModel;        
+        return dcaContentModel;
       } else {
         return null;
-      }      
+      }
     } catch (IllegalStateException ex) {
       LOGGER.warn("Caught IllegalStateException ");
       return null;
-    }    
+    }
   }
-  
-  private void getAdditionalContext() {    
+
+  private void getAdditionalContext() {
     additionalContextEncoded = this.event.getContext().getAdditionalContext();
     LOGGER.info("Encoded Additional Context is {}", additionalContextEncoded);
   }
-    
+
   private void decodeAdditionalContext() {
     try {
       additionalContext = new String(Base64.getDecoder().decode(additionalContextEncoded));
-      LOGGER.info("Decoded Additional Context is {}", additionalContext);       
+      LOGGER.info("Decoded Additional Context is {}", additionalContext);
     } catch (IllegalArgumentException e) {
       LOGGER.error("Unable to decode Additional Context ", e);
-  }  
+    }
   }
-  
+
   private void parseAdditionalContext() {
     try {
-      ObjectMapper mapper = new ObjectMapper();  
+      ObjectMapper mapper = new ObjectMapper();
       if (additionalContext != null) {
-        additionalContextObj =
-            mapper.readValue(additionalContext, AdditionalContextObj.class);
+        additionalContextObj = mapper.readValue(additionalContext, AdditionalContextObj.class);
         LOGGER.info("Additional Context Object {}", additionalContext.toString());
       }
     } catch (IOException e) {
       LOGGER.error("Unable to parse the additionalContext Json", e);
-    }    
+    }
   }
-  
+
   private void fetchDCAContentInfo() {
     if (additionalContextObj != null) {
-      DCAContentService service =
-          new DCAContentService(DBICreator.getDbiForCoreDS());    
-      dcaContentModel = service.getDCAContentId(additionalContextObj.getDcaContentId());      
-    }    
+      DCAContentService service = new DCAContentService(DBICreator.getDbiForCoreDS());
+      dcaContentModel = service.getDCAContentId(additionalContextObj.getDcaContentId());
+    }
   }
-  
+
   private boolean validateDCAContentInfo() {
-    if ((dcaContentModel == null) || (dcaContentModel != null && (!dcaContentModel.getAllowMasteryAccrual() || 
-        !dcaContentModel.getContentType().equalsIgnoreCase(event.getCollectionType()) || 
-        !event.getContext().getContentSource().equalsIgnoreCase(DCA)) )) {
+    if ((dcaContentModel == null)
+        || (dcaContentModel != null && (!dcaContentModel.getAllowMasteryAccrual()
+            || !dcaContentModel.getContentType().equalsIgnoreCase(event.getCollectionType())
+            || !event.getContext().getContentSource().equalsIgnoreCase(DCA)))) {
       LOGGER.error("DCA Content Validation unsuccessful");
       return false;
     } else {
       return true;
-    }    
+    }
   }
 
 }

@@ -62,12 +62,13 @@ public class AtcPostProcessor {
       }
 
       if (!classMembers.isEmpty()) {
-        for (String member : classMembers) {          
-          LOGGER.info("Seems like student " + member + " has not studied anything yet! Updating only Total Competencies.") ;
-          
+        for (String member : classMembers) {
+          LOGGER.info("Seems like student " + member
+              + " has not studied anything yet! Updating only Total Competencies.");
+
           // Calculate gradeId for this student
           // If the gradeId of the Student is not set, then get the gradeId of the Class
-          // If that is also not set then store the Global Skyline for the user        
+          // If that is also not set then store the Global Skyline for the user
 
           gradeId = atcPostProcessorCoreService.fetchGradefromClassMembers(member, classId);
           if (gradeId == null) {

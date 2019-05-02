@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * @author mukul@gooru
  */
 public class AtcPostProcessorCoreService {
-  
+
   private final ClassDao classDao;
 
   public AtcPostProcessorCoreService(DBI coreDbi) {
@@ -30,7 +30,7 @@ public class AtcPostProcessorCoreService {
   public String fetchCoursefromClass(@Bind("classId") String classId) {
     return classDao.fetchCoursefromClass(UUID.fromString(classId));
   }
-  
+
   Integer fetchGradefromClassMembers(String userId, String classId) {
     return classDao.fetcheGradefromClassMembers(UUID.fromString(userId), UUID.fromString(classId));
   }
@@ -38,7 +38,7 @@ public class AtcPostProcessorCoreService {
   Integer fetchGradefromClass(String classId, String courseId) {
     return classDao.fetcheGradefromClass(UUID.fromString(classId), UUID.fromString(courseId));
   }
-  
+
   List<String> fetchClassMembers(String classId) {
     return classDao.fetchClassMembers(UUID.fromString(classId));
   }

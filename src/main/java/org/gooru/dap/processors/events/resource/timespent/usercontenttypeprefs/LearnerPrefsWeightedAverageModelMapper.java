@@ -9,8 +9,8 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
  * @author ashish.
  */
 
-public class LearnerPrefsWeightedAverageModelMapper implements
-    ResultSetMapper<LearnerPrefsWeightedAverageModel> {
+public class LearnerPrefsWeightedAverageModelMapper
+    implements ResultSetMapper<LearnerPrefsWeightedAverageModel> {
 
   private static final String USER_ID = "user_id";
   private static final String VIDEO_WA = "video_wa";

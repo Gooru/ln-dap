@@ -27,7 +27,7 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
   private static final Logger XMISSION_ERROR_LOGGER = LoggerFactory.getLogger("xmission.error");
-  
+
   private final KafkaConsumerConfig kafkaConsumerConfig;
 
   public CollectionStartEventConsumer(int id, KafkaConsumerConfig kafkaConsumerConfig) {
@@ -69,31 +69,33 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
        * 
        * new CollectionStartEventProcessor(collectionStartEventMapper).process();
        */
-      //DO NOT STORE COMPETENCY STATUS IF THIS IS A DIAGNOSTIC ASSESSMENT
+      // DO NOT STORE COMPETENCY STATUS IF THIS IS A DIAGNOSTIC ASSESSMENT
       AssessmentScoreEventMapper eventMapper =
           mapper.readValue(event, AssessmentScoreEventMapper.class);
       LOGGER.debug("event has been mapped to object:== {}", eventMapper.toString());
-      if (eventMapper.getContext().getContentSource() != null && 
-          eventMapper.getContext().getContentSource().equalsIgnoreCase(DIAGNOSTIC)) {
+      if (eventMapper.getContext().getContentSource() != null
+          && eventMapper.getContext().getContentSource().equalsIgnoreCase(DIAGNOSTIC)) {
         LOGGER.info("Diagnostic Assesment, no further processing");
-        return;                
+        return;
       } else {
         if (eventMapper.getContext().getAdditionalContext() != null) {
           DCAContentModel dcaContent = new AssessmentScoreEventPreProcessor(eventMapper).process();
-          if (dcaContent != null) {            
+          if (dcaContent != null) {
             eventMapper.setCollectionId(dcaContent.getContentId());
           } else {
-            LOGGER.info("DCA Content Info cannot be obtained. No further processing for this event {}", event);
+            LOGGER.info(
+                "DCA Content Info cannot be obtained. No further processing for this event {}",
+                event);
             return;
           }
-        }  else if (eventMapper.getContext().getContentSource().equalsIgnoreCase(DCA) && 
-            eventMapper.getContext().getAdditionalContext() == null) {
+        } else if (eventMapper.getContext().getContentSource().equalsIgnoreCase(DCA)
+            && eventMapper.getContext().getAdditionalContext() == null) {
           LOGGER.info("Additional Context is null. No further processing for this event {}", event);
           return;
-        }     
+        }
         new CollectionStartEventProcessor(eventMapper).process();
       }
-      
+
       // Produce Event for further processing
       List<String> producerTopics = this.kafkaConsumerConfig.getProducerTopics();
       if (producerTopics != null && !producerTopics.isEmpty()) {
@@ -101,7 +103,7 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
           KafkaMessageProducer.getInstance().sendEvents(topic, event);
         });
       }
-      
+
     } catch (IOException e) {
       LOGGER.error("unable to parse the event", e);
       // Just in case if we need the event

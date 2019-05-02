@@ -83,5 +83,5 @@ public class LearnerProfileCompetencyEvidenceCommand {
   public String getContentSource() {
     return contentSource;
   }
-  
+
 }

@@ -13,7 +13,8 @@ import org.slf4j.LoggerFactory;
  */
 public class GroupPerformanceReportsEventProcessor implements EventProcessor {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(GroupPerformanceReportsEventProcessor.class);
+  private final static Logger LOGGER =
+      LoggerFactory.getLogger(GroupPerformanceReportsEventProcessor.class);
   private final GroupReportsEventMapper eventMapper;
   private final GroupPerfTSReortsQueueService queueService =
       new GroupPerfTSReortsQueueService(DBICreator.getDbiForDefaultDS());

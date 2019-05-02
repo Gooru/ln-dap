@@ -5,7 +5,7 @@ package org.gooru.dap.jobs.group.reports.timespent;
  * @author szgooru Created On 25-Apr-2019
  */
 public class ClassTimespentDataReportBean {
-  
+
   private String classId;
   private Long collectionTimespent;
   private String groupSubtype;

@@ -7,7 +7,7 @@ import org.skife.jdbi.v2.DBI;
  * @author mukul@gooru
  */
 public class DCAContentService {
-  
+
   private final DCAContentDao dcaContentDao;
 
   public DCAContentService(DBI coredbi) {

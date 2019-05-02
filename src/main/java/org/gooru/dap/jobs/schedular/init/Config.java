@@ -16,7 +16,7 @@ public class Config {
 
   @JsonProperty("cronExpression")
   private String cronExpression;
-  
+
   @JsonProperty("jobConfigs")
   private List<JobConfig> jobConfigs = null;
 

@@ -19,7 +19,8 @@ public class ContentCompetencyEvidenceCommand {
 
   public ContentCompetencyEvidenceCommand(String userId, String classId, String courseId,
       String unitId, String lessonId, String latestSessionId, String collectionId,
-      long collectionPathId, Double collectionScore, String collectionType, long activityTime, String contentSource) {
+      long collectionPathId, Double collectionScore, String collectionType, long activityTime,
+      String contentSource) {
     this.userId = userId;
     this.classId = classId;
     this.courseId = courseId;

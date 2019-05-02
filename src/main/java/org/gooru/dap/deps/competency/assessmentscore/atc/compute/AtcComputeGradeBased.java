@@ -9,7 +9,7 @@ import org.gooru.dap.components.jdbi.PGArrayUtils;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcDao;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcEvent;
 import org.gooru.dap.deps.competency.assessmentscore.atc.compute.processor.GradeCompetencyProcessor;
-//import org.gooru.dap.deps.competency.assessmentscore.atc.postprocessor.ClassDao;
+// import org.gooru.dap.deps.competency.assessmentscore.atc.postprocessor.ClassDao;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,7 +90,7 @@ public class AtcComputeGradeBased implements AtcCompute {
       gradeCompetencyStatsModel.setYear(today.getYear());
       LocalDate localDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
       Date statsDate = Date.valueOf(localDate);
-      gradeCompetencyStatsModel.setStatsDate(statsDate);      
+      gradeCompetencyStatsModel.setStatsDate(statsDate);
       CompetencyStatsModel stats = competencyCompletionService.fetchUserCompetencyStatus(cm,
           atcEventObject.getSubjectCode(), gradeCompetencyList);
       if (stats != null) {
@@ -108,24 +108,24 @@ public class AtcComputeGradeBased implements AtcCompute {
 
     }
   }
-  
+
   private void computeClassCurrentGradeCompetency() {
-    
+
     AtcDao atcDao = coreDbi.onDemand(AtcDao.class);
-    Integer gradeId = atcDao.fetchClassCurrentGrade(UUID.fromString(atcEventObject.getClassId()), 
+    Integer gradeId = atcDao.fetchClassCurrentGrade(UUID.fromString(atcEventObject.getClassId()),
         UUID.fromString(atcEventObject.getCourseId()));
 
     if (gradeId != null && gradeId > 0) {
       Integer classCompetencies = 0;
       GradeCompetencyProcessor gradeCompetencyProcessor = new GradeCompetencyProcessor();
-      classCompetencyList = gradeCompetencyProcessor.getGradeCompetency(gradeId,
-          atcEventObject.getSubjectCode());
-      
+      classCompetencyList =
+          gradeCompetencyProcessor.getGradeCompetency(gradeId, atcEventObject.getSubjectCode());
+
       classCompetencies = classCompetencyList.size();
       gradeCompetencyStatsModel.setClassCompetencies(classCompetencies);
-      gradeCompetencyStatsModel.setClassGradeId(gradeId);      
+      gradeCompetencyStatsModel.setClassGradeId(gradeId);
     }
-    
+
   }
 
   private void computeGradeBasedUserCompetencyPerformance() {

@@ -11,8 +11,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 public class DCAContentModelMapper implements ResultSetMapper<DCAContentModel> {
 
   @Override
-  public DCAContentModel map(int index, ResultSet r, StatementContext ctx)
-      throws SQLException {
+  public DCAContentModel map(int index, ResultSet r, StatementContext ctx) throws SQLException {
     DCAContentModel model = new DCAContentModel();
 
     model.setClassId(r.getString(MapperFields.CLASS_ID));
