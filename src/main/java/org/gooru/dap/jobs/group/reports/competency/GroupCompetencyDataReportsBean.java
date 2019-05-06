@@ -6,7 +6,7 @@ package org.gooru.dap.jobs.group.reports.competency;
  */
 public class GroupCompetencyDataReportsBean {
 
-  private String groupId;
+  private Long groupId;
   private Long completedCount;
   private Long inprogressCount;
   private Long cumulativeCompletedCount;
@@ -17,11 +17,11 @@ public class GroupCompetencyDataReportsBean {
   private Integer year;
   private String tenant;
 
-  public String getGroupId() {
+  public Long getGroupId() {
     return groupId;
   }
 
-  public void setGroupId(String groupId) {
+  public void setGroupId(Long groupId) {
     this.groupId = groupId;
   }
 

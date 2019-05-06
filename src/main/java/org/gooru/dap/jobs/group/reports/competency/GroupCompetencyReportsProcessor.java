@@ -124,37 +124,38 @@ public class GroupCompetencyReportsProcessor {
       ClassCompetencyDataReportsBean clsBean) {
     List<GroupCompetencyStatsModel> competencyStatsModel = computeCompetencyCompletionBySchool(
         clsBean.getSchoolDistrictId(), clsBean.getMonth(), clsBean.getYear());
-    createGroupReportDataBeanAndPersist(clsBean, competencyStatsModel);
+    createGroupReportDataBeanAndPersist(clsBean, clsBean.getSchoolDistrictId(),
+        competencyStatsModel);
   }
 
   private void computeAndPersistClusterCompetencyData(ClassCompetencyDataReportsBean clsBean) {
     List<GroupCompetencyStatsModel> competencyStatsModel = computeCompetencyCompletionBySchool(
         clsBean.getClusterId(), clsBean.getMonth(), clsBean.getYear());
-    createGroupReportDataBeanAndPersist(clsBean, competencyStatsModel);
+    createGroupReportDataBeanAndPersist(clsBean, clsBean.getClusterId(), competencyStatsModel);
   }
 
   private void computeAndPersistBlockCompetecyData(ClassCompetencyDataReportsBean clsBean) {
     Set<Long> blockChildIds = this.groupsService.fetchGroupChilds(clsBean.getBlockId());
     List<GroupCompetencyStatsModel> competencyStatsModel = this.reportService
         .fetchCompetencyCompletionsByGroup(blockChildIds, clsBean.getMonth(), clsBean.getYear());
-    createGroupReportDataBeanAndPersist(clsBean, competencyStatsModel);
+    createGroupReportDataBeanAndPersist(clsBean, clsBean.getBlockId(), competencyStatsModel);
   }
 
   private void computeAndPersistDistrictCompetencyData(ClassCompetencyDataReportsBean clsBean) {
     Set<Long> districtChildIds = this.groupsService.fetchGroupChilds(clsBean.getDistrictId());
     List<GroupCompetencyStatsModel> competencyStatsModel = this.reportService
         .fetchCompetencyCompletionsByGroup(districtChildIds, clsBean.getMonth(), clsBean.getYear());
-    createGroupReportDataBeanAndPersist(clsBean, competencyStatsModel);
+    createGroupReportDataBeanAndPersist(clsBean, clsBean.getDistrictId(), competencyStatsModel);
   }
 
   private void createGroupReportDataBeanAndPersist(ClassCompetencyDataReportsBean clsBean,
-      List<GroupCompetencyStatsModel> competencyStatsModel) {
+      Long groupId, List<GroupCompetencyStatsModel> competencyStatsModel) {
     Long completedCount = computeCompletedCompetency(competencyStatsModel);
     Long inprogressCount = computeInprogressCompetency(competencyStatsModel);
     Long cumulativeCompletedCount = computeCumulativeCompetency(competencyStatsModel);
 
     GroupCompetencyDataReportsBean groupBean = createGroupCompetencyDataReportsBean(clsBean,
-        completedCount, inprogressCount, cumulativeCompletedCount);
+        groupId, completedCount, inprogressCount, cumulativeCompletedCount);
     this.reportService.insertOrUpdateGroupCompetencyDataReport(groupBean);
   }
 
@@ -178,12 +179,14 @@ public class GroupCompetencyReportsProcessor {
   }
 
   private GroupCompetencyDataReportsBean createGroupCompetencyDataReportsBean(
-      ClassCompetencyDataReportsBean clsBean, Long completedCount, Long inprogressCount,
-      Long cumulativeCompletedCount) {
+      ClassCompetencyDataReportsBean clsBean, Long groupId, Long completedCount,
+      Long inprogressCount, Long cumulativeCompletedCount) {
     GroupCompetencyDataReportsBean bean = new GroupCompetencyDataReportsBean();
     bean.setCompletedCount(completedCount);
     bean.setInprogressCount(inprogressCount);
     bean.setCumulativeCompletedCount(cumulativeCompletedCount);
+
+    bean.setGroupId(groupId);
 
     bean.setSchoolId(clsBean.getSchoolId());
     bean.setStateId(clsBean.getStateId());
