@@ -169,7 +169,7 @@
 					"enable.auto.commit": true
 				},
 				"consumer.topics": [
-					"org.gooru.da.sink.dap.group.competency.reports"
+					"org.gooru.da.sink.dap.groups.competency.reports"
 				]
 			}
 		}
@@ -200,7 +200,7 @@
 			{
 				"chainId": "org.gooru.dap.jobs.schedular.init.JobChainOne",
 				"config": {
-					"cronExpression": "0 */1 * ? * *",
+					"cronExpression": "0 */55 * ? * *",
 					"jobConfigs": [
 						{
 							"jobId": "org.gooru.dap.jobs.GroupPerformanceReportsJobExecutor",
@@ -213,7 +213,7 @@
 			{
 				"chainId": "org.gooru.dap.jobs.schedular.init.JobChainTwo",
 				"config": {
-					"cronExpression": "0 */5 * ? * *",
+					"cronExpression": "0 */2 * ? * *",
 					"jobConfigs": [
 						{
 							"jobId": "org.gooru.dap.jobs.GroupTimespentReportsJobExecutor"
@@ -224,7 +224,7 @@
 			{
 				"chainId": "org.gooru.dap.jobs.schedular.init.JobChainThree",
 				"config": {
-					"cronExpression": "0 */10 * ? * *",
+					"cronExpression": "0 */3 * ? * *",
 					"jobConfigs": [
 						{
 							"jobId": "org.gooru.dap.jobs.GroupCompetencyReportsJobExecutor"

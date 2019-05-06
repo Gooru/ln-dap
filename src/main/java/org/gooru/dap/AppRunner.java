@@ -11,6 +11,7 @@ import org.gooru.dap.infra.ConsumersDeployer;
 import org.gooru.dap.jobs.schedular.init.JobChain;
 import org.gooru.dap.jobs.schedular.init.JobChainOne;
 import org.gooru.dap.jobs.schedular.init.JobChainRunner;
+import org.gooru.dap.jobs.schedular.init.JobChainThree;
 import org.gooru.dap.jobs.schedular.init.JobChainTwo;
 import org.gooru.dap.jobs.schedular.init.Schedulers;
 import org.slf4j.Logger;
@@ -117,6 +118,8 @@ public class AppRunner {
       jobChain = new JobChainOne();
     } else if (StringUtils.equalsIgnoreCase(jobChainId, JobChainTwo.class.getCanonicalName())) {
       jobChain = new JobChainTwo();
+    } else if (StringUtils.equalsIgnoreCase(jobChainId, JobChainThree.class.getCanonicalName())) {
+      jobChain = new JobChainThree();
     }
     return jobChain;
   }

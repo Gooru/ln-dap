@@ -14,7 +14,7 @@ public interface GroupCompetencyReportsQueueDao {
   @SqlUpdate("INSERT INTO competency_data_reports_queue(class_id, tenant, status) VALUES (:classId, :tenant, 'pending'")
   void insertIntoQueue(@Bind("classId") String classId, @Bind("tenant") String tenant);
 
-  @SqlQuery("SELECT class_id FORM competency_data_reports_queue WHERE status = 'pending' ORDER BY updated_at ASC LIMIT :limit OFFSET :offset")
+  @SqlQuery("SELECT class_id FROM competency_data_reports_queue WHERE status = 'pending' ORDER BY updated_at ASC LIMIT :limit OFFSET :offset")
   List<String> fetchClassFromQueueForProcessing(@Bind("limit") Integer limit,
       @Bind("offset") Integer offset);
 

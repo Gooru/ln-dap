@@ -34,7 +34,7 @@ public class GroupCompetencyReportsJobExecutor implements Job {
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
-    LOGGER.debug("performance job execution started");
+    LOGGER.debug("competency job execution started");
     try {
       JobConfig config = (JobConfig) context.getMergedJobDataMap().get(JOBCONFIG);
       ObjectMapper objectMapper = new ObjectMapper();
