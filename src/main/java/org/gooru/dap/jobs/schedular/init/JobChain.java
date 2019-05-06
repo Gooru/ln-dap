@@ -15,7 +15,7 @@ public class JobChain {
 
   @JsonProperty("chainId")
   private String chainId;
-  
+
   @JsonProperty("config")
   private Config config;
 

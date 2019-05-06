@@ -26,7 +26,7 @@ public class KafkaConsumerConfigImpl implements KafkaConsumerConfig {
     for (int index = 0; index < topicsNode.size(); index++) {
       topics.add(topicsNode.get(index).textValue());
     }
-    
+
     JsonNode producerTopicsNode = kafkaConfig.get("producer.topics");
     if (producerTopicsNode != null && producerTopicsNode.size() > 0) {
       producerTopics = new ArrayList<>(producerTopicsNode.size());

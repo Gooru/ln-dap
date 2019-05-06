@@ -56,7 +56,7 @@ public class AtcComputeSkylineBased implements AtcCompute {
       computeSkylineBasedCompetencyCompletion();
       LOGGER.debug("Fetch Skyline Competencies");
       fetchSkylineComptencies();
-      LOGGER.debug("Compute User Competency Performance");      
+      LOGGER.debug("Compute User Competency Performance");
       computeSkylineBasedUserCompetencyPerformance();
       return skylineCompetencyStatsModel;
     } catch (IllegalStateException ex) {
@@ -83,7 +83,7 @@ public class AtcComputeSkylineBased implements AtcCompute {
     skylineCompetencyStatsModel.setYear(today.getYear());
     LocalDate localDate = LocalDate.of(today.getYear(), today.getMonthValue(), 1);
     Date statsDate = Date.valueOf(localDate);
-    skylineCompetencyStatsModel.setStatsDate(statsDate);      
+    skylineCompetencyStatsModel.setStatsDate(statsDate);
     CompetencyStatsModel stats = competencyCompletionService.fetchUserSkylineCompetencyStatus(
         atcEventObject.getUserId(), atcEventObject.getSubjectCode());
     if (stats != null) {
@@ -106,28 +106,29 @@ public class AtcComputeSkylineBased implements AtcCompute {
     competencyPerformanceDao = dbi.onDemand(CompetencyPerformanceDao.class);
     if (skylineCompetencyCodes != null && !skylineCompetencyCodes.isEmpty()) {
       userAvgScore =
-          competencyPerformanceDao.fetchSkylineCompetencyPerformance(atcEventObject.getUserId(), 
+          competencyPerformanceDao.fetchSkylineCompetencyPerformance(atcEventObject.getUserId(),
               PGArrayUtils.convertFromListStringToSqlArrayOfString(skylineCompetencyCodes));
       if (userAvgScore != null) {
         skylineCompetencyStatsModel.setPercentScore(userAvgScore);
-      }      
+      }
     }
   }
-  
+
   private void fetchSkylineComptencies() {
     this.userSkylineDao = dbi.onDemand(SkylineDao.class);
     List<CompetencyModel> userSkylineModels = new ArrayList<>();
-    userSkylineModels = userSkylineDao.fetchUserDomainCompetencyStatus(atcEventObject.getUserId(), atcEventObject.getSubjectCode());
+    userSkylineModels = userSkylineDao.fetchUserDomainCompetencyStatus(atcEventObject.getUserId(),
+        atcEventObject.getSubjectCode());
 
     if (userSkylineModels.isEmpty()) {
       LOGGER.info("The User Skyline is empty");
-    } else {      
+    } else {
       List<CompetencyModel> competencies = userSkylineModels.stream()
-          .filter(skymodel -> skymodel.getStatus() >= IN_PROGRESS).collect(Collectors.toList());      
+          .filter(skymodel -> skymodel.getStatus() >= IN_PROGRESS).collect(Collectors.toList());
       competencies.forEach(model -> {
         String compCode = model.getCompetencyCode();
         LOGGER.debug("Skyline Competencies Code" + compCode);
-        skylineCompetencyCodes.add(compCode);       
+        skylineCompetencyCodes.add(compCode);
       });
     }
   }

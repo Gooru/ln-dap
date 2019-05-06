@@ -17,20 +17,24 @@ public class GroupPerformanceReportsService {
     this.dao = dsdbi.onDemand(GroupPerformanceReportsDao.class);
   }
 
-  public void insertOrUpdateClassLevelAssessmentPerfAndTimespent(ClassPerformanceDataReportsBean bean) {
+  public void insertOrUpdateClassLevelAssessmentPerfAndTimespent(
+      ClassPerformanceDataReportsBean bean) {
     this.dao.insertOrUpdateClassLevelAssessmentPerfAndTimespent(bean);
   }
-  
+
   public void insertOrUpdateGroupLevelAssessmentPerf(GroupPerformanceDataReportBean bean) {
     this.dao.insertOrUpdateGroupLevelAssessmentPerformance(bean);
   }
 
-  public List<AssessmentPerfByGroupModel> fetchAssessmentPerfBySchool(Set<Long> schoolIds) {
-    return this.dao.fetchAssessmentPerfBySchool(CollectionUtils.longSetToPGArrayOfString(schoolIds));
+  public List<AssessmentPerfByGroupModel> fetchAssessmentPerfBySchool(Set<Long> schoolIds,
+      Integer month, Integer year) {
+    return this.dao.fetchAssessmentPerfBySchool(CollectionUtils.longSetToPGArrayOfString(schoolIds),
+        month, year);
   }
 
-  public List<AssessmentPerfByGroupModel> fetchAssessmentPerfByGroup(Set<Long> groupIds) {
-    return this.dao
-        .fetchGroupLevelAssessmentPerf(CollectionUtils.longSetToPGArrayOfString(groupIds));
+  public List<AssessmentPerfByGroupModel> fetchAssessmentPerfByGroup(Set<Long> groupIds,
+      Integer month, Integer year) {
+    return this.dao.fetchGroupLevelAssessmentPerf(
+        CollectionUtils.longSetToPGArrayOfString(groupIds), month, year);
   }
 }

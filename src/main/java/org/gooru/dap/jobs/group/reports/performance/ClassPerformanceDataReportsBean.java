@@ -21,7 +21,7 @@ public class ClassPerformanceDataReportsBean {
   private Integer year;
   private String contentSource;
   private String tenant;
-  
+
   public String getClassId() {
     return classId;
   }

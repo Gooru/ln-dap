@@ -18,7 +18,7 @@ public class GroupPerfTSReortsQueueModel {
   public void setClassId(String classId) {
     this.classId = classId;
   }
-  
+
   public String getCourseId() {
     return courseId;
   }
@@ -26,7 +26,7 @@ public class GroupPerfTSReortsQueueModel {
   public void setCourseId(String courseId) {
     this.courseId = courseId;
   }
-  
+
   public String getContentSource() {
     return contentSource;
   }
@@ -50,5 +50,5 @@ public class GroupPerfTSReortsQueueModel {
   public void setStatus(String status) {
     this.status = status;
   }
-  
+
 }

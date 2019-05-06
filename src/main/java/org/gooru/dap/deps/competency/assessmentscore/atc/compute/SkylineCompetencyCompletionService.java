@@ -37,7 +37,7 @@ public class SkylineCompetencyCompletionService {
     if (userSkylineModels.isEmpty()) {
       LOGGER.info("The User Skyline is empty");
       return null;
-    } else {      
+    } else {
       Map<String, Map<String, CompetencyModel>> skylineCompletedCompMap = new HashMap<>();
       totalCompetencies = userSkylineModels.size();
       skylineCompetencyStatsModel.setTotalCompetencies(totalCompetencies);

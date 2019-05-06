@@ -9,8 +9,9 @@ import org.slf4j.LoggerFactory;
  * @author mukul@gooru
  */
 public class AssessmentScoreEventPreProcessor implements EventPreProcessor {
-  
-  private final static Logger LOGGER = LoggerFactory.getLogger(AssessmentScoreEventPreProcessor.class);
+
+  private final static Logger LOGGER =
+      LoggerFactory.getLogger(AssessmentScoreEventPreProcessor.class);
   private final static String DCA = "dailyclassactivity";
   private AssessmentScoreEventMapper assessmentScoreEvent;
 
@@ -39,5 +40,5 @@ public class AssessmentScoreEventPreProcessor implements EventPreProcessor {
   private DCAContentModel processAssessmentScoreEvent() {
     return new AdditionalContextProcessor(assessmentScoreEvent).process();
   }
-  
+
 }

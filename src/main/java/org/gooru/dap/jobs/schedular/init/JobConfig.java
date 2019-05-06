@@ -18,7 +18,7 @@ public class JobConfig {
 
   @JsonProperty("fetchClassCMPerfReqUri")
   private String fetchClassCMPerfReqUri;
-  
+
   @JsonProperty("fetchClassCAPerfReqUri")
   private String fetchClassCAPerfReqUri;
 

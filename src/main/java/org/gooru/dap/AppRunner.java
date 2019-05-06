@@ -113,12 +113,12 @@ public class AppRunner {
 
   private JobChainRunner getJobChainInstance(String jobChainId) {
     JobChainRunner jobChain = null;
-    if(StringUtils.equalsIgnoreCase(jobChainId, JobChainOne.class.getCanonicalName())) {
-        jobChain = new JobChainOne();
-    }else if(StringUtils.equalsIgnoreCase(jobChainId, JobChainTwo.class.getCanonicalName())) {
-        jobChain = new JobChainTwo();
+    if (StringUtils.equalsIgnoreCase(jobChainId, JobChainOne.class.getCanonicalName())) {
+      jobChain = new JobChainOne();
+    } else if (StringUtils.equalsIgnoreCase(jobChainId, JobChainTwo.class.getCanonicalName())) {
+      jobChain = new JobChainTwo();
     }
-    return jobChain;    
+    return jobChain;
   }
 
 }

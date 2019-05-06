@@ -12,6 +12,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
+import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.listeners.JobChainingJobListener;
 import org.slf4j.Logger;
@@ -44,11 +45,11 @@ public class JobChainOne implements JobChainRunner {
       });
 
       JobKey jobKey = JobKey.jobKey("perfReportsJob", "group1");
-
       JobDetail performanceReportJob = JobBuilder.newJob(GroupPerformanceReportsJobExecutor.class)
           .withIdentity(jobKey).storeDurably(true).setJobData(performanceJobDataMap).build();
 
-      Trigger jobTrigger = TriggerBuilder.newTrigger().withIdentity("trig", "group1")
+      TriggerKey triggerKey = TriggerKey.triggerKey("perfReportsJobTrigger", "group1");
+      Trigger jobTrigger = TriggerBuilder.newTrigger().withIdentity(triggerKey)
           .withSchedule(CronScheduleBuilder.cronSchedule(config.getConfig().getCronExpression()))
           .build();
 

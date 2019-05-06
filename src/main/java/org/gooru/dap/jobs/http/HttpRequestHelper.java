@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class HttpRequestHelper {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(HttpRequestHelper.class);
-  
+
   public ClassPerformanceResponse fetchClassPerformances(String uri, String requestData) {
     LOGGER.debug("fetching class performances");
     ClassPerformanceResponse response = null;
@@ -37,7 +37,7 @@ public class HttpRequestHelper {
       // Set request body
       final StringEntity requestPayload = new StringEntity(requestData.toString());
       postRequest.setEntity(requestPayload);
-      
+
       LOGGER.debug("request is created and now executing");
       // Execute request
       try (CloseableHttpResponse httpResponse = httpClient.execute(postRequest)) {

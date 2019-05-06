@@ -9,8 +9,7 @@ import org.skife.jdbi.v2.tweak.ResultSetMapper;
 /**
  * @author szgooru Created On 25-Apr-2019
  */
-public class CollectionPerformanceModelMapper
-    implements ResultSetMapper<CollectionTimespentModel> {
+public class CollectionPerformanceModelMapper implements ResultSetMapper<CollectionTimespentModel> {
 
   @Override
   public CollectionTimespentModel map(int index, ResultSet r, StatementContext ctx)

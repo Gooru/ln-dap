@@ -143,7 +143,7 @@ public class LearnerProfileCompetencyEvidenceBean {
   public void setContentSource(String contentSource) {
     this.contentSource = contentSource;
   }
-  
+
   public int getStatus() {
     return status;
   }

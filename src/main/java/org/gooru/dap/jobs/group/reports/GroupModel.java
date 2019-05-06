@@ -75,6 +75,6 @@ public class GroupModel {
         + parentId + ", stateId=" + stateId + ", countryId=" + countryId + ", tenant=" + tenant
         + "]";
   }
-  
+
 
 }

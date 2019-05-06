@@ -9,8 +9,9 @@ import org.slf4j.LoggerFactory;
  * @author mukul@gooru
  */
 public class CollectionStartEventPreProcessor implements EventPreProcessor {
-  
-  private final static Logger LOGGER = LoggerFactory.getLogger(CollectionStartEventPreProcessor.class);
+
+  private final static Logger LOGGER =
+      LoggerFactory.getLogger(CollectionStartEventPreProcessor.class);
   private AssessmentScoreEventMapper event;
 
   public CollectionStartEventPreProcessor(AssessmentScoreEventMapper event) {

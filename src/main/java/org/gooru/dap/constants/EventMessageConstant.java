@@ -20,13 +20,13 @@ public final class EventMessageConstant {
 
   public static final String CONTENT_SOURCE_CM = "coursemap";
   public static final String CONTENT_SOURCE_CA = "dailyclassactivity";
-  
+
   public static final String CONTENT_TYPE_COLLECTION = "collection";
   public static final String CONTENT_TYPE_COLLECTION_EXT = "collection-external";
 
   public static final List<String> VALID_CONTENT_SOURCE_FOR_GROUP_REPORTS =
       Arrays.asList(CONTENT_SOURCE_CA, CONTENT_SOURCE_CM);
-  
+
   public static final List<String> VALID_COLLECTION_TYPES =
       Arrays.asList(CONTENT_TYPE_COLLECTION, CONTENT_TYPE_COLLECTION_EXT);
 }

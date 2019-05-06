@@ -56,26 +56,25 @@ class UserPrefsContentTypeServiceImpl implements UserPrefsContentTypeService {
 
   private void calculateAndUpdateLearnerPrefsForUserAndSpecifiedResourceType() {
     /*
-      Update the learner_prefs_per_million table
+     * Update the learner_prefs_per_million table
      */
-    userPrefsContentTypeDao
-        .updateLearnerPrefsNormalized(
-            learnerPrefsWeightedAverageModel.asLearnerPrefWeightedAverageNormalizedBean());
+    userPrefsContentTypeDao.updateLearnerPrefsNormalized(
+        learnerPrefsWeightedAverageModel.asLearnerPrefWeightedAverageNormalizedBean());
 
   }
 
   private void calculateAndUpdateWeightedAverageForUserAndSpecifiedResourceType() {
     /*
-      - Calculate weighted average for the specific type of resource,
-      - the base reading is existing entry, incoming entry is converted to min and scaled to 1M
-      - Update the value in learner_prefs_weighted_average table
+     * - Calculate weighted average for the specific type of resource, - the base reading is
+     * existing entry, incoming entry is converted to min and scaled to 1M - Update the value in
+     * learner_prefs_weighted_average table
      */
     learnerPrefsWeightedAverageModel = userPrefsContentTypeDao
         .fetchLearnerPrefsForSpecifiedUser(userStatsResourceContentTypeTimeSpentBean.getUserId());
 
     Long oldValue = fetchOldValueByContentType();
-    Double newValue =
-        userStatsResourceContentTypeTimeSpentBean.getTimeSpent() / MILLISEC_TO_SEC_CONVERSION_FACTOR;
+    Double newValue = userStatsResourceContentTypeTimeSpentBean.getTimeSpent()
+        / MILLISEC_TO_SEC_CONVERSION_FACTOR;
     Double newEma = new EMACalculator().calculateNewEma(oldValue.doubleValue(), newValue);
     updateNewValueByContentType(newEma);
     userPrefsContentTypeDao
@@ -141,16 +140,16 @@ class UserPrefsContentTypeServiceImpl implements UserPrefsContentTypeService {
 
   private void createAndInitializeUserRecordInLearnerPrefs() {
     /*
-        - Fetch all records from userstat_resource_content_type_timespent_ts
-        - Create base record to be inserted into learner_prefs_weighted_average table
-        - Update learner_prefs_weighted_average with new record
+     * - Fetch all records from userstat_resource_content_type_timespent_ts - Create base record to
+     * be inserted into learner_prefs_weighted_average table - Update learner_prefs_weighted_average
+     * with new record
      */
-    List<ContentTypeTimespentModel> contentTypeTimespentModels = userPrefsContentTypeDao
-        .fetchCategorizedAverageTimespentForUser(
+    List<ContentTypeTimespentModel> contentTypeTimespentModels =
+        userPrefsContentTypeDao.fetchCategorizedAverageTimespentForUser(
             userStatsResourceContentTypeTimeSpentBean.getUserId());
-    LearnerPrefsWeightedAverageModel model = LearnerPrefsWeightedAverageModel
-        .fromContentTypeTimespentList(userStatsResourceContentTypeTimeSpentBean.getUserId(),
-            contentTypeTimespentModels);
+    LearnerPrefsWeightedAverageModel model =
+        LearnerPrefsWeightedAverageModel.fromContentTypeTimespentList(
+            userStatsResourceContentTypeTimeSpentBean.getUserId(), contentTypeTimespentModels);
     userPrefsContentTypeDao.createLearnerPrefsWeightedAverageRecord(model);
 
   }

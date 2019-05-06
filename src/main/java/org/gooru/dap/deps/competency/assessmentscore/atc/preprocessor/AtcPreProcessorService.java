@@ -17,7 +17,7 @@ public class AtcPreProcessorService {
   AtcPreProcessorService(DBI coreDbi) {
     this.atcPreprocessorDao = coreDbi.onDemand(AtcPreProcessorDao.class);
   }
-  
+
   String fetchCourseFromClass(String classId) {
     String courseId = atcPreprocessorDao.fetchCoursefromClass(UUID.fromString(classId));
     return courseId;

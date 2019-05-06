@@ -83,7 +83,7 @@ public class GroupTimespentReportsProcessor {
 
         GroupModel group = groupsMap.get(groupId);
         ClassTimespentDataReportBean clsbean =
-            createClassTSDataReportBean(model, groupId, group, classId);
+            createClassTSDataReportBean(model, schoolId, group, classId);
 
         // persist the class and group level data.
         LOGGER.debug("persisting timespent at class and group level");
@@ -158,8 +158,8 @@ public class GroupTimespentReportsProcessor {
 
   private void computeAndPersistDistrictTSData(ClassTimespentDataReportBean bean) {
     Set<Long> districtChildIds = this.groupsService.fetchGroupChilds(bean.getDistrictId());
-    List<CollectionTimespentByGroupModel> tsByBlock =
-        this.reportService.fetchGroupLevelCollectionTimespent(districtChildIds);
+    List<CollectionTimespentByGroupModel> tsByBlock = this.reportService
+        .fetchGroupLevelCollectionTimespent(districtChildIds, bean.getMonth(), bean.getYear());
     Long ts = computeCollectionTimespent(tsByBlock);
     GroupTimespentDataReportBean groupBean =
         createGroupTSDataReportBean(bean, bean.getDistrictId(), ts);
@@ -169,8 +169,8 @@ public class GroupTimespentReportsProcessor {
 
   private void computeAndPersistBlockTSData(ClassTimespentDataReportBean bean) {
     Set<Long> blockChildIds = this.groupsService.fetchGroupChilds(bean.getBlockId());
-    List<CollectionTimespentByGroupModel> tsByBlock =
-        this.reportService.fetchGroupLevelCollectionTimespent(blockChildIds);
+    List<CollectionTimespentByGroupModel> tsByBlock = this.reportService
+        .fetchGroupLevelCollectionTimespent(blockChildIds, bean.getMonth(), bean.getYear());
     Long ts = computeCollectionTimespent(tsByBlock);
     GroupTimespentDataReportBean groupBean =
         createGroupTSDataReportBean(bean, bean.getBlockId(), ts);
@@ -179,7 +179,8 @@ public class GroupTimespentReportsProcessor {
   }
 
   private void computeAndPersistClusterTSData(ClassTimespentDataReportBean bean) {
-    Long ts = computeCollectionTimespentBySchool(bean.getClusterId());
+    Long ts =
+        computeCollectionTimespentBySchool(bean.getClusterId(), bean.getMonth(), bean.getYear());
     GroupTimespentDataReportBean groupBean =
         createGroupTSDataReportBean(bean, bean.getClusterId(), ts);
     this.reportService.insertOrUpdateGroupLevelCollectionTimspent(groupBean);
@@ -187,7 +188,8 @@ public class GroupTimespentReportsProcessor {
   }
 
   private void computeAndPersistSchoolDistrictTSData(ClassTimespentDataReportBean bean) {
-    Long ts = computeCollectionTimespentBySchool(bean.getSchoolDistrictId());
+    Long ts = computeCollectionTimespentBySchool(bean.getSchoolDistrictId(), bean.getMonth(),
+        bean.getYear());
     GroupTimespentDataReportBean groupBean =
         createGroupTSDataReportBean(bean, bean.getSchoolDistrictId(), ts);
     this.reportService.insertOrUpdateGroupLevelCollectionTimspent(groupBean);
@@ -219,10 +221,10 @@ public class GroupTimespentReportsProcessor {
     return bean;
   }
 
-  private Long computeCollectionTimespentBySchool(Long groupId) {
+  private Long computeCollectionTimespentBySchool(Long groupId, Integer month, Integer year) {
     Set<Long> schoolIds = this.groupsService.fetchAllSchoolsOfGroup(groupId);
     List<CollectionTimespentByGroupModel> tsDataBySchool =
-        this.reportService.fetchCollectionTimespentBySchool(schoolIds);
+        this.reportService.fetchCollectionTimespentBySchool(schoolIds, month, year);
     return computeCollectionTimespent(tsDataBySchool);
   }
 

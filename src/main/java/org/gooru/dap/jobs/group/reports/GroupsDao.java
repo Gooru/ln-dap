@@ -30,7 +30,7 @@ public interface GroupsDao {
 
   @SqlQuery("SELECT school_id FROM group_school_mapping WHERE group_id = :groupId")
   Set<Long> fetchAllSchoolsOfGroup(@Bind("groupId") Long groupId);
-  
+
   @SqlQuery("SELECT id FROM groups WHERE parent_id = :groupId")
   Set<Long> fetchGroupChilds(@Bind("groupId") Long groupId);
 }

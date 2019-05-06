@@ -38,11 +38,11 @@ public class AtcProcessor {
       classId = this.assessmentScoreEvent.getContext().getClassId();
       courseId = this.assessmentScoreEvent.getContext().getCourseId();
       userId = this.assessmentScoreEvent.getUserId();
-      
-      //courseId can be NULL in the incoming event, in which case
-      //use courseId from the class table
-      if(courseId == null) {
-        courseId = atcService.fetchCoursefromClass(classId);        
+
+      // courseId can be NULL in the incoming event, in which case
+      // use courseId from the class table
+      if (courseId == null) {
+        courseId = atcService.fetchCoursefromClass(classId);
       }
 
       // Calculate gradeId for this student
@@ -51,10 +51,10 @@ public class AtcProcessor {
 
       gradeId = atcService.fetchGradefromClassMembers(userId, classId);
       if (gradeId == null) {
-          gradeId = atcService.fetchGradefromClass(classId, courseId);
+        gradeId = atcService.fetchGradefromClass(classId, courseId);
       }
 
-      if (gradeId == null || gradeId <= 0) {        
+      if (gradeId == null || gradeId <= 0) {
         LOGGER.debug("Fetching subject code");
         initializeSubjectCodefromCourse();
 
@@ -70,10 +70,10 @@ public class AtcProcessor {
         gradeCompetencyStatsService.insertUserClassCompetencyStats(skylineCompetencyStats);
 
       } else if (gradeId != null && gradeId > 0) {
-        
+
         LOGGER.debug("Fetching subject code");
         initializeSubjectCodefromGrade();
-        
+
         // Inject this object for further calculation
         AtcEvent atcEventObject = new AtcEvent(classId, courseId, userId, gradeId, subjectCode);
 
@@ -86,8 +86,7 @@ public class AtcProcessor {
         // Persist Aggregated Data into a DB Table
         gradeCompetencyStatsService.insertUserClassCompetencyStats(gradeCompetencyStats);
 
-      } 
-      else {
+      } else {
         LOGGER.info("No Learner Profile for " + userId + "at class " + classId);;
         return;
       }
@@ -110,8 +109,8 @@ public class AtcProcessor {
   private void initializeSubjectCodefromGrade() {
     subjectCode = SubjectFetcher.build().fetchSubjectFromGrade(gradeId);
     if (subjectCode == null || subjectCode.isEmpty()) {
-      LOGGER.warn("Not able to find subject code for specified grade '{}' and class '{}'",
-          gradeId, classId);
+      LOGGER.warn("Not able to find subject code for specified grade '{}' and class '{}'", gradeId,
+          classId);
       throw new IllegalStateException(
           "Not able to find subject code for specified course " + gradeId);
     }

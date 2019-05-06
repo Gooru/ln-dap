@@ -24,8 +24,8 @@ class SubjectFetcherImpl implements SubjectFetcher {
       String subjectCode = getSubjectFetcherFromCourseDao().fetchSubjectBucketForCourse(courseId);
       if (subjectCode != null) {
         if (isFrameworkCode(subjectCode)) {
-          subjectCode =
-              getSubjectFetcherFromCourseDao().fetchGutSubjectCodeForFrameworkSubjectCode(subjectCode);
+          subjectCode = getSubjectFetcherFromCourseDao()
+              .fetchGutSubjectCodeForFrameworkSubjectCode(subjectCode);
         }
         return subjectCode;
       }
@@ -34,14 +34,14 @@ class SubjectFetcherImpl implements SubjectFetcher {
   }
 
   public String fetchSubjectFromGrade(Integer gradeId) {
-    if(gradeId != null && gradeId > 0) {
-      String subjectCode = getSubjectFetcherFromGradeDao().fetchSubjectCodeFromGrade(gradeId);      
+    if (gradeId != null && gradeId > 0) {
+      String subjectCode = getSubjectFetcherFromGradeDao().fetchSubjectCodeFromGrade(gradeId);
       return subjectCode;
     }
-    
+
     return null;
   }
-  
+
   private boolean isFrameworkCode(String subjectCode) {
     long countDots = subjectCode.chars().filter(ch -> ch == '.').count();
     return countDots > 1;
@@ -53,7 +53,7 @@ class SubjectFetcherImpl implements SubjectFetcher {
     }
     return courseDao;
   }
-  
+
   private SubjectFetcherFromGradeDao getSubjectFetcherFromGradeDao() {
     if (gradeDao == null) {
       gradeDao = dsdbi.onDemand(SubjectFetcherFromGradeDao.class);

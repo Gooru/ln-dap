@@ -59,7 +59,7 @@ public class CollectionUtils {
   public static <T, U> U[] convertArray(T[] from, Function<T, U> func, IntFunction<U[]> generator) {
     return Arrays.stream(from).map(func).toArray(generator);
   }
-  
+
   public static PGArray<String> convertToSqlArrayOfString(List<String> input) {
     return PGArray.arrayOf(String.class, input);
   }
@@ -72,7 +72,7 @@ public class CollectionUtils {
   public static PGArray<UUID> convertFromListUUIDToSqlArrayOfUUID(List<UUID> input) {
     return PGArray.arrayOf(UUID.class, input);
   }
-  
+
   public static String longSetToPGArrayOfString(Set<Long> input) {
     Iterator<Long> it = input.iterator();
     if (!it.hasNext()) {

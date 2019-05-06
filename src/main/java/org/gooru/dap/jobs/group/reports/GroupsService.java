@@ -41,7 +41,7 @@ public class GroupsService {
         LOGGER.debug("null group model for id '{}'", parentGroupId);
         parentGroupId = null;
       }
-      
+
     }
 
     return groupModels;
@@ -93,7 +93,7 @@ public class GroupsService {
   public Set<Long> fetchAllSchoolsOfGroup(Long groupId) {
     return this.dao.fetchAllSchoolsOfGroup(groupId);
   }
-  
+
   public Set<Long> fetchGroupChilds(Long groupId) {
     return this.dao.fetchGroupChilds(groupId);
   }

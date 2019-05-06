@@ -22,7 +22,7 @@ public final class DBICreator {
     return createDBI(
         DataSourceRegistry.getInstance().getDataSourceByName(Constants.CORE_DATA_SOURCE));
   }
-  
+
   public static DBI getDbiForReportsDS() {
     return createDBI(
         DataSourceRegistry.getInstance().getDataSourceByName(Constants.REPORTS_DATA_SOURCE));
