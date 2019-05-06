@@ -30,7 +30,7 @@ public class GroupCompetencyReportsJobExecutor implements Job {
       new GroupCompetencyReportsQueueService(DBICreator.getDbiForDefaultDS());
 
   private final GroupCompetencyReportsService competencyService =
-      new GroupCompetencyReportsService(DBICreator.getDbiForReportsDS());
+      new GroupCompetencyReportsService(DBICreator.getDbiForDefaultDS());
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
