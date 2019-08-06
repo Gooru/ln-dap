@@ -61,6 +61,11 @@ public class GroupCompetencyReportsJobExecutor implements Job {
                 previousMonth.getMonthValue(), previousMonth.getYear());
 
         new GroupCompetencyReportsProcessor(currentStatsModels, previousStatsModels).process();
+        
+        // Queue cleanup
+        // Execution for the current set of classes has been finished, now we can delete the records
+        // from the queue which are marked as completed by the report processor
+        this.queueService.deleteFromQueue();
 
         // Increase offset count to fetch next set of records from the queue
         offset = offset + limit;
