@@ -14,6 +14,7 @@ public class KafkaConsumerConfigImpl implements KafkaConsumerConfig {
 
   private final int instances;
   private final List<String> topics;
+  private final List<String> producerTopics;
   private final Properties properties;
 
   public KafkaConsumerConfigImpl(JsonNode config) {
@@ -24,6 +25,16 @@ public class KafkaConsumerConfigImpl implements KafkaConsumerConfig {
     topics = new ArrayList<>(topicsNode.size());
     for (int index = 0; index < topicsNode.size(); index++) {
       topics.add(topicsNode.get(index).textValue());
+    }
+
+    JsonNode producerTopicsNode = kafkaConfig.get("producer.topics");
+    if (producerTopicsNode != null && producerTopicsNode.size() > 0) {
+      producerTopics = new ArrayList<>(producerTopicsNode.size());
+      for (int index = 0; index < producerTopicsNode.size(); index++) {
+        producerTopics.add(producerTopicsNode.get(index).textValue());
+      }
+    } else {
+      producerTopics = null;
     }
 
     properties = new Properties();
@@ -48,5 +59,10 @@ public class KafkaConsumerConfigImpl implements KafkaConsumerConfig {
   @Override
   public Properties getProperties() {
     return properties;
+  }
+
+  @Override
+  public List<String> getProducerTopics() {
+    return producerTopics;
   }
 }

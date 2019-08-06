@@ -28,7 +28,7 @@ public final class ContentCompetencyEvidenceCommandBuilder {
     String sessionId = context.getSessionId();
     long pathId = context.getPathId();
     String contentSource = context.getContentSource();
-    
+
     ResultMapper result = assessmentScoreEvent.getResult();
     Double score = null;
     if (result != null) {

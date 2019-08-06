@@ -156,7 +156,7 @@ public class ContentCompetencyEvidenceBean {
   public void setCollectionType(String collectionType) {
     this.collectionType = collectionType;
   }
-  
+
   public String getContentSource() {
     return contentSource;
   }

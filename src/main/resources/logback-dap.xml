@@ -43,7 +43,20 @@
 		</rollingPolicy>
 		<append>true</append>
 		<encoder>
-			<pattern>%msg%n</pattern>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+	
+		<appender name="JOB-LOGS"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>job-execution.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>job-execution.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+		<append>true</append>
+		<encoder>
+			<pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
 		</encoder>
 	</appender>
 
@@ -61,6 +74,10 @@
 	<logger name="org.gooru.dap.deps.competency" level="debug"
 		additivity="false">
 		<appender-ref ref="COMPETENCY-LOG" />
+	</logger>
+	
+	<logger name="org.gooru.dap.jobs" level="debug" additivity="false">
+		<appender-ref ref="JOB-LOGS" />
 	</logger>
 
 	<root level="info">

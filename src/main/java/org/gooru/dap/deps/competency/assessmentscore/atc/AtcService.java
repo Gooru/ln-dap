@@ -20,7 +20,7 @@ public class AtcService {
   String fetchCoursefromClass(@Bind("classId") String classId) {
     return atcDao.fetchCoursefromClass(UUID.fromString(classId));
   }
-  
+
   Integer fetchGradefromClassMembers(String userId, String classId) {
     return atcDao.fetcheGradefromClassMembers(UUID.fromString(userId), UUID.fromString(classId));
   }

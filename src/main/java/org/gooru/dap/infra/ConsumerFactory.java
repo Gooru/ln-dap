@@ -6,6 +6,9 @@ import org.gooru.dap.configuration.KafkaConsumerConfig;
 import org.gooru.dap.deps.competency.AssessmentScoreEventConsumer;
 import org.gooru.dap.deps.competency.CollectionStartEventConsumer;
 import org.gooru.dap.deps.competency.CompetencyStatsEventConsumer;
+import org.gooru.dap.deps.group.GroupCompetencyReportsEventConsumer;
+import org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer;
+import org.gooru.dap.deps.group.GroupTimespentReportsEventConsumer;
 import org.gooru.dap.deps.question.QuestionConsumer;
 import org.gooru.dap.deps.resource.ResourceConsumer;
 import org.slf4j.Logger;
@@ -58,11 +61,18 @@ final class ConsumerFactory {
       case "org.gooru.dap.deps.competency.CompetencyStatsEventConsumer":
         return new CompetencyStatsEventConsumer(id, config);
 
+      case "org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer":
+        return new GroupPerformanceReportsEventConsumer(id, config);
+
+      case "org.gooru.dap.deps.group.GroupTimespentReportsEventConsumer":
+        return new GroupTimespentReportsEventConsumer(id, config);
+
+      case "org.gooru.dap.deps.group.GroupCompetencyReportsEventConsumer":
+        return new GroupCompetencyReportsEventConsumer(id, config);
+
       default:
         LOGGER.warn("Factory does not know to initiate the deployment for '{}'", deploymentName);
         throw new IllegalStateException("Invalid deployment descriptor: " + deploymentName);
-
     }
   }
-
 }

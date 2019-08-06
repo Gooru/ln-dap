@@ -13,6 +13,8 @@ public interface KafkaConsumerConfig {
 
   List<String> getTopics();
 
+  List<String> getProducerTopics();
+
   Properties getProperties();
 
   static KafkaConsumerConfig build(JsonNode config) {

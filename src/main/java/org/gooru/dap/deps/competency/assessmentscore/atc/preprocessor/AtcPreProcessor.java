@@ -34,9 +34,9 @@ public class AtcPreProcessor {
       classId = this.assessmentScoreEvent.getContext().getClassId();
       courseId = this.assessmentScoreEvent.getContext().getCourseId();
       userId = this.assessmentScoreEvent.getUserId();
-      
-      //If courseId obtained from the event is NULL, fallback to the courseId 
-      //stored in the class table 
+
+      // If courseId obtained from the event is NULL, fallback to the courseId
+      // stored in the class table
       if (courseId == null) {
         courseId = service.fetchCourseFromClass(classId);
       }
@@ -47,10 +47,10 @@ public class AtcPreProcessor {
           LOGGER.info("Class " + classId + " is Premium, Continue ..");
           new AtcProcessor(assessmentScoreEvent).compute();
           new AtcPostProcessor(assessmentScoreEvent).compute();
-      } else {
+        } else {
           LOGGER.info("Class " + classId + " is NOT Premium. No further processing");
-          return;          
-      }
+          return;
+        }
       }
 
     } catch (Throwable t) {

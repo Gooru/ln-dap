@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 public class LearnerPrefsWeightedAverageModel {
 
   private static final Long NORMALIZED_WEIGHT_BY_MILLION = 1_000_000L;
-  private static final Logger LOGGER = LoggerFactory
-      .getLogger(LearnerPrefsWeightedAverageModel.class);
+  private static final Logger LOGGER =
+      LoggerFactory.getLogger(LearnerPrefsWeightedAverageModel.class);
 
   private String userId;
   private Long video = 0L;
@@ -78,8 +78,8 @@ public class LearnerPrefsWeightedAverageModel {
     this.audio = audio;
   }
 
-  public static LearnerPrefsWeightedAverageModel fromContentTypeTimespentList(
-      String userId, List<ContentTypeTimespentModel> models) {
+  public static LearnerPrefsWeightedAverageModel fromContentTypeTimespentList(String userId,
+      List<ContentTypeTimespentModel> models) {
     LearnerPrefsWeightedAverageModel result = new LearnerPrefsWeightedAverageModel();
     result.setUserId(userId);
 
@@ -115,7 +115,8 @@ public class LearnerPrefsWeightedAverageModel {
   }
 
   LearnerPrefWeightedAverageNormalizedBean asLearnerPrefWeightedAverageNormalizedBean() {
-    LearnerPrefWeightedAverageNormalizedBean result = new LearnerPrefWeightedAverageNormalizedBean();
+    LearnerPrefWeightedAverageNormalizedBean result =
+        new LearnerPrefWeightedAverageNormalizedBean();
     result.setUserId(userId);
     Long sum = audio + image + interactive + text + webpage + video;
 
@@ -147,16 +148,15 @@ public class LearnerPrefsWeightedAverageModel {
   }
 
   private void adjustForOffset(LearnerPrefWeightedAverageNormalizedBean result) {
-    long offset =
-        NORMALIZED_WEIGHT_BY_MILLION - result.audio - result.video - result.webpage - result.text
-            - result.interactive - result.image;
+    long offset = NORMALIZED_WEIGHT_BY_MILLION - result.audio - result.video - result.webpage
+        - result.text - result.interactive - result.image;
 
     result.webpage += offset;
   }
 
   private Long calculateWeightedPrefsPerMillion(Long sum, Long datum) {
     double v = (datum / sum.doubleValue()) * NORMALIZED_WEIGHT_BY_MILLION;
-    return (long)v;
+    return (long) v;
   }
 
   public static class LearnerPrefWeightedAverageNormalizedBean {

@@ -36,4 +36,8 @@ public final class AppConfiguration {
     return Config.getInstance().getRootConfig().get("kafkaproducers");
   }
 
+  public static JsonNode fetchJobsConfig() {
+    return Config.getInstance().getRootConfig().get("jobs.config");
+  }
+
 }

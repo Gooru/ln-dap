@@ -1,5 +1,8 @@
 package org.gooru.dap.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 public final class EventMessageConstant {
 
   public static final String EVENT_NAME = "eventName";
@@ -15,4 +18,15 @@ public final class EventMessageConstant {
   public final static String CTX_CLASS_ID = "/context/classId";
   public final static String CTX_COLLECTION_TYPE = "/context/collectionType";
 
+  public static final String CONTENT_SOURCE_CM = "coursemap";
+  public static final String CONTENT_SOURCE_CA = "dailyclassactivity";
+
+  public static final String CONTENT_TYPE_COLLECTION = "collection";
+  public static final String CONTENT_TYPE_COLLECTION_EXT = "collection-external";
+
+  public static final List<String> VALID_CONTENT_SOURCE_FOR_GROUP_REPORTS =
+      Arrays.asList(CONTENT_SOURCE_CA, CONTENT_SOURCE_CM);
+
+  public static final List<String> VALID_COLLECTION_TYPES =
+      Arrays.asList(CONTENT_TYPE_COLLECTION, CONTENT_TYPE_COLLECTION_EXT);
 }

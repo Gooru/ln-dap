@@ -10,7 +10,7 @@ import org.skife.jdbi.v2.DBI;
 public interface SubjectFetcher {
 
   String fetchSubjectFromCourse(UUID courseId);
-  
+
   String fetchSubjectFromGrade(Integer gradeId);
 
   static SubjectFetcher build() {

@@ -6,7 +6,7 @@ package org.gooru.dap.processors.events.resource.timespent.usercontenttypeprefs;
 
 class EMACalculator {
 
-  private static final double DEFAULT_ALPHA = 1/(double)3;
+  private static final double DEFAULT_ALPHA = 1 / (double) 3;
 
   private double alpha;
 
