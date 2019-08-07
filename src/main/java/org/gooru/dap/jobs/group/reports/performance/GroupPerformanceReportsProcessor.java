@@ -84,6 +84,12 @@ public class GroupPerformanceReportsProcessor {
           // grouped.
           // We can skip and move ahead
           LOGGER.warn("class '{}' is not grouped under school, skipping", classId);
+          
+          // Even if there is no school and groups mapped with the class, at least persist the class
+          // level performance.
+          ClassPerformanceDataReportsBean bean =
+              prepareClassLevelDataReportsBean(usage, null, null, usage.getContentSource());
+          processClassLevelAssessmentPerf(bean);
           continue;
         }
 
@@ -231,34 +237,37 @@ public class GroupPerformanceReportsProcessor {
     bean.setAssessmentTimespent(perfData.getTimeSpent());
     bean.setClassId(perfData.getClassId());
     bean.setSchoolId(schoolId);
-    bean.setStateId(group.getStateId());
-    bean.setCountryId(group.getCountryId());
     bean.setContentSource(contentSource);
-    bean.setTenant(group.getTenant());
 
     // Set current month and year values
     LocalDate now = LocalDate.now();
     bean.setMonth(now.getMonthValue());
     bean.setYear(now.getYear());
-
-    // If the group type is school district, then set the group id as school district id in bean and
-    // return. Otherwise if its cluster we need to fetch the parent hierarchy and set the block and
-    // district id's accordingly.
-    // Here we need to fetch the group hierarchy and set the appropriate id's to be used in further
-    // processing of the report generation
-    if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_SCHOOL_DISTRICT)) {
-      bean.setSchoolDistrictId(group.getId());
-    } else if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_CLUSTER)) {
-      bean.setClusterId(group.getId());
-      List<GroupModel> groupModels = this.groupsService.fetchGroupHierarchy(group.getParentId());
-      groupModels.forEach(groupModel -> {
-        if (groupModel.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_BLOCK)) {
-          bean.setBlockId(groupModel.getId());
-        } else if (groupModel.getSubType()
-            .equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_DISTRICT)) {
-          bean.setDistrictId(groupModel.getId());
-        }
-      });
+    
+    if (group != null) {
+      bean.setStateId(group.getStateId());
+      bean.setCountryId(group.getCountryId());
+      bean.setTenant(group.getTenant());
+      
+      // If the group type is school district, then set the group id as school district id in bean and
+      // return. Otherwise if its cluster we need to fetch the parent hierarchy and set the block and
+      // district id's accordingly.
+      // Here we need to fetch the group hierarchy and set the appropriate id's to be used in further
+      // processing of the report generation
+      if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_SCHOOL_DISTRICT)) {
+        bean.setSchoolDistrictId(group.getId());
+      } else if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_CLUSTER)) {
+        bean.setClusterId(group.getId());
+        List<GroupModel> groupModels = this.groupsService.fetchGroupHierarchy(group.getParentId());
+        groupModels.forEach(groupModel -> {
+          if (groupModel.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_BLOCK)) {
+            bean.setBlockId(groupModel.getId());
+          } else if (groupModel.getSubType()
+              .equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_DISTRICT)) {
+            bean.setDistrictId(groupModel.getId());
+          }
+        });
+      }
     }
 
     return bean;
