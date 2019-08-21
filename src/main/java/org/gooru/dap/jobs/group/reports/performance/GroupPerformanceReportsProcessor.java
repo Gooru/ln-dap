@@ -83,7 +83,7 @@ public class GroupPerformanceReportsProcessor {
           // If the school id does not present for the given class then the class is not yet
           // grouped.
           // We can skip and move ahead
-          LOGGER.warn("class '{}' is not grouped under school, skipping", classId);
+          LOGGER.warn("class '{}' is not grouped under school, persisting class level data", classId);
           
           // Even if there is no school and groups mapped with the class, at least persist the class
           // level performance.
@@ -95,8 +95,13 @@ public class GroupPerformanceReportsProcessor {
 
         Long groupId = schoolGroupMap.get(schoolId);
         if (groupId == null) {
-          // If the group id is null, then the schools has not been grouped, skip and move ahead
-          LOGGER.debug("school '{}' is not associated with any group, skipping", schoolId);
+          // If the group id is null, then the schools has not been grouped, then still persist
+          // class level data and return.
+          LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
+
+          ClassPerformanceDataReportsBean bean =
+              prepareClassLevelDataReportsBean(usage, schoolId, null, usage.getContentSource());
+          processClassLevelAssessmentPerf(bean);
           continue;
         }
 
