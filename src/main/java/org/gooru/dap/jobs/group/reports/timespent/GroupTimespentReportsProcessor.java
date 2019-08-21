@@ -77,6 +77,7 @@ public class GroupTimespentReportsProcessor {
           ClassTimespentDataReportBean clsbean =
               createClassTSDataReportBean(model, null, null, classId);
           processClassLevelCollectionTS(clsbean);
+          updateQueueStatusToCompleted(model);
           continue;
         }
 
@@ -88,6 +89,7 @@ public class GroupTimespentReportsProcessor {
           ClassTimespentDataReportBean clsbean =
               createClassTSDataReportBean(model, schoolId, null, classId);
           processClassLevelCollectionTS(clsbean);
+          updateQueueStatusToCompleted(model);
           continue;
         }
 

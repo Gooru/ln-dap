@@ -90,6 +90,7 @@ public class GroupPerformanceReportsProcessor {
           ClassPerformanceDataReportsBean bean =
               prepareClassLevelDataReportsBean(usage, null, null, usage.getContentSource());
           processClassLevelAssessmentPerf(bean);
+          updateQueueStatusToCompleted(usage);
           continue;
         }
 
@@ -102,6 +103,7 @@ public class GroupPerformanceReportsProcessor {
           ClassPerformanceDataReportsBean bean =
               prepareClassLevelDataReportsBean(usage, schoolId, null, usage.getContentSource());
           processClassLevelAssessmentPerf(bean);
+          updateQueueStatusToCompleted(usage);
           continue;
         }
 

@@ -83,6 +83,7 @@ public class GroupCompetencyReportsProcessor {
         ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
             previousStatsModelMap.get(model.getClassId()), null, null);
         processClassLevelCompetency(clsBean);
+        updateQueueStatusToCompleted(model);
         continue;
       }
 
@@ -95,6 +96,7 @@ public class GroupCompetencyReportsProcessor {
         ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
             previousStatsModelMap.get(model.getClassId()), schoolId, null);
         processClassLevelCompetency(clsBean);
+        updateQueueStatusToCompleted(model);
         continue;
       }
 
