@@ -24,7 +24,7 @@ public class GroupTimespentReportsProcessor {
       LoggerFactory.getLogger(GroupTimespentReportsProcessor.class);
   private final List<CollectionTimespentModel> timespentData;
 
-  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForDefaultDS());
+  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForCoreDS());
   private final GroupTimespentReportsService reportService =
       new GroupTimespentReportsService(DBICreator.getDbiForDefaultDS());
   private final GroupPerfTSReortsQueueService queueService =

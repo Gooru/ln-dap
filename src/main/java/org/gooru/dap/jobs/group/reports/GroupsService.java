@@ -41,7 +41,6 @@ public class GroupsService {
         LOGGER.debug("null group model for id '{}'", parentGroupId);
         parentGroupId = null;
       }
-
     }
 
     return groupModels;
@@ -50,7 +49,7 @@ public class GroupsService {
   public Map<String, Long> fetchClassSchoolMapping(List<String> distinctClassIds) {
     // Fetch Class to School mapping
     List<ClassSchoolMappingModel> schools = this.dao
-        .fetchClassSchoolMapping(CollectionUtils.convertToSqlArrayOfString(distinctClassIds));
+        .fetchClassSchoolMapping(CollectionUtils.convertToSqlArrayOfUUID(distinctClassIds));
     LOGGER.debug("# schools returned {}", schools.size());
     Map<String, Long> resultMap = new HashMap<>();
     schools.forEach(school -> {

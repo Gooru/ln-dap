@@ -29,7 +29,7 @@ public class GroupCompetencyReportsProcessor {
   private final GroupCompetencyReportsQueueService queueService =
       new GroupCompetencyReportsQueueService(DBICreator.getDbiForDefaultDS());
 
-  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForDefaultDS());
+  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForCoreDS());
 
   private final GroupCompetencyReportsService reportService =
       new GroupCompetencyReportsService(DBICreator.getDbiForDefaultDS());

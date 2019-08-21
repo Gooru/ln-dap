@@ -26,7 +26,7 @@ public class GroupPerformanceReportsProcessor {
 
   private final List<UsageData> allUsageData;
 
-  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForDefaultDS());
+  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForCoreDS());
 
   private final GroupPerformanceReportsService reportsService =
       new GroupPerformanceReportsService(DBICreator.getDbiForDefaultDS());
