@@ -11,7 +11,8 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
  */
 public interface GroupCompetencyReportsQueueDao {
 
-  @SqlUpdate("INSERT INTO competency_data_reports_queue(class_id, tenant, status) VALUES (:classId, :tenant, 'pending')")
+  @SqlUpdate("INSERT INTO competency_data_reports_queue(class_id, tenant, status) VALUES (:classId, :tenant, 'pending') ON CONFLICT (class_id)"
+      + " DO UPDATE SET status = 'pending'")
   void insertIntoQueue(@Bind("classId") String classId, @Bind("tenant") String tenant);
 
   @SqlQuery("SELECT class_id FROM competency_data_reports_queue WHERE status = 'pending' ORDER BY updated_at ASC LIMIT :limit OFFSET :offset")
