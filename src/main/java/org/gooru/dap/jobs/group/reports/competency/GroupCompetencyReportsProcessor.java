@@ -29,7 +29,7 @@ public class GroupCompetencyReportsProcessor {
   private final GroupCompetencyReportsQueueService queueService =
       new GroupCompetencyReportsQueueService(DBICreator.getDbiForDefaultDS());
 
-  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForDefaultDS());
+  private final GroupsService groupsService = new GroupsService(DBICreator.getDbiForCoreDS());
 
   private final GroupCompetencyReportsService reportService =
       new GroupCompetencyReportsService(DBICreator.getDbiForDefaultDS());
@@ -76,20 +76,27 @@ public class GroupCompetencyReportsProcessor {
         // If the school id does not present for the given class then the class is not yet
         // grouped.
         // We can skip and move ahead
-        LOGGER.warn("class '{}' is not grouped under school, skipping", model.getClassId());
+        LOGGER.warn("class '{}' is not grouped under school, persisting class level data", model.getClassId());
         
         // Even if there is no school and groups mapped with the class, at least persist the class
         // level competency data.
         ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
             previousStatsModelMap.get(model.getClassId()), null, null);
         processClassLevelCompetency(clsBean);
+        updateQueueStatusToCompleted(model);
         continue;
       }
 
       Long groupId = schoolGroupMap.get(schoolId);
       if (groupId == null) {
-        // If the group id is null, then the schools has not been grouped, skip and move ahead
-        LOGGER.debug("school '{}' is not associated with any group, skipping", schoolId);
+        // If the group id is null, then the schools has not been grouped, then still persist class
+        // level data and return
+        LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
+
+        ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
+            previousStatsModelMap.get(model.getClassId()), schoolId, null);
+        processClassLevelCompetency(clsBean);
+        updateQueueStatusToCompleted(model);
         continue;
       }
 

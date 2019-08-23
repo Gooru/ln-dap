@@ -15,7 +15,7 @@ public class ClassSchoolMappingModelMapper implements ResultSetMapper<ClassSchoo
   public ClassSchoolMappingModel map(int index, ResultSet r, StatementContext ctx)
       throws SQLException {
     ClassSchoolMappingModel model = new ClassSchoolMappingModel();
-    model.setClassId(r.getString("class_id"));
+    model.setClassId(r.getString("id"));
     model.setSchoolId(r.getLong("school_id"));
     return model;
   }
