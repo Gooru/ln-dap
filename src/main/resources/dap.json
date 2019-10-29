@@ -34,7 +34,8 @@
 		"org.gooru.dap.deps.competency.CompetencyStatsEventConsumer",
 		"org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer",
 		"org.gooru.dap.deps.group.GroupTimespentReportsEventConsumer",
-		"org.gooru.dap.deps.group.GroupCompetencyReportsEventConsumer"
+		"org.gooru.dap.deps.group.GroupCompetencyReportsEventConsumer",
+		"org.gooru.dap.deps.struggling.StrugglingCompetencyEventConsumer"
 	],
 	"deps.config": {
 		"org.gooru.dap.deps.competency.AssessmentScoreEventConsumer": {
@@ -54,7 +55,8 @@
 				"producer.topics": [
 					"org.gooru.da.sink.dap.competency.stats",
 					"org.gooru.da.sink.dap.group.performance.reports",
-					"org.gooru.da.sink.dap.group.competency.reports"
+					"org.gooru.da.sink.dap.group.competency.reports",
+					"org.gooru.da.sink.dap.struggling.competency"
 				]
 			}
 		},
@@ -170,6 +172,22 @@
 				},
 				"consumer.topics": [
 					"org.gooru.da.sink.dap.groups.competency.reports"
+				]
+			}
+		},
+		"org.gooru.dap.deps.struggling.StrugglingCompetencyEventConsumer": {
+			"kafka.consumer.config": {
+				"instances": 1,
+				"props": {
+					"bootstrap.servers": "localhost:9092",
+					"session.timeout.ms": 120000,
+					"group.id": "group-9",
+					"max.poll.records": 1,
+					"max.poll.interval.ms": 1000,
+					"enable.auto.commit": true
+				},
+				"consumer.topics": [
+					"org.gooru.da.sink.dap.struggling.competency"
 				]
 			}
 		}
