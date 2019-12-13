@@ -2,14 +2,18 @@
 package org.gooru.dap.jobs.group.reports.performance;
 
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.group.GroupConstants;
 import org.gooru.dap.deps.group.dbhelpers.GroupPerfTSReortsQueueService;
+import org.gooru.dap.jobs.group.reports.ClassModel;
 import org.gooru.dap.jobs.group.reports.GroupModel;
 import org.gooru.dap.jobs.group.reports.GroupsService;
 import org.gooru.dap.jobs.http.response.UsageData;
@@ -67,6 +71,13 @@ public class GroupPerformanceReportsProcessor {
 
       // Fetch details of all groups mapped with schools above
       Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
+      
+      // Fetch class details from core and prepare map for further use
+      List<ClassModel> classDetails = this.groupsService.fetchClassDetails(distinctClassIds);
+      Map<String, ClassModel> classDetailsMap = new HashMap<>();
+      classDetails.forEach(model -> {
+        classDetailsMap.put(model.getId(), model);
+      });
 
       LOGGER.debug("class, school and group mapping is fetched, now usage data processing started");
       // Now iterate on usage data objects to prepare bean object and persist the assessment
@@ -79,6 +90,7 @@ public class GroupPerformanceReportsProcessor {
       for (UsageData usage : allUsageData) {
         String classId = usage.getClassId();
         Long schoolId = classSchoolMap.get(classId);
+        ClassModel classModel = classDetailsMap.get(classId);
         if (schoolId == null) {
           // If the school id does not present for the given class then the class is not yet
           // grouped.
@@ -88,7 +100,7 @@ public class GroupPerformanceReportsProcessor {
           // Even if there is no school and groups mapped with the class, at least persist the class
           // level performance.
           ClassPerformanceDataReportsBean bean =
-              prepareClassLevelDataReportsBean(usage, null, null, usage.getContentSource());
+              prepareClassLevelDataReportsBean(usage, null, null, usage.getContentSource(), classModel);
           processClassLevelAssessmentPerf(bean);
           updateQueueStatusToCompleted(usage);
           continue;
@@ -101,7 +113,7 @@ public class GroupPerformanceReportsProcessor {
           LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
 
           ClassPerformanceDataReportsBean bean =
-              prepareClassLevelDataReportsBean(usage, schoolId, null, usage.getContentSource());
+              prepareClassLevelDataReportsBean(usage, schoolId, null, usage.getContentSource(), classModel);
           processClassLevelAssessmentPerf(bean);
           updateQueueStatusToCompleted(usage);
           continue;
@@ -109,7 +121,7 @@ public class GroupPerformanceReportsProcessor {
 
         GroupModel group = groupsMap.get(groupId);
         ClassPerformanceDataReportsBean bean =
-            prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource());
+            prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource(), classModel);
 
         // persist the class and group level data.
         LOGGER.debug("persisting performances at class and group level");
@@ -211,7 +223,9 @@ public class GroupPerformanceReportsProcessor {
     bean.setSchoolId(clsLevelBean.getSchoolId());
     bean.setStateId(clsLevelBean.getStateId());
     bean.setCountryId(clsLevelBean.getCountryId());
-
+    bean.setSubject(clsLevelBean.getSubject());
+    bean.setFramework(clsLevelBean.getFramework());
+    
     // As this is a generic pojo used for all type of groups, this group id will be of type which is
     // passed from the caller of the method. It can be School District, District and so on.
     bean.setGroupId(groupId);
@@ -219,9 +233,9 @@ public class GroupPerformanceReportsProcessor {
     bean.setAssessmentPerformance(perf);
 
     // Set current month and year values
-    LocalDate now = LocalDate.now();
-    bean.setMonth(now.getMonthValue());
-    bean.setYear(now.getYear());
+    bean.setWeek(clsLevelBean.getWeek());
+    bean.setMonth(clsLevelBean.getMonth());
+    bean.setYear(clsLevelBean.getYear());
 
     bean.setTenant(clsLevelBean.getTenant());
 
@@ -230,7 +244,7 @@ public class GroupPerformanceReportsProcessor {
 
   // Populate the bean from usage data, and group information
   private ClassPerformanceDataReportsBean prepareClassLevelDataReportsBean(UsageData perfData,
-      Long schoolId, GroupModel group, String contentSource) {
+      Long schoolId, GroupModel group, String contentSource, ClassModel classModel) {
 
     ClassPerformanceDataReportsBean bean = new ClassPerformanceDataReportsBean();
 
@@ -245,9 +259,14 @@ public class GroupPerformanceReportsProcessor {
     bean.setClassId(perfData.getClassId());
     bean.setSchoolId(schoolId);
     bean.setContentSource(contentSource);
+    
+    bean.setSubject(classModel.getSubject());
+    bean.setFramework(classModel.getFramework());
 
     // Set current month and year values
     LocalDate now = LocalDate.now();
+    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+    bean.setWeek(now.get(weekFields.weekOfWeekBasedYear()));
     bean.setMonth(now.getMonthValue());
     bean.setYear(now.getYear());
     

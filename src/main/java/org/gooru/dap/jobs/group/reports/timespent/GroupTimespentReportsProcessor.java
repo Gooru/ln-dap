@@ -2,14 +2,18 @@
 package org.gooru.dap.jobs.group.reports.timespent;
 
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.group.GroupConstants;
 import org.gooru.dap.deps.group.dbhelpers.GroupPerfTSReortsQueueService;
+import org.gooru.dap.jobs.group.reports.ClassModel;
 import org.gooru.dap.jobs.group.reports.GroupModel;
 import org.gooru.dap.jobs.group.reports.GroupsService;
 import org.slf4j.Logger;
@@ -60,12 +64,20 @@ public class GroupTimespentReportsProcessor {
 
       // Fetch details of all groups mapped with schools above
       Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
-
+      
+      // Fetch class details from core and prepare map for further use
+      List<ClassModel> classDetails = this.groupsService.fetchClassDetails(distinctClassIds);
+      Map<String, ClassModel> classDetailsMap = new HashMap<>();
+      classDetails.forEach(model -> {
+        classDetailsMap.put(model.getId(), model);
+      });
+      
       LOGGER.debug(
           "class, school and group mapping is fetched, now timespent data processing started");
       for (CollectionTimespentModel model : timespentData) {
         String classId = model.getClassId();
         Long schoolId = classSchoolMap.get(classId);
+        ClassModel classModel = classDetailsMap.get(classId);
         if (schoolId == null) {
           // If the school id does not present for the given class then the class is not yet
           // grouped.
@@ -75,7 +87,7 @@ public class GroupTimespentReportsProcessor {
           // Even if there is no school and groups mapped with the class, at least persist the class
           // level time spent data.
           ClassTimespentDataReportBean clsbean =
-              createClassTSDataReportBean(model, null, null, classId);
+              createClassTSDataReportBean(model, null, null, classModel);
           processClassLevelCollectionTS(clsbean);
           updateQueueStatusToCompleted(model);
           continue;
@@ -87,7 +99,7 @@ public class GroupTimespentReportsProcessor {
           // class level data and return
           LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
           ClassTimespentDataReportBean clsbean =
-              createClassTSDataReportBean(model, schoolId, null, classId);
+              createClassTSDataReportBean(model, schoolId, null, classModel);
           processClassLevelCollectionTS(clsbean);
           updateQueueStatusToCompleted(model);
           continue;
@@ -95,7 +107,7 @@ public class GroupTimespentReportsProcessor {
 
         GroupModel group = groupsMap.get(groupId);
         ClassTimespentDataReportBean clsbean =
-            createClassTSDataReportBean(model, schoolId, group, classId);
+            createClassTSDataReportBean(model, schoolId, group, classModel);
 
         // persist the class and group level data.
         LOGGER.debug("persisting timespent at class and group level");
@@ -114,16 +126,21 @@ public class GroupTimespentReportsProcessor {
   }
 
   private ClassTimespentDataReportBean createClassTSDataReportBean(CollectionTimespentModel tsData,
-      Long schoolId, GroupModel group, String contentSource) {
+      Long schoolId, GroupModel group, ClassModel classModel) {
     ClassTimespentDataReportBean bean = new ClassTimespentDataReportBean();
     bean.setClassId(tsData.getClassId());
     bean.setCollectionTimespent(tsData.getTimespent());
 
     bean.setSchoolId(schoolId);
-    bean.setContentSource(contentSource);
+    bean.setContentSource(tsData.getContentSource());
 
+    bean.setSubject(classModel.getSubject());
+    bean.setFramework(classModel.getFramework());
+    
     // Set current month and year values
     LocalDate now = LocalDate.now();
+    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+    bean.setWeek(now.get(weekFields.weekOfWeekBasedYear()));
     bean.setMonth(now.getMonthValue());
     bean.setYear(now.getYear());
 
@@ -219,7 +236,9 @@ public class GroupTimespentReportsProcessor {
     bean.setSchoolId(clsLevelBean.getSchoolId());
     bean.setStateId(clsLevelBean.getStateId());
     bean.setCountryId(clsLevelBean.getCountryId());
-
+    bean.setSubject(clsLevelBean.getSubject());
+    bean.setFramework(clsLevelBean.getFramework());
+    
     // As this is a generic pojo used for all type of groups, this group id will be of type which is
     // passed from the caller of the method. It can be School District, District and so on.
     bean.setGroupId(groupId);
@@ -227,9 +246,9 @@ public class GroupTimespentReportsProcessor {
     bean.setCollectionTimespent(collectionTimespent);
 
     // Set current month and year values
-    LocalDate now = LocalDate.now();
-    bean.setMonth(now.getMonthValue());
-    bean.setYear(now.getYear());
+    bean.setWeek(clsLevelBean.getWeek());
+    bean.setMonth(clsLevelBean.getMonth());
+    bean.setYear(clsLevelBean.getYear());
 
     bean.setTenant(clsLevelBean.getTenant());
 

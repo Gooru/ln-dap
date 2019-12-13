@@ -24,27 +24,30 @@ public interface GroupCompetencyReportsDao {
   @Mapper(GroupCompetencyStatsModelMapper.class)
   @SqlQuery("SELECT SUM(completed_count) AS completed_count, SUM(inprogress_count) AS inprogress_count, SUM(cumulative_completed_count) AS"
       + " cumulative_completed_count, school_id as id FROM class_competency_data_reports WHERE school_id = ANY(:schoolIds::bigint[]) AND"
-      + " month = :month AND year = :year GROUP BY school_id")
+      + " week = :week AND month = :month AND year = :year GROUP BY school_id")
   List<GroupCompetencyStatsModel> fetchCompetencyCompletionsBySchool(
-      @Bind("schoolIds") String schoolIds, @Bind("month") Integer month,
+      @Bind("schoolIds") String schoolIds, @Bind("week") Integer week, @Bind("month") Integer month,
       @Bind("year") Integer year);
 
   @Mapper(GroupCompetencyStatsModelMapper.class)
   @SqlQuery("SELECT SUM(completed_count) AS completed_count, SUM(inprogress_count) AS inprogress_count, SUM(cumulative_completed_count) AS"
-      + " cumulative_completed_count, group_id as id FROM group_competency_data_reports WHERE group_id = ANY(:groupIds::bigint[]) AND month = :month"
-      + " AND year = :year GROUP BY group_id")
+      + " cumulative_completed_count, group_id as id FROM group_competency_data_reports WHERE group_id = ANY(:groupIds::bigint[]) AND week = :week"
+      + " AND month = :month AND year = :year GROUP BY group_id")
   List<GroupCompetencyStatsModel> fetchCompetencyCompletionsByGroup(
-      @Bind("groupIds") String groupIds, @Bind("month") Integer month, @Bind("year") Integer year);
+      @Bind("groupIds") String groupIds, @Bind("week") Integer week, @Bind("month") Integer month,
+      @Bind("year") Integer year);
 
   @SqlUpdate("INSERT INTO class_competency_data_reports(class_id, completed_count, inprogress_count, cumulative_completed_count, school_id, state_id,"
-      + " country_id, month, year, tenant) VALUES (:classId, :completedCount, :inprogressCount, :cumulativeCompletedCount, :schoolId, :stateId,"
-      + " :countryId, :month, :year, :tenant) ON CONFLICT (class_id, month, year) DO UPDATE SET class_id = :classId, completed_count = :completedCount,"
-      + " inprogress_count = :inprogressCount, cumulative_completed_count = :cumulativeCompletedCount, updated_at = now()")
+      + " country_id, week, month, year, tenant, subject, framework) VALUES (:classId, :completedCount, :inprogressCount, :cumulativeCompletedCount,"
+      + " :schoolId, :stateId, :countryId, :week, :month, :year, :tenant, :subject, :framework) ON CONFLICT (class_id, week, month, year) DO UPDATE"
+      + " SET class_id = :classId, completed_count = :completedCount, inprogress_count = :inprogressCount, cumulative_completed_count ="
+      + " :cumulativeCompletedCount, updated_at = now()")
   void insertOrUpdateClassCompetencyDataReport(@BindBean ClassCompetencyDataReportsBean bean);
 
   @SqlUpdate("INSERT INTO group_competency_data_reports(group_id, completed_count, inprogress_count, cumulative_completed_count, school_id, state_id,"
-      + " country_id, month, year, tenant) VALUES (:groupId, :completedCount, :inprogressCount, :cumulativeCompletedCount, :schoolId, :stateId,"
-      + " :countryId, :month, :year, :tenant) ON CONFLICT (group_id, month, year) DO UPDATE SET group_id = :groupId, completed_count = :completedCount,"
-      + " inprogress_count = :inprogressCount, cumulative_completed_count = :cumulativeCompletedCount, updated_at = now()")
+      + " country_id, week, month, year, tenant, subject, framework) VALUES (:groupId, :completedCount, :inprogressCount, :cumulativeCompletedCount,"
+      + " :schoolId, :stateId, :countryId, :week, :month, :year, :tenant, :subject, :framework) ON CONFLICT (group_id, week, month, year) DO UPDATE"
+      + " SET group_id = :groupId, completed_count = :completedCount, inprogress_count = :inprogressCount, cumulative_completed_count ="
+      + " :cumulativeCompletedCount, updated_at = now()")
   void insertOrUpdateGroupCompetencyDataReport(@BindBean GroupCompetencyDataReportsBean bean);
 }

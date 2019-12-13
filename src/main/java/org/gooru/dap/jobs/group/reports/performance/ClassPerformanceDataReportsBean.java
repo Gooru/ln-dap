@@ -17,8 +17,11 @@ public class ClassPerformanceDataReportsBean {
   private Long schoolId;
   private Long stateId;
   private Long countryId;
+  private Integer week;
   private Integer month;
   private Integer year;
+  private String subject;
+  private String framework;
   private String contentSource;
   private String tenant;
 
@@ -109,6 +112,14 @@ public class ClassPerformanceDataReportsBean {
   public void setCountryId(Long countryId) {
     this.countryId = countryId;
   }
+  
+  public Integer getWeek() {
+    return week;
+  }
+
+  public void setWeek(Integer week) {
+    this.week = week;
+  }
 
   public Integer getMonth() {
     return month;
@@ -124,6 +135,22 @@ public class ClassPerformanceDataReportsBean {
 
   public void setYear(Integer year) {
     this.year = year;
+  }
+  
+  public String getSubject() {
+    return subject;
+  }
+
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
+
+  public String getFramework() {
+    return framework;
+  }
+
+  public void setFramework(String framework) {
+    this.framework = framework;
   }
 
   public String getContentSource() {

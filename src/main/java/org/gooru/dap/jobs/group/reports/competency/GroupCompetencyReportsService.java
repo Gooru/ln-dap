@@ -24,15 +24,15 @@ public class GroupCompetencyReportsService {
   }
 
   public List<GroupCompetencyStatsModel> fetchCompetencyCompletionsBySchool(Set<Long> schoolIds,
-      Integer month, Integer year) {
+      Integer week, Integer month, Integer year) {
     return this.dao.fetchCompetencyCompletionsBySchool(
-        CollectionUtils.longSetToPGArrayOfString(schoolIds), month, year);
+        CollectionUtils.longSetToPGArrayOfString(schoolIds), week, month, year);
   }
 
   public List<GroupCompetencyStatsModel> fetchCompetencyCompletionsByGroup(Set<Long> groupIds,
-      Integer month, Integer year) {
+      Integer week, Integer month, Integer year) {
     return this.dao.fetchCompetencyCompletionsByGroup(
-        CollectionUtils.longSetToPGArrayOfString(groupIds), month, year);
+        CollectionUtils.longSetToPGArrayOfString(groupIds), week, month, year);
   }
 
   public void insertOrUpdateClassCompetencyDataReport(ClassCompetencyDataReportsBean bean) {
