@@ -26,13 +26,15 @@ public interface GroupTimespentReportsDao {
   List<CollectionTimespentByGroupModel> fetchGroupLevelCollectionTimespent(
       @Bind("groupIds") String groupIds, @Bind("month") Integer month, @Bind("year") Integer year);
 
-  @SqlUpdate("INSERT INTO class_performance_data_reports(class_id, collection_timespent, school_id, state_id, country_id, month, year,"
-      + " content_source, tenant) VALUES (:classId, :collectionTimespent, :schoolId, :stateId, :countryId, :month, :year, :contentSource, :tenant)"
-      + " ON CONFLICT (class_id, content_source, month, year) DO UPDATE SET collection_timespent = :collectionTimespent, updated_at = now()")
+  @SqlUpdate("INSERT INTO class_performance_data_reports(class_id, collection_timespent, school_id, state_id, country_id, week, month, year,"
+      + " content_source, tenant, subject, framework) VALUES (:classId, :collectionTimespent, :schoolId, :stateId, :countryId, :week, :month,"
+      + " :year, :contentSource, :tenant, :subject, :framework) ON CONFLICT (class_id, content_source, month, year) DO UPDATE SET"
+      + " collection_timespent = :collectionTimespent, updated_at = now()")
   void insertOrUpdateClassLevelCollectionTimespent(@BindBean ClassTimespentDataReportBean bean);
 
-  @SqlUpdate("INSERT INTO group_performance_data_reports(collection_timespent, group_id, school_id, state_id, country_id, month, year,"
-      + " content_source, tenant) VALUES(:collectionTimespent, :groupId, :schoolId, :stateId, :countryId, :month, :year, :contentSource, :tenant)"
-      + " ON CONFLICT (group_id, content_source, month, year) DO UPDATE SET collection_timespent = :collectionTimespent, updated_at = now()")
+  @SqlUpdate("INSERT INTO group_performance_data_reports(collection_timespent, group_id, school_id, state_id, country_id, week, month, year,"
+      + " content_source, tenant, subject, framework) VALUES(:collectionTimespent, :groupId, :schoolId, :stateId, :countryId, :week, :month,"
+      + " :year, :contentSource, :tenant, :subject, :framework) ON CONFLICT (group_id, content_source, week, month, year) DO UPDATE SET"
+      + " collection_timespent = :collectionTimespent, updated_at = now()")
   void insertOrUpdateGroupLevelCollectionTimspent(@BindBean GroupTimespentDataReportBean bean);
 }
