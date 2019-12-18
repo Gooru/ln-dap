@@ -2,15 +2,18 @@
 package org.gooru.dap.jobs.group.reports.competency;
 
 import java.time.LocalDate;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.group.GroupConstants;
 import org.gooru.dap.deps.group.dbhelpers.GroupCompetencyReportsQueueService;
+import org.gooru.dap.jobs.group.reports.ClassModel;
 import org.gooru.dap.jobs.group.reports.GroupModel;
 import org.gooru.dap.jobs.group.reports.GroupsService;
 import org.slf4j.Logger;
@@ -67,21 +70,30 @@ public class GroupCompetencyReportsProcessor {
     // Fetch details of all groups mapped with schools above
     Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
 
+    // Fetch class details from core and prepare map for further use
+    List<ClassModel> classDetails = this.groupsService.fetchClassDetails(uniqueClasses);
+    Map<String, ClassModel> classDetailsMap = new HashMap<>();
+    classDetails.forEach(model -> {
+      classDetailsMap.put(model.getId(), model);
+    });
+    
     LOGGER
         .debug("class, school and group mapping is fetched, now timespent data processing started");
 
     for (ClassCompetencyStatsModel model : this.currentStatsModels) {
-      Long schoolId = classSchoolMap.get(model.getClassId());
+      String classId = model.getClassId();
+      Long schoolId = classSchoolMap.get(classId);
+      ClassModel classModel = classDetailsMap.get(classId);
       if (schoolId == null) {
         // If the school id does not present for the given class then the class is not yet
         // grouped.
         // We can skip and move ahead
-        LOGGER.warn("class '{}' is not grouped under school, persisting class level data", model.getClassId());
+        LOGGER.warn("class '{}' is not grouped under school, persisting class level data", classId);
         
         // Even if there is no school and groups mapped with the class, at least persist the class
         // level competency data.
         ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
-            previousStatsModelMap.get(model.getClassId()), null, null);
+            previousStatsModelMap.get(classId), null, null, classModel);
         processClassLevelCompetency(clsBean);
         updateQueueStatusToCompleted(model);
         continue;
@@ -94,7 +106,7 @@ public class GroupCompetencyReportsProcessor {
         LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
 
         ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
-            previousStatsModelMap.get(model.getClassId()), schoolId, null);
+            previousStatsModelMap.get(classId), schoolId, null, classModel);
         processClassLevelCompetency(clsBean);
         updateQueueStatusToCompleted(model);
         continue;
@@ -102,7 +114,7 @@ public class GroupCompetencyReportsProcessor {
 
       GroupModel group = groupsMap.get(groupId);
       ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
-          previousStatsModelMap.get(model.getClassId()), schoolId, group);
+          previousStatsModelMap.get(classId), schoolId, group, classModel);
 
       // persist the class and group level data.
       LOGGER.debug("persisting competency at class and group level");
@@ -115,7 +127,6 @@ public class GroupCompetencyReportsProcessor {
       updateQueueStatusToCompleted(model);
     }
   }
-
 
   private void processClassLevelCompetency(ClassCompetencyDataReportsBean clsBean) {
     this.reportService.insertOrUpdateClassCompetencyDataReport(clsBean);
@@ -136,28 +147,28 @@ public class GroupCompetencyReportsProcessor {
   private void computeAndPersistSchoolDistrictCompetencyData(
       ClassCompetencyDataReportsBean clsBean) {
     List<GroupCompetencyStatsModel> competencyStatsModel = computeCompetencyCompletionBySchool(
-        clsBean.getSchoolDistrictId(), clsBean.getMonth(), clsBean.getYear());
+        clsBean.getSchoolDistrictId(), clsBean.getWeek(), clsBean.getMonth(), clsBean.getYear());
     createGroupReportDataBeanAndPersist(clsBean, clsBean.getSchoolDistrictId(),
         competencyStatsModel);
   }
 
   private void computeAndPersistClusterCompetencyData(ClassCompetencyDataReportsBean clsBean) {
     List<GroupCompetencyStatsModel> competencyStatsModel = computeCompetencyCompletionBySchool(
-        clsBean.getClusterId(), clsBean.getMonth(), clsBean.getYear());
+        clsBean.getClusterId(), clsBean.getWeek(), clsBean.getMonth(), clsBean.getYear());
     createGroupReportDataBeanAndPersist(clsBean, clsBean.getClusterId(), competencyStatsModel);
   }
 
   private void computeAndPersistBlockCompetecyData(ClassCompetencyDataReportsBean clsBean) {
     Set<Long> blockChildIds = this.groupsService.fetchGroupChilds(clsBean.getBlockId());
     List<GroupCompetencyStatsModel> competencyStatsModel = this.reportService
-        .fetchCompetencyCompletionsByGroup(blockChildIds, clsBean.getMonth(), clsBean.getYear());
+        .fetchCompetencyCompletionsByGroup(blockChildIds, clsBean.getWeek(), clsBean.getMonth(), clsBean.getYear());
     createGroupReportDataBeanAndPersist(clsBean, clsBean.getBlockId(), competencyStatsModel);
   }
 
   private void computeAndPersistDistrictCompetencyData(ClassCompetencyDataReportsBean clsBean) {
     Set<Long> districtChildIds = this.groupsService.fetchGroupChilds(clsBean.getDistrictId());
     List<GroupCompetencyStatsModel> competencyStatsModel = this.reportService
-        .fetchCompetencyCompletionsByGroup(districtChildIds, clsBean.getMonth(), clsBean.getYear());
+        .fetchCompetencyCompletionsByGroup(districtChildIds, clsBean.getWeek(), clsBean.getMonth(), clsBean.getYear());
     createGroupReportDataBeanAndPersist(clsBean, clsBean.getDistrictId(), competencyStatsModel);
   }
 
@@ -173,9 +184,9 @@ public class GroupCompetencyReportsProcessor {
   }
 
   private List<GroupCompetencyStatsModel> computeCompetencyCompletionBySchool(Long groupId,
-      Integer month, Integer year) {
+      Integer week, Integer month, Integer year) {
     Set<Long> schoolIds = this.groupsService.fetchAllSchoolsOfGroup(groupId);
-    return this.reportService.fetchCompetencyCompletionsBySchool(schoolIds, month, year);
+    return this.reportService.fetchCompetencyCompletionsBySchool(schoolIds, week, month, year);
   }
 
   private Long computeCompletedCompetency(List<GroupCompetencyStatsModel> dataModels) {
@@ -200,12 +211,16 @@ public class GroupCompetencyReportsProcessor {
     bean.setCumulativeCompletedCount(cumulativeCompletedCount);
 
     bean.setGroupId(groupId);
-
+    
+    bean.setSubject(clsBean.getSubject());
+    bean.setFramework(clsBean.getFramework());
+    
     bean.setSchoolId(clsBean.getSchoolId());
     bean.setStateId(clsBean.getStateId());
     bean.setCountryId(clsBean.getCountryId());
     bean.setTenant(clsBean.getTenant());
 
+    bean.setWeek(clsBean.getWeek());
     bean.setMonth(clsBean.getMonth());
     bean.setYear(clsBean.getYear());
     return bean;
@@ -213,7 +228,7 @@ public class GroupCompetencyReportsProcessor {
 
   private ClassCompetencyDataReportsBean createClassCompetencyDataReportsBean(
       ClassCompetencyStatsModel currentStatsmodel, ClassCompetencyStatsModel previousStatsModel,
-      Long schoolId, GroupModel group) {
+      Long schoolId, GroupModel group, ClassModel classModel) {
     ClassCompetencyDataReportsBean bean = new ClassCompetencyDataReportsBean();
     bean.setClassId(currentStatsmodel.getClassId());
 
@@ -236,9 +251,13 @@ public class GroupCompetencyReportsProcessor {
     // count hence setting is directly
     bean.setCumulativeCompletedCount(currentStatsmodel.getCompletedCount());
     bean.setSchoolId(schoolId);
-
+    bean.setSubject(classModel.getSubject());
+    bean.setFramework(classModel.getFramework());
+    
     // Set current month and year values
     LocalDate now = LocalDate.now();
+    WeekFields weekFields = WeekFields.of(Locale.getDefault());
+    bean.setWeek(now.get(weekFields.weekOfWeekBasedYear()));
     bean.setMonth(now.getMonthValue());
     bean.setYear(now.getYear());
 

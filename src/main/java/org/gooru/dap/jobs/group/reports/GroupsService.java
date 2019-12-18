@@ -45,6 +45,10 @@ public class GroupsService {
 
     return groupModels;
   }
+  
+  public List<ClassModel> fetchClassDetails(List<String> distinctClassIds) {
+    return this.dao.fetchClassDetails(CollectionUtils.convertToSqlArrayOfUUID(distinctClassIds));
+  }
 
   public Map<String, Long> fetchClassSchoolMapping(List<String> distinctClassIds) {
     // Fetch Class to School mapping

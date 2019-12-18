@@ -11,6 +11,7 @@ import org.gooru.dap.deps.group.GroupPerformanceReportsEventConsumer;
 import org.gooru.dap.deps.group.GroupTimespentReportsEventConsumer;
 import org.gooru.dap.deps.question.QuestionConsumer;
 import org.gooru.dap.deps.resource.ResourceConsumer;
+import org.gooru.dap.deps.struggling.StrugglingCompetencyEventConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +70,9 @@ final class ConsumerFactory {
 
       case "org.gooru.dap.deps.group.GroupCompetencyReportsEventConsumer":
         return new GroupCompetencyReportsEventConsumer(id, config);
+        
+      case "org.gooru.dap.deps.struggling.StrugglingCompetencyEventConsumer":
+        return new StrugglingCompetencyEventConsumer(id, config);
 
       default:
         LOGGER.warn("Factory does not know to initiate the deployment for '{}'", deploymentName);

@@ -13,6 +13,9 @@ public class GroupCompetencyDataReportsBean {
   private Long schoolId;
   private Long stateId;
   private Long countryId;
+  private String subject;
+  private String framework;
+  private Integer week;
   private Integer month;
   private Integer year;
   private String tenant;
@@ -71,6 +74,30 @@ public class GroupCompetencyDataReportsBean {
 
   public void setCountryId(Long countryId) {
     this.countryId = countryId;
+  }
+  
+  public String getSubject() {
+    return subject;
+  }
+
+  public void setSubject(String subject) {
+    this.subject = subject;
+  }
+
+  public String getFramework() {
+    return framework;
+  }
+
+  public void setFramework(String framework) {
+    this.framework = framework;
+  }
+
+  public Integer getWeek() {
+    return week;
+  }
+
+  public void setWeek(Integer week) {
+    this.week = week;
   }
 
   public Integer getMonth() {

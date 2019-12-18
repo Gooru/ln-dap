@@ -29,25 +29,16 @@ public interface GroupPerformanceReportsDao {
       @Bind("month") Integer month, @Bind("year") Integer year);
 
   @SqlUpdate("INSERT INTO class_performance_data_reports(class_id, assessment_timespent, assessment_performance, school_id, state_id, country_id,"
-      + " month, year, content_source, tenant) VALUES (:classId, :assessmentTimespent, :assessmentPerformance, :schoolId, :stateId, :countryId,"
-      + " :month, :year, :contentSource, :tenant) ON CONFLICT (class_id, content_source, month, year) DO UPDATE SET assessment_timespent ="
-      + " :assessmentTimespent, assessment_performance = :assessmentPerformance, updated_at = now()")
+      + " week, month, year, content_source, tenant, subject, framework) VALUES (:classId, :assessmentTimespent, :assessmentPerformance, :schoolId,"
+      + " :stateId, :countryId, :week, :month, :year, :contentSource, :tenant, :subject, :framework) ON CONFLICT (class_id, content_source, week,"
+      + " month, year) DO UPDATE SET assessment_timespent = :assessmentTimespent, assessment_performance = :assessmentPerformance, updated_at = now()")
   void insertOrUpdateClassLevelAssessmentPerfAndTimespent(
       @BindBean ClassPerformanceDataReportsBean bean);
 
-
-  // INSERT INTO userstat_resource_content_type_timespent_ts(activity_date, user_id, content_type,
-  // time_spent) VALUES (:a, :b, :c :d) ON CONFLICT (user_id, content_type, activity_date) DO UPDATE
-  // set time_spent = userstat_resource_content_type_timespent_ts.time_spent + excluded.time_spent;
-
-  void insertOrUpdateClassLevelCollectionTimespent(@BindBean ClassPerformanceDataReportsBean bean);
-
-
-  @SqlUpdate("INSERT INTO group_performance_data_reports(assessment_performance, group_id, school_id, state_id, country_id, month, year,"
-      + " content_source, tenant) VALUES(:assessmentPerformance, :groupId, :schoolId, :stateId, :countryId, :month, :year, :contentSource, :tenant)"
-      + " ON CONFLICT (group_id, content_source, month, year) DO UPDATE SET assessment_performance = :assessmentPerformance, updated_at = now()")
+  @SqlUpdate("INSERT INTO group_performance_data_reports(assessment_performance, group_id, school_id, state_id, country_id, week, month, year,"
+      + " content_source, tenant, subject, framework) VALUES(:assessmentPerformance, :groupId, :schoolId, :stateId, :countryId, :week, :month, :year,"
+      + " :contentSource, :tenant, :subject, :framework) ON CONFLICT (group_id, content_source, week, month, year) DO UPDATE SET"
+      + " assessment_performance = :assessmentPerformance, updated_at = now()")
   void insertOrUpdateGroupLevelAssessmentPerformance(@BindBean GroupPerformanceDataReportBean bean);
-
-  void insertOrUpdateGroupLevelCollectionTimspent();
 
 }
