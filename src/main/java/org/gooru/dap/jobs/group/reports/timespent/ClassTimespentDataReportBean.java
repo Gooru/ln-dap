@@ -103,7 +103,7 @@ public class ClassTimespentDataReportBean {
   public void setCountryId(Long countryId) {
     this.countryId = countryId;
   }
-  
+
   public Integer getWeek() {
     return week;
   }

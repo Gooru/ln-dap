@@ -70,7 +70,7 @@ final class ConsumerFactory {
 
       case "org.gooru.dap.deps.group.GroupCompetencyReportsEventConsumer":
         return new GroupCompetencyReportsEventConsumer(id, config);
-        
+
       case "org.gooru.dap.deps.struggling.StrugglingCompetencyEventConsumer":
         return new StrugglingCompetencyEventConsumer(id, config);
 

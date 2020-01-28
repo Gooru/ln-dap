@@ -39,7 +39,6 @@ public abstract class LearnerProfileCompetencyStatusDao {
   protected abstract void insertOrUpdateLearnerProfileCompetencyStatus(
       @BindBean LearnerProfileCompetencyStatusBean bean);
 
-
   /*
    * We do not need to update anything in TS tables if the conflict found based on user, gut code
    * and status. We always serve cumulative data up to month/week.

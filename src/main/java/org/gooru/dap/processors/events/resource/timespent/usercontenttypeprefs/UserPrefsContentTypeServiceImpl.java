@@ -42,7 +42,6 @@ class UserPrefsContentTypeServiceImpl implements UserPrefsContentTypeService {
     this.userPrefsContentTypeDao = this.dbi.onDemand(UserPrefsContentTypeDao.class);
   }
 
-
   @Override
   public void updateUserPrefsForContentTypeBasedOnTimespent(
       UserStatsResourceContentTypeTimeSpentBean userStatsResourceContentTypeTimeSpentBean) {

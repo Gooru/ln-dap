@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
 /**
  * @author mukul@gooru
  */
@@ -32,7 +31,6 @@ public class AtcPostProcessor {
       new AtcPostProcessorService(DBICreator.getDbiForDefaultDS());
   private CompetencyStatsService gradeCompetencyStatsService =
       new CompetencyStatsService(DBICreator.getDbiForDefaultDS());
-
 
   public AtcPostProcessor(AssessmentScoreEventMapper assessmentScoreEvent) {
     this.assessmentScoreEvent = assessmentScoreEvent;
@@ -67,8 +65,10 @@ public class AtcPostProcessor {
               + " has not studied anything yet! Updating only Total Competencies.");
 
           // Calculate gradeId for this student
-          // If the gradeId of the Student is not set, then get the gradeId of the Class
-          // If that is also not set then store the Global Skyline for the user
+          // If the gradeId of the Student is not set, then get the
+          // gradeId of the Class
+          // If that is also not set then store the Global Skyline for
+          // the user
 
           gradeId = atcPostProcessorCoreService.fetchGradefromClassMembers(member, classId);
           if (gradeId == null) {
@@ -142,6 +142,5 @@ public class AtcPostProcessor {
           "Not able to find subject code for specified course " + gradeId);
     }
   }
-
 
 }

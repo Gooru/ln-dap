@@ -4,7 +4,6 @@ import java.util.UUID;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 
-
 /**
  * @author mukul@gooru
  */

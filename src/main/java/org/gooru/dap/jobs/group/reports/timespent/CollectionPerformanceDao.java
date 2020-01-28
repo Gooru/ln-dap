@@ -12,7 +12,6 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
  */
 public interface CollectionPerformanceDao {
 
-
   @Mapper(CollectionPerformanceModelMapper.class)
   @SqlQuery("SELECT class_id, content_source, sum(timespent) as timespent FROM collection_performance WHERE class_id = ANY(:classIds) AND"
       + " collection_type = 'collection' AND content_source = :contentSource GROUP BY class_id, content_source")

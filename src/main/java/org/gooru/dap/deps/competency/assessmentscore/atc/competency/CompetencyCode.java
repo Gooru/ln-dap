@@ -41,4 +41,3 @@ public class CompetencyCode {
     return "CompetencyCode{" + "code='" + code + '\'' + '}';
   }
 }
-

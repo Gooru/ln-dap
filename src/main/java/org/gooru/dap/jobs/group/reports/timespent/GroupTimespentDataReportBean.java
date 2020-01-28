@@ -57,7 +57,7 @@ public class GroupTimespentDataReportBean {
   public void setCountryId(Long countryId) {
     this.countryId = countryId;
   }
-  
+
   public String getSubject() {
     return subject;
   }

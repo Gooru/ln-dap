@@ -81,9 +81,11 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
     if (pathId == null || pathId == 0) {
       String contentSource = this.assessmentScoreEvent.getContext().getContentSource();
       if (contentSource != null && contentSource.equalsIgnoreCase(COMPETENCY_MASTERY)) {
-        // (contentSource = competency_mastery) indicates that student has played a Standalone
+        // (contentSource = competency_mastery) indicates that student
+        // has played a Standalone
         // Signature Assessment by inspecting
-        // competencies. Since this is not a suggestion to the Student, path_id will be null or 0
+        // competencies. Since this is not a suggestion to the Student,
+        // path_id will be null or 0
         LOGGER.debug("Inferred as Standalone Signature Assessment Play");
 
         // Fetch signature gut codes of the assessment
@@ -124,8 +126,10 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
         List<String> gutCodes = competency.getGutCodes();
         if (gutCodes != null && !gutCodes.isEmpty()) {
           gutCodes.forEach(gc -> {
-            // Always update the status and evidence of the learner profile, logic for
-            // mastery and completed will be in respective processors
+            // Always update the status and evidence of the learner
+            // profile, logic for
+            // mastery and completed will be in respective
+            // processors
             new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, false).process();
             new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, false)
                 .process();
@@ -136,10 +140,12 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
         }
       }
     } else {
-      // Update - 18-Mar-2019: Mastery should be only in context where path type is system, for rest
+      // Update - 18-Mar-2019: Mastery should be only in context where
+      // path type is system, for rest
       // of the path type it should consider for completion only.
       if (!this.assessmentScoreEvent.getContext().getPathType().equalsIgnoreCase(SYSTEM_PATHTYPE)) {
-        // Suggestions from route0 will not be treated as Signature Assessments
+        // Suggestions from route0 will not be treated as Signature
+        // Assessments
         LOGGER.debug(
             "pathId is present and pathType is route0, executing logic for non signature items");
 
@@ -166,8 +172,10 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
         List<String> gutCodes = competency.getGutCodes();
         if (gutCodes != null && !gutCodes.isEmpty()) {
           gutCodes.forEach(gc -> {
-            // Always update the status and evidence of the learner profile, logic for
-            // mastery and completed will be in respective processors
+            // Always update the status and evidence of the learner
+            // profile, logic for
+            // mastery and completed will be in respective
+            // processors
             new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gc, false).process();
             new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gc, false)
                 .process();
@@ -177,7 +185,8 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
               "no gut codes found for the assessment, skipping leaner profile status updates");
         }
       } else {
-        // Signature Assessments will be suggested ONLY by (pathType = system) and not
+        // Signature Assessments will be suggested ONLY by (pathType =
+        // system) and not
         // by (pathType = route0 and teacher)
         LOGGER.debug("pathId value present, executing logic for signature items");
 

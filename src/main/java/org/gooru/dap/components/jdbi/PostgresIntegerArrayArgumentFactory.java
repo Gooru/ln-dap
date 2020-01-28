@@ -22,4 +22,3 @@ public class PostgresIntegerArrayArgumentFactory implements ArgumentFactory<PGAr
     };
   }
 }
-

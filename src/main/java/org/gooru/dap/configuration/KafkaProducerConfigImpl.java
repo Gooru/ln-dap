@@ -35,5 +35,4 @@ public class KafkaProducerConfigImpl implements KafkaProducerConfig {
     return properties;
   }
 
-
 }

@@ -56,7 +56,8 @@ public class ContentCompetencyEvidenceProcessor {
     boolean isMicroCompetency = (HYPHEN_PATTERN.split(competencyCode).length >= 5);
     bean.setMicroCompetency(isMicroCompetency);
 
-    // Calculate the status to persist in evidence ts table to uniquely identify the
+    // Calculate the status to persist in evidence ts table to uniquely
+    // identify the
     // evidence by status
     int status = StatusConstants.IN_PROGRESS;
     if (score != null && score >= COMPLETION_SCORE) {
@@ -64,13 +65,17 @@ public class ContentCompetencyEvidenceProcessor {
     }
     LOGGER.debug("Content Competency Evidence: Competency:{} || status:{}", competencyCode, status);
     // Update - 12-July-2018:
-    // Regardless of the score, persist the evidence. This will enable in progress
+    // Regardless of the score, persist the evidence. This will enable in
+    // progress
     // evidence
 
     // Update - 02-Aug-2018:
-    // Get the existing score for user, gut and assessment. IF there is no score
-    // already exists, then persist the evidence. If score exists and less than 80
-    // (in-progress) then update the evidence. If score exists and greater than 80
+    // Get the existing score for user, gut and assessment. IF there is no
+    // score
+    // already exists, then persist the evidence. If score exists and less
+    // than 80
+    // (in-progress) then update the evidence. If score exists and greater
+    // than 80
     // then only update evidence if status is COMPLETED. Here, we do not
     // want to down grade the score if its already COMPLETED. However,
     // we need to persist latest evidence for them.
