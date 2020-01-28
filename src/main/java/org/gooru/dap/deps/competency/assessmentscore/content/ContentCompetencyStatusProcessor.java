@@ -40,8 +40,10 @@ public class ContentCompetencyStatusProcessor {
       score = this.assessmentScore.getResult().getScore();
     }
 
-    // If user obtained score is greater than completion score then update the
-    // status to completed. Status should not be updated to completed if its already
+    // If user obtained score is greater than completion score then update
+    // the
+    // status to completed. Status should not be updated to completed if its
+    // already
     // completed. This should be handled in the query at DAO layer.
     if (score != null && score >= COMPLETION_SCORE) {
       LOGGER.debug("Content Competency Status: competency:{} || status=completed",
@@ -50,8 +52,10 @@ public class ContentCompetencyStatusProcessor {
       return;
     }
 
-    // If user obtained score is less that completion score then update the status
-    // to in_progress. Status should not be updated to in_progress if its already
+    // If user obtained score is less that completion score then update the
+    // status
+    // to in_progress. Status should not be updated to in_progress if its
+    // already
     // completed. This should be handled in the query at DAO layer.
     LOGGER.debug("Content Competency Status: competency:{} || status=inprogress",
         this.competencyCode);

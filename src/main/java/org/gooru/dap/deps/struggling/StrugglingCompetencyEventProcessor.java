@@ -52,7 +52,7 @@ public class StrugglingCompetencyEventProcessor implements EventProcessor {
     // Fetch competencies tagged with assessment
     LOGGER.debug("fetching competency for assessment: '{}'", collectionId);
     AssessmentCompetency competency = service.getAssessmentCompetency(collectionId);
-    
+
     new StrugglingCompetencyProcessor(assessmentScoreEvent, competency.getGutCodes()).process();
   }
 }

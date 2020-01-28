@@ -16,7 +16,6 @@ class GradeCompetencyModelImpl implements GradeCompetencyModel {
   private final List<DomainModel> domains;
   private final Map<DomainCode, List<CompetencyModel>> domainCodeCompetencyModelMap;
 
-
   GradeCompetencyModelImpl(SubjectCode subjectCode, List<DomainModel> domains,
       Map<DomainCode, List<CompetencyModel>> domainCodeCompetencyModelMap) {
     this.subjectCode = subjectCode;

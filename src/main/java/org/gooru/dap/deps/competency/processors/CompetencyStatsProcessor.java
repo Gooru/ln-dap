@@ -6,7 +6,6 @@ import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author mukul@gooru
  */

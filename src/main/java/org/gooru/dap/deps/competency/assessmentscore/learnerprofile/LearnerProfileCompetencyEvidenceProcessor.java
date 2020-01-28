@@ -42,18 +42,22 @@ public class LearnerProfileCompetencyEvidenceProcessor {
       score = this.assessmentScore.getResult().getScore();
     }
 
-    // If the score is greater than the mastry/completion score then only persist
+    // If the score is greater than the mastry/completion score then only
+    // persist
     // the evidence. Below mastry/completion score we are not treating the
-    // competency as mastered or completed hence no need to persist the evidence.
+    // competency as mastered or completed hence no need to persist the
+    // evidence.
 
-    // Update: 12-July-2018: Requirement is to persist the evidence for in progress
+    // Update: 12-July-2018: Requirement is to persist the evidence for in
+    // progress
     // status in non TS tables
 
     boolean isMicroCompetency = (HYPHEN_PATTERN.split(gutCode).length >= 5);
     LearnerProfileCompetencyEvidenceCommand command =
         LearnerProfileCompetencyEvidenceCommandBuilder.build(this.assessmentScore);
 
-    // Calculate the status to persist in evidence ts table to uniquely identify the
+    // Calculate the status to persist in evidence ts table to uniquely
+    // identify the
     // evidence by status
     int status = StatusConstants.IN_PROGRESS;
     if (score != null && score >= MASTERY_SCORE) {
@@ -65,9 +69,12 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     }
 
     // Regardless of score always persist the evidence. This is basically
-    // NOT to overwrite the evidence in TS table when competency is transitioned to
-    // completed/mastered from in progress. Which also enables to persist evidence
-    // for in progress status. However in NON TS table evidence will be overwritten
+    // NOT to overwrite the evidence in TS table when competency is
+    // transitioned to
+    // completed/mastered from in progress. Which also enables to persist
+    // evidence
+    // for in progress status. However in NON TS table evidence will be
+    // overwritten
     // with latest score if its same content, else will be inserted
     LOGGER.debug("LP Evidence: Competency:{} || status:{}", gutCode, status);
     if (isMicroCompetency) {
@@ -83,11 +90,16 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     LearnerProfileCompetencyEvidenceBean bean = new LearnerProfileCompetencyEvidenceBean(command);
     bean.setGutCode(gutCode);
 
-    // Get the existing score for user, gut and assessment. IF there is no score
-    // already exists, then persist the evidence. If score exists and less than 80
-    // (in-progress) then update the evidence. If score exists and greater than 80
-    // then only update evidence if status is COMPLETED or MASTERED. Here, we do not
-    // want to down grade the score if its already COMPLETED or MASTERED. However,
+    // Get the existing score for user, gut and assessment. IF there is no
+    // score
+    // already exists, then persist the evidence. If score exists and less
+    // than 80
+    // (in-progress) then update the evidence. If score exists and greater
+    // than 80
+    // then only update evidence if status is COMPLETED or MASTERED. Here,
+    // we do not
+    // want to down grade the score if its already COMPLETED or MASTERED.
+    // However,
     // we need to persist latest evidence for them.
     Double score = this.service.getScoreForCompetency(bean);
     LOGGER.debug("existing score for the competency '{}' is '{}'", gutCode, score);
@@ -130,7 +142,8 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     // Check if the competency is already COMPLETED or MASTERED
     // If current status of the competency is INPROGRESS and its not already
     // COMPLETED or MASTERED then Insert new or update the score
-    // If current status of the competency is COMPLETED / MASTERED then straight
+    // If current status of the competency is COMPLETED / MASTERED then
+    // straight
     // forward INSERT, In case of conflict update score
     boolean isCompletedOrMastered =
         this.service.checkIfCompetencyIsAlreadyCompletedOrMastered(bean);
@@ -154,9 +167,11 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     microCompetencyBean.setStatus(status);
 
     // Check if the micro competency is already COMPLETED or MASTERED
-    // If current status of the micro competency is INPROGRESS and its not already
+    // If current status of the micro competency is INPROGRESS and its not
+    // already
     // COMPLETED or MASTERED then Insert new or update the score
-    // If current status of the micro competency is COMPLETED / MASTERED then
+    // If current status of the micro competency is COMPLETED / MASTERED
+    // then
     // straight forward INSERT, In case of conflict update score
     boolean isCompletedOrMastered =
         this.service.checkIfMicroCompetencyIsAlreadyCompletedOrMastered(microCompetencyBean);

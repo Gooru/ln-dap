@@ -46,8 +46,10 @@ public class AtcProcessor {
       }
 
       // Calculate gradeId for this student
-      // If the gradeId of the Student is not set, then get the gradeId of the Class
-      // If that is also not set then store the Global Skyline for the user
+      // If the gradeId of the Student is not set, then get the gradeId of
+      // the Class
+      // If that is also not set then store the Global Skyline for the
+      // user
 
       gradeId = atcService.fetchGradefromClassMembers(userId, classId);
       if (gradeId == null) {

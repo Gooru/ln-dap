@@ -14,5 +14,4 @@ public final class Constants {
   public static final String CORE_DATA_SOURCE = "coreDataSource";
   public static final String REPORTS_DATA_SOURCE = "reportsDataSource";
 
-
 }

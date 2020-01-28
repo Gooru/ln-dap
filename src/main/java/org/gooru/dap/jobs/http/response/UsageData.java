@@ -85,6 +85,4 @@ public class UsageData {
     this.processed = processed;
   }
 
-
-
 }

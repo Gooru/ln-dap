@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 
-
 /**
  * @author mukul@gooru
  */
@@ -25,6 +24,5 @@ public interface ClassDao {
 
   @SqlQuery("select user_id from class_member where class_id = :classId and class_member_status = 'joined'")
   List<String> fetchClassMembers(@Bind("classId") UUID classId);
-
 
 }

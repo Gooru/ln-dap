@@ -9,7 +9,8 @@ import org.gooru.dap.components.jdbi.PGArrayUtils;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcDao;
 import org.gooru.dap.deps.competency.assessmentscore.atc.AtcEvent;
 import org.gooru.dap.deps.competency.assessmentscore.atc.compute.processor.GradeCompetencyProcessor;
-// import org.gooru.dap.deps.competency.assessmentscore.atc.postprocessor.ClassDao;
+// import
+// org.gooru.dap.deps.competency.assessmentscore.atc.postprocessor.ClassDao;
 import org.skife.jdbi.v2.DBI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

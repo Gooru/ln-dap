@@ -56,13 +56,16 @@ public class GroupPerformanceReportsJobExecutor implements Job {
           break;
         }
 
-        // These lists are used to store the request data for coursemap and classactivities
+        // These lists are used to store the request data for coursemap
+        // and classactivities
         // separately.
         List<ClassJson> classesForCM = new ArrayList<>(dataModels.size());
         List<String> classesForCA = new ArrayList<>(dataModels.size());
 
-        // Iterate on records from queue and separate the coursemap and classactivities source
-        // classes to prepare the request using specific classes. The APIs to fetch performance data
+        // Iterate on records from queue and separate the coursemap and
+        // classactivities source
+        // classes to prepare the request using specific classes. The
+        // APIs to fetch performance data
         // for coursemap and classactivities are different
         dataModels.forEach(model -> {
           if (model.getContentSource().equalsIgnoreCase(EventMessageConstant.CONTENT_SOURCE_CM)) {
@@ -78,13 +81,17 @@ public class GroupPerformanceReportsJobExecutor implements Job {
             classesForCA.size());
         HttpRequestHelper httpHelper = new HttpRequestHelper();
 
-        // This list will be used to accumulate performance data for both coursemap and
-        // classactivities which will be then used for further processing of aggregations at class
+        // This list will be used to accumulate performance data for
+        // both coursemap and
+        // classactivities which will be then used for further
+        // processing of aggregations at class
         // and group levels
         List<UsageData> allUsageData = new ArrayList<>();
 
-        // If there are any classes for coursemap data then prepare the request and fetch the
-        // performance data from analytics read API. Use the performance data returned by the API
+        // If there are any classes for coursemap data then prepare the
+        // request and fetch the
+        // performance data from analytics read API. Use the performance
+        // data returned by the API
         // for further processing.
         if (classesForCM != null && !classesForCM.isEmpty()) {
           CMClassPerformanceRequest cmRequest = new CMClassPerformanceRequest();
@@ -94,7 +101,8 @@ public class GroupPerformanceReportsJobExecutor implements Job {
           ClassPerformanceResponse cmClassPerformances = httpHelper.fetchClassPerformances(
               config.getFetchClassCMPerfReqUri(), objectMapper.writeValueAsString(cmRequest));
 
-          // ClassPerformanceResponse cmClassPerformances = getDummyResponseForCM(classesForCM);
+          // ClassPerformanceResponse cmClassPerformances =
+          // getDummyResponseForCM(classesForCM);
 
           if (cmClassPerformances != null && cmClassPerformances.getUsageData() != null) {
             List<UsageData> cmUsageData = cmClassPerformances.getUsageData();
@@ -110,8 +118,10 @@ public class GroupPerformanceReportsJobExecutor implements Job {
           LOGGER.debug("no classes to process for CM data");
         }
 
-        // If there are any classes for the classactivities found in queue then prepare the request
-        // and fetch the performance data from analytics read API. Use the performance data returned
+        // If there are any classes for the classactivities found in
+        // queue then prepare the request
+        // and fetch the performance data from analytics read API. Use
+        // the performance data returned
         // by the API for further processing.
         if (classesForCA != null && !classesForCA.isEmpty()) {
           CAClassPerformanceRequest caRequest = new CAClassPerformanceRequest();
@@ -119,7 +129,8 @@ public class GroupPerformanceReportsJobExecutor implements Job {
 
           ClassPerformanceResponse caClassPerformances = httpHelper.fetchClassPerformances(
               config.getFetchClassCAPerfReqUri(), objectMapper.writeValueAsString(caRequest));
-          // ClassPerformanceResponse caClassPerformances = getDummyResponseForCA(classesForCA);
+          // ClassPerformanceResponse caClassPerformances =
+          // getDummyResponseForCA(classesForCA);
 
           if (caClassPerformances != null && caClassPerformances.getUsageData() != null) {
             List<UsageData> caUsageData = caClassPerformances.getUsageData();
@@ -135,18 +146,22 @@ public class GroupPerformanceReportsJobExecutor implements Job {
           LOGGER.debug("no classes to process for CA data");
         }
 
-        // Now finally verify that we really have some data to process and send it for further
+        // Now finally verify that we really have some data to process
+        // and send it for further
         // processing.
         if (!allUsageData.isEmpty()) {
           new GroupPerformanceReportsProcessor(allUsageData).process();
         }
 
         // Queue cleanup
-        // Execution for the current set of classes has been finished, now we can delete the records
-        // from the queue which are marked as completed by the report processor
+        // Execution for the current set of classes has been finished,
+        // now we can delete the records
+        // from the queue which are marked as completed by the report
+        // processor
         this.queueService.deleteCompletedFromPerfQueue();
 
-        // Increase offset count to fetch next set of records from the queue
+        // Increase offset count to fetch next set of records from the
+        // queue
         offset = offset + limit;
       }
     } catch (Throwable t) {

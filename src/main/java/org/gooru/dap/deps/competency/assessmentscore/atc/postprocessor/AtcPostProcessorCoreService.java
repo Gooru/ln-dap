@@ -15,7 +15,6 @@ import org.skife.jdbi.v2.sqlobject.Bind;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * @author mukul@gooru
  */

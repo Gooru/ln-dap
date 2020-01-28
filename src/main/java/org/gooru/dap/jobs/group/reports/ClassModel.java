@@ -5,7 +5,7 @@ package org.gooru.dap.jobs.group.reports;
  * @author szgooru Created On 09-Dec-2019
  */
 public class ClassModel {
-  
+
   private String id;
   private String title;
   private Long gradeCurrent;

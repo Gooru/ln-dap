@@ -30,7 +30,7 @@ public class StrugglingCompetencyProcessor {
 
   private List<String> completedCompetencies;
   private List<String> inferredCompetencies;
-  
+
   private static final Pattern HYPEN_PATTERN = Pattern.compile("-");
 
   private final static StrugglingCompetencyService SERVICE =
@@ -50,8 +50,10 @@ public class StrugglingCompetencyProcessor {
       score = this.assessmentScore.getResult().getScore();
     }
 
-    // We are inferring the subject code from the first competency assuming that that competencies
-    // tagged to assessment are inline with class subject and all competencies are of same subject
+    // We are inferring the subject code from the first competency assuming
+    // that that competencies
+    // tagged to assessment are inline with class subject and all
+    // competencies are of same subject
     String subjectCode = HYPEN_PATTERN.split(gutCodes.get(0))[0];
     fetchUserSkyline(assessmentScore.getUserId(), subjectCode);
 
@@ -60,23 +62,29 @@ public class StrugglingCompetencyProcessor {
           StrugglingCompetencyCommand.build(gut, this.assessmentScore.getUserId());
       StrugglingCompetencyCommand.StrugglingCompetencyCommandBean bean = command.asBean();
 
-      // if the assessment is completed then all the competencies tagged to assessment need to be
-      // removed from the struggling competencies if they are present for this month and year. We
-      // need to keep previous months records as is to report the competencies are struggling in
+      // if the assessment is completed then all the competencies tagged
+      // to assessment need to be
+      // removed from the struggling competencies if they are present for
+      // this month and year. We
+      // need to keep previous months records as is to report the
+      // competencies are struggling in
       // those months.
       if (score != null && score >= MASTERY_SCORE) {
         SERVICE.removeFromStruggling(bean);
       }
 
-      // Check if the competency is already been completed or inferred from the user skyline data
+      // Check if the competency is already been completed or inferred
+      // from the user skyline data
       if (checkIfCompletedOrInferred(gut)) {
         LOGGER.debug("competecy '{}' of the user '{}' has inferred mastery, skipping", gut,
             bean.getUserId());
         continue;
       }
 
-      // After all checks looks like the competency is really struggling as its not been already
-      // completed or inferred. Hence we will insert in as struggling competencies
+      // After all checks looks like the competency is really struggling
+      // as its not been already
+      // completed or inferred. Hence we will insert in as struggling
+      // competencies
       SERVICE.insertAsStruggling(bean);
     }
   }
@@ -87,7 +95,8 @@ public class StrugglingCompetencyProcessor {
         : false;
   }
 
-  // Fetch the user skyline and populate the completed and inferred competency lists for the further
+  // Fetch the user skyline and populate the completed and inferred competency
+  // lists for the further
   // computation
   private void fetchUserSkyline(String userId, String subject) {
     final List<UserDomainCompetencyMatrixModel> userCompetencyMatrixModels =

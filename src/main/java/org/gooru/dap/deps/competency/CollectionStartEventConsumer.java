@@ -67,7 +67,7 @@ public class CollectionStartEventConsumer extends ConsumerTemplate<String, Strin
        * CollectionStartEventMapper.class); LOGGER.debug("event has been mapped to object:== {}",
        * collectionStartEventMapper.toString());
        * 
-       * new CollectionStartEventProcessor(collectionStartEventMapper).process();
+       * new CollectionStartEventProcessor(collectionStartEventMapper).process ();
        */
       // DO NOT STORE COMPETENCY STATUS IF THIS IS A DIAGNOSTIC ASSESSMENT
       AssessmentScoreEventMapper eventMapper =
