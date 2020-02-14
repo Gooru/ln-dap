@@ -6,6 +6,7 @@ import org.gooru.dap.constants.Constants;
 import org.gooru.dap.constants.StatusConstants;
 import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ContextMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +36,12 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     this.isSignature = isSignature;
   }
   
-  private int getCompletedSettingsScore() {
-    String tenantId = this.assessmentScore.context.getTenantId();
+  private int getCompletedScoreSettings() {
+    ContextMapper context = this.assessmentScore.getContext();
+    String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
-      String settingData = tenant.getTenantSettings(tenantId);
-      return Integer.parseInt(settingData);
+      String completedScore = tenant.getTenantSettings(tenantId);
+      return Integer.parseInt(completedScore);
     } else {
       return Constants.DEFAULT_COMPLETED_SCORE;
     }
@@ -71,9 +73,9 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     // evidence by status
     int status = StatusConstants.IN_PROGRESS;
     if(score != null) {
-      int scoreData = getCompletedSettingsScore();
+      int scoreData = getCompletedScoreSettings();
       LOGGER.debug("LP scoreData: scoreData:{}", scoreData);
-      if(score >= getCompletedSettingsScore()) {
+      if(score >= getCompletedScoreSettings()) {
         status = StatusConstants.COMPLETED;
       }
       if (isSignature && score >= Constants.MASTERY_SCORE) {
