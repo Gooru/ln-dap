@@ -13,5 +13,7 @@ public final class Constants {
   public static final String DEFAULT_DATA_SOURCE = "defaultDataSource";
   public static final String CORE_DATA_SOURCE = "coreDataSource";
   public static final String REPORTS_DATA_SOURCE = "reportsDataSource";
+  public static final double MASTERY_SCORE = 80.00;
+  public static final int DEFAULT_COMPLETED_SCORE = 80;
 
 }

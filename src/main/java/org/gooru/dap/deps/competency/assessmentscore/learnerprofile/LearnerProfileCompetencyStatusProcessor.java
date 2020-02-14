@@ -1,6 +1,7 @@
 package org.gooru.dap.deps.competency.assessmentscore.learnerprofile;
 
 import org.gooru.dap.components.jdbi.DBICreator;
+import org.gooru.dap.constants.Constants;
 import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
@@ -12,17 +13,15 @@ import org.slf4j.LoggerFactory;
  */
 public class LearnerProfileCompetencyStatusProcessor {
 
-  // TODO: Move this to the config
-  private final double MASTERY_SCORE = 80.00;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
 
   private final AssessmentScoreEventMapper assessmentScore;
   private final String gutCode;
   private final boolean isSignature;
-
   private LearnerProfileCompetencyStatusService service =
       new LearnerProfileCompetencyStatusService(DBICreator.getDbiForDefaultDS());
+  private GetTenantSettingService tenant = new GetTenantSettingService(DBICreator.getDbiForCoreDS());
 
   public LearnerProfileCompetencyStatusProcessor(AssessmentScoreEventMapper assessmentScore,
       String gutCode, boolean isSignature) {
@@ -30,7 +29,15 @@ public class LearnerProfileCompetencyStatusProcessor {
     this.gutCode = gutCode;
     this.isSignature = isSignature;
   }
-
+  private int getCompletedSettingsScore() {
+    String tenantId = this.assessmentScore.context.getTenantId();
+    if(tenantId != null && !tenantId.isEmpty()) {
+      String settingData = tenant.getTenantSettings(tenantId);
+      return Integer.parseInt(settingData);
+    } else {
+      return Constants.DEFAULT_COMPLETED_SCORE;
+    }
+  }
   public void process() {
     LearnerProfileCompetencyStatusCommand command =
         LearnerProfileCompetencyStatusCommandBuilder.build(assessmentScore, gutCode);
@@ -47,12 +54,13 @@ public class LearnerProfileCompetencyStatusProcessor {
       score = this.assessmentScore.getResult().getScore();
     }
 
-    if (score != null && score >= MASTERY_SCORE) {
-      if (this.isSignature) {
+    if (score != null) {
+      if (this.isSignature && score >= Constants.MASTERY_SCORE) {
         LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Masterd",
             score, this.isSignature, gutCode);
         service.updateLearnerProfileCompetencyStatusToMastered(bean);
-      } else {
+      } 
+      if(score >= getCompletedSettingsScore()) {
         LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Completed",
             score, this.isSignature, gutCode);
         service.updateLearnerProfileCompetencyStatusToCompleted(bean);

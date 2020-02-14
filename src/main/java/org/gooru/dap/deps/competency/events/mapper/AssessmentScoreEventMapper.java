@@ -13,7 +13,7 @@ public class AssessmentScoreEventMapper {
   private long activityTime;
   private String version;
 
-  private ContextMapper context;
+  public ContextMapper context;
   private ResultMapper result;
 
   public String getUserId() {
