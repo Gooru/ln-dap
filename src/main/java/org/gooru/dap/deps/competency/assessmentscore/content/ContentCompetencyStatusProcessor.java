@@ -1,8 +1,11 @@
 package org.gooru.dap.deps.competency.assessmentscore.content;
 
 import org.gooru.dap.components.jdbi.DBICreator;
+import org.gooru.dap.constants.Constants;
 import org.gooru.dap.deps.competency.CompetencyConstants;
+import org.gooru.dap.deps.competency.assessmentscore.learnerprofile.TenantSettingService;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ContextMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +15,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ContentCompetencyStatusProcessor {
 
-  // TODO: Move this to the config
-  private final double COMPLETION_SCORE = 80.00;
-
   private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
 
   private final AssessmentScoreEventMapper assessmentScore;
@@ -22,6 +22,8 @@ public class ContentCompetencyStatusProcessor {
 
   private ContentCompetencyStatusService service =
       new ContentCompetencyStatusService(DBICreator.getDbiForDefaultDS());
+  private TenantSettingService tenantSettingService = 
+      new TenantSettingService(DBICreator.getDbiForCoreDS());
 
   public ContentCompetencyStatusProcessor(AssessmentScoreEventMapper assessmentScore,
       String competencyCode) {
@@ -29,6 +31,16 @@ public class ContentCompetencyStatusProcessor {
     this.competencyCode = competencyCode;
   }
 
+  private double getCompletedScoreSettings() {
+    ContextMapper context = this.assessmentScore.getContext();
+    String tenantId = context.getTenantId();
+    if(tenantId != null && !tenantId.isEmpty()) {
+      return tenantSettingService.fetchTenantCompletionScore(tenantId);
+    } else {
+      return Constants.DEFAULT_COMPLETED_SCORE;
+    }
+  }
+  
   public void process() {
     ContentCompetencyStatusCommand command =
         ContentCompetencyStatusCommandBuilder.build(this.assessmentScore, this.competencyCode);
@@ -45,7 +57,7 @@ public class ContentCompetencyStatusProcessor {
     // status to completed. Status should not be updated to completed if its
     // already
     // completed. This should be handled in the query at DAO layer.
-    if (score != null && score >= COMPLETION_SCORE) {
+    if (score != null && score >= getCompletedScoreSettings()) {
       LOGGER.debug("Content Competency Status: competency:{} || status=completed",
           this.competencyCode);
       this.service.insertOrUpdateContentCompetencyStatusToCompleted(bean);

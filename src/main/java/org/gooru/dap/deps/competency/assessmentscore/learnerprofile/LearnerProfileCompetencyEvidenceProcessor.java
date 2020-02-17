@@ -2,20 +2,21 @@ package org.gooru.dap.deps.competency.assessmentscore.learnerprofile;
 
 import java.util.regex.Pattern;
 import org.gooru.dap.components.jdbi.DBICreator;
+import org.gooru.dap.constants.Constants;
 import org.gooru.dap.constants.StatusConstants;
 import org.gooru.dap.deps.competency.CompetencyConstants;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ContextMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 /**
  * @author gooru on 14-May-2018
  */
 public class LearnerProfileCompetencyEvidenceProcessor {
 
   // TODO: Move this to the config
-  private final double MASTERY_SCORE = 80.00;
+  
   private final static Pattern HYPHEN_PATTERN = Pattern.compile("-");
 
   private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
@@ -26,16 +27,26 @@ public class LearnerProfileCompetencyEvidenceProcessor {
 
   private LearnerProfileCompetencyEvidenceService service =
       new LearnerProfileCompetencyEvidenceService(DBICreator.getDbiForDefaultDS());
-
+  private TenantSettingService tenantSettingService = new TenantSettingService(DBICreator.getDbiForCoreDS());
+  
   public LearnerProfileCompetencyEvidenceProcessor(AssessmentScoreEventMapper assessmentScore,
       String gutCode, boolean isSignature) {
     this.assessmentScore = assessmentScore;
     this.gutCode = gutCode;
     this.isSignature = isSignature;
   }
-
+  
+  private double getCompletedScoreSettings() {
+    ContextMapper context = this.assessmentScore.getContext();
+    String tenantId = context.getTenantId();
+    if(tenantId != null && !tenantId.isEmpty()) {
+      return tenantSettingService.fetchTenantCompletionScore(tenantId);
+    } else {
+      return Constants.DEFAULT_COMPLETED_SCORE;
+    }
+  }
+  
   public void process() {
-
     ResultMapper result = this.assessmentScore.getResult();
     Double score = null;
     if (result != null) {
@@ -60,10 +71,10 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     // identify the
     // evidence by status
     int status = StatusConstants.IN_PROGRESS;
-    if (score != null && score >= MASTERY_SCORE) {
-      if (isSignature) {
+    if(score != null) {
+      if (isSignature && score >= Constants.MASTERY_SCORE) {
         status = StatusConstants.MASTERED;
-      } else {
+      } else if (score >= getCompletedScoreSettings()) {
         status = StatusConstants.COMPLETED;
       }
     }
@@ -103,7 +114,7 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     // we need to persist latest evidence for them.
     Double score = this.service.getScoreForCompetency(bean);
     LOGGER.debug("existing score for the competency '{}' is '{}'", gutCode, score);
-    if (score == null || score < MASTERY_SCORE) {
+    if (score == null || score < Constants.MASTERY_SCORE) {
       this.service.insertOrUpdateLearnerProfileCompetencyEvidence(bean);
     } else {
       if (status != StatusConstants.IN_PROGRESS) {
@@ -120,7 +131,7 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     // Refer to comment in processCompetency() for logic
     Double score = this.service.getScoreForMicroCompetency(microCompetencyBean);
     LOGGER.debug("existing score for the micro competency '{}' is '{}'", gutCode, score);
-    if (score == null || score < MASTERY_SCORE) {
+    if (score == null || score < Constants.MASTERY_SCORE) {
       this.service.insertOrUpdateLearnerProfileMicroCompetencyEvidence(microCompetencyBean);
     } else {
       if (status != StatusConstants.IN_PROGRESS) {
