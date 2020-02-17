@@ -2,9 +2,12 @@ package org.gooru.dap.deps.competency.assessmentscore.content;
 
 import java.util.regex.Pattern;
 import org.gooru.dap.components.jdbi.DBICreator;
+import org.gooru.dap.constants.Constants;
 import org.gooru.dap.constants.StatusConstants;
 import org.gooru.dap.deps.competency.CompetencyConstants;
+import org.gooru.dap.deps.competency.assessmentscore.learnerprofile.TenantSettingService;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ContextMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,8 +16,6 @@ import org.slf4j.LoggerFactory;
  * @author gooru on 14-May-2018
  */
 public class ContentCompetencyEvidenceProcessor {
-  // TODO: Move this to the config
-  private final double COMPLETION_SCORE = 80.00;
 
   private static final Pattern PERIOD_PATTERN = Pattern.compile("\\.");
   private static final Pattern HYPHEN_PATTERN = Pattern.compile("-");
@@ -27,6 +28,8 @@ public class ContentCompetencyEvidenceProcessor {
 
   private ContentCompetencyEvidenceService service =
       new ContentCompetencyEvidenceService(DBICreator.getDbiForDefaultDS());
+  private TenantSettingService tenantSettingService = 
+      new TenantSettingService(DBICreator.getDbiForCoreDS());
 
   public ContentCompetencyEvidenceProcessor(AssessmentScoreEventMapper assessmentScore,
       String competencyCode, String gutCode) {
@@ -34,6 +37,18 @@ public class ContentCompetencyEvidenceProcessor {
     this.competencyCode = competencyCode;
     this.gutCode = gutCode;
   }
+  
+  private double getCompletedScoreSettings() {
+    ContextMapper context = this.assessmentScore.getContext();
+    String tenantId = context.getTenantId();
+    if(tenantId != null && !tenantId.isEmpty()) {
+      String completedScore = tenantSettingService.fetchTenantSettings(tenantId);
+      return Double.parseDouble(completedScore);
+    } else {
+      return Constants.DEFAULT_COMPLETED_SCORE;
+    }
+  }
+  
 
   public void process() {
 
@@ -60,7 +75,7 @@ public class ContentCompetencyEvidenceProcessor {
     // identify the
     // evidence by status
     int status = StatusConstants.IN_PROGRESS;
-    if (score != null && score >= COMPLETION_SCORE) {
+    if (score != null && score >= getCompletedScoreSettings()) {
       status = StatusConstants.COMPLETED;
     }
     LOGGER.debug("Content Competency Evidence: Competency:{} || status:{}", competencyCode, status);
@@ -81,7 +96,7 @@ public class ContentCompetencyEvidenceProcessor {
     // we need to persist latest evidence for them.
     Double existingScore = this.service.getCompetencyScore(bean);
     LOGGER.debug("existing score for the competency '{}' is '{}'", competencyCode, existingScore);
-    if (existingScore == null || existingScore < COMPLETION_SCORE) {
+    if (existingScore == null || existingScore < getCompletedScoreSettings()) {
       this.service.insertOrUpdateContentCompetencyEvidence(bean);
     } else {
       if (status != StatusConstants.IN_PROGRESS) {

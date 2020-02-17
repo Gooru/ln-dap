@@ -22,7 +22,7 @@ public class LearnerProfileCompetencyStatusProcessor {
   private final boolean isSignature;
   private LearnerProfileCompetencyStatusService service =
       new LearnerProfileCompetencyStatusService(DBICreator.getDbiForDefaultDS());
-  private GetTenantSettingService tenant = new GetTenantSettingService(DBICreator.getDbiForCoreDS());
+  private TenantSettingService tenantSettingService = new TenantSettingService(DBICreator.getDbiForCoreDS());
 
   public LearnerProfileCompetencyStatusProcessor(AssessmentScoreEventMapper assessmentScore,
       String gutCode, boolean isSignature) {
@@ -30,12 +30,12 @@ public class LearnerProfileCompetencyStatusProcessor {
     this.gutCode = gutCode;
     this.isSignature = isSignature;
   }
-  private int getCompletedScoreSettings() {
+  private double getCompletedScoreSettings() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
-      String completedScore = tenant.getTenantSettings(tenantId);
-      return Integer.parseInt(completedScore);
+      String completedScore = tenantSettingService.fetchTenantSettings(tenantId);
+      return Double.parseDouble(completedScore);
     } else {
       return Constants.DEFAULT_COMPLETED_SCORE;
     }

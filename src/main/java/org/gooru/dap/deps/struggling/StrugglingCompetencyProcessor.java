@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
+import org.gooru.dap.constants.Constants;
 import org.gooru.dap.constants.StatusConstants;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
@@ -20,8 +21,6 @@ import org.slf4j.LoggerFactory;
  * @author szgooru Created On 11-Oct-2019
  */
 public class StrugglingCompetencyProcessor {
-
-  private final double MASTERY_SCORE = 80.00;
 
   private final static Logger LOGGER = LoggerFactory.getLogger(StrugglingCompetencyProcessor.class);
 
@@ -69,7 +68,7 @@ public class StrugglingCompetencyProcessor {
       // need to keep previous months records as is to report the
       // competencies are struggling in
       // those months.
-      if (score != null && score >= MASTERY_SCORE) {
+      if (score != null && score >= Constants.MASTERY_SCORE) {
         SERVICE.removeFromStruggling(bean);
       }
 

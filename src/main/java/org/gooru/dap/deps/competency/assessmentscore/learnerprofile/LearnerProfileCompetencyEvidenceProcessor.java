@@ -27,7 +27,7 @@ public class LearnerProfileCompetencyEvidenceProcessor {
 
   private LearnerProfileCompetencyEvidenceService service =
       new LearnerProfileCompetencyEvidenceService(DBICreator.getDbiForDefaultDS());
-  private GetTenantSettingService tenant = new GetTenantSettingService(DBICreator.getDbiForCoreDS());
+  private TenantSettingService tenantSettingService = new TenantSettingService(DBICreator.getDbiForCoreDS());
   
   public LearnerProfileCompetencyEvidenceProcessor(AssessmentScoreEventMapper assessmentScore,
       String gutCode, boolean isSignature) {
@@ -36,12 +36,12 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     this.isSignature = isSignature;
   }
   
-  private int getCompletedScoreSettings() {
+  private double getCompletedScoreSettings() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
-      String completedScore = tenant.getTenantSettings(tenantId);
-      return Integer.parseInt(completedScore);
+      String completedScore = tenantSettingService.fetchTenantSettings(tenantId);
+      return Double.parseDouble(completedScore);
     } else {
       return Constants.DEFAULT_COMPLETED_SCORE;
     }
@@ -73,13 +73,10 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     // evidence by status
     int status = StatusConstants.IN_PROGRESS;
     if(score != null) {
-      int scoreData = getCompletedScoreSettings();
-      LOGGER.debug("LP scoreData: scoreData:{}", scoreData);
-      if(score >= getCompletedScoreSettings()) {
-        status = StatusConstants.COMPLETED;
-      }
       if (isSignature && score >= Constants.MASTERY_SCORE) {
         status = StatusConstants.MASTERED;
+      } else if (score >= getCompletedScoreSettings()) {
+        status = StatusConstants.COMPLETED;
       }
     }
 
