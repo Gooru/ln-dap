@@ -12,7 +12,9 @@ import java.util.stream.Collectors;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.constants.Constants;
 import org.gooru.dap.constants.StatusConstants;
+import org.gooru.dap.deps.competency.assessmentscore.learnerprofile.TenantSettingService;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ContextMapper;
 import org.gooru.dap.deps.competency.events.mapper.ResultMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +36,8 @@ public class StrugglingCompetencyProcessor {
 
   private final static StrugglingCompetencyService SERVICE =
       new StrugglingCompetencyService(DBICreator.getDbiForDefaultDS());
+  private TenantSettingService tenantSettingService = 
+      new TenantSettingService(DBICreator.getDbiForCoreDS());
 
   public StrugglingCompetencyProcessor(AssessmentScoreEventMapper assessmentScore,
       List<String> gutCodes) {
@@ -41,6 +45,16 @@ public class StrugglingCompetencyProcessor {
     this.gutCodes = gutCodes;
   }
 
+  private double getCompletedScoreSettings() {
+    ContextMapper context = this.assessmentScore.getContext();
+    String tenantId = context.getTenantId();
+    if(tenantId != null && !tenantId.isEmpty()) {
+      return tenantSettingService.fetchTenantCompletionScore(tenantId);
+    } else {
+      return Constants.DEFAULT_COMPLETED_SCORE;
+    }
+  }
+  
   public void process() {
 
     ResultMapper result = this.assessmentScore.getResult();
@@ -68,7 +82,7 @@ public class StrugglingCompetencyProcessor {
       // need to keep previous months records as is to report the
       // competencies are struggling in
       // those months.
-      if (score != null && score >= Constants.MASTERY_SCORE) {
+      if (score != null && score >= getCompletedScoreSettings()) {
         SERVICE.removeFromStruggling(bean);
       }
 

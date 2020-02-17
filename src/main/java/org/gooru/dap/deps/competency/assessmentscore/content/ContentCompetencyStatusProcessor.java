@@ -35,8 +35,7 @@ public class ContentCompetencyStatusProcessor {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
-      String completedScore = tenantSettingService.fetchTenantSettings(tenantId);
-      return Double.parseDouble(completedScore);
+      return tenantSettingService.fetchTenantCompletionScore(tenantId);
     } else {
       return Constants.DEFAULT_COMPLETED_SCORE;
     }

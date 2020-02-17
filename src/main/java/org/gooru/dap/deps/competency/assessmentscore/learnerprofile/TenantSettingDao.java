@@ -6,7 +6,7 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 public abstract class TenantSettingDao {
   
   @SqlQuery("select value from tenant_setting where key='comp_completion_value' and id = :tenantId::uuid ")
-  protected abstract String fetchTenantSettings(
+  protected abstract String fetchTenantCompletionScore(
       @Bind("tenantId") String tenantId);
 
 
