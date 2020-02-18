@@ -30,13 +30,13 @@ public class LearnerProfileCompetencyStatusProcessor {
     this.gutCode = gutCode;
     this.isSignature = isSignature;
   }
-  private double getCompletedScoreSettings() {
+  private double getCompletionScoreSettings() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
       return tenantSettingService.fetchTenantCompletionScore(tenantId);
     } else {
-      return Constants.DEFAULT_COMPLETED_SCORE;
+      return Constants.DEFAULT_COMPLETION_SCORE;
     }
   }
   public void process() {
@@ -61,7 +61,7 @@ public class LearnerProfileCompetencyStatusProcessor {
             score, this.isSignature, gutCode);
         service.updateLearnerProfileCompetencyStatusToMastered(bean);
       } 
-      if(score >= getCompletedScoreSettings()) {
+      if(score >= getCompletionScoreSettings()) {
         LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Completed",
             score, this.isSignature, gutCode);
         service.updateLearnerProfileCompetencyStatusToCompleted(bean);

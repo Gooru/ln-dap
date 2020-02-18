@@ -36,13 +36,13 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     this.isSignature = isSignature;
   }
   
-  private double getCompletedScoreSettings() {
+  private double getCompletionScoreSettings() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
       return tenantSettingService.fetchTenantCompletionScore(tenantId);
     } else {
-      return Constants.DEFAULT_COMPLETED_SCORE;
+      return Constants.DEFAULT_COMPLETION_SCORE;
     }
   }
   
@@ -74,7 +74,7 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     if(score != null) {
       if (isSignature && score >= Constants.MASTERY_SCORE) {
         status = StatusConstants.MASTERED;
-      } else if (score >= getCompletedScoreSettings()) {
+      } else if (score >= getCompletionScoreSettings()) {
         status = StatusConstants.COMPLETED;
       }
     }

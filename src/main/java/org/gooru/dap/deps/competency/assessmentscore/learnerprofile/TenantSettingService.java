@@ -23,6 +23,6 @@ public class TenantSettingService {
       LOGGER.error("Invalid completion score for settings '{}'",completionScore);
     }
     // returning default score incase of error or null
-    return Constants.DEFAULT_COMPLETED_SCORE;
+    return Constants.DEFAULT_COMPLETION_SCORE;
   }
 }
