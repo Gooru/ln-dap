@@ -38,13 +38,13 @@ public class ContentCompetencyEvidenceProcessor {
     this.gutCode = gutCode;
   }
   
-  private double getCompletedScoreSettings() {
+  private double getCompletionScoreSettings() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
       return tenantSettingService.fetchTenantCompletionScore(tenantId);
     } else {
-      return Constants.DEFAULT_COMPLETED_SCORE;
+      return Constants.DEFAULT_COMPLETION_SCORE;
     }
   }
   
@@ -74,7 +74,7 @@ public class ContentCompetencyEvidenceProcessor {
     // identify the
     // evidence by status
     int status = StatusConstants.IN_PROGRESS;
-    if (score != null && score >= getCompletedScoreSettings()) {
+    if (score != null && score >= getCompletionScoreSettings()) {
       status = StatusConstants.COMPLETED;
     }
     LOGGER.debug("Content Competency Evidence: Competency:{} || status:{}", competencyCode, status);
@@ -95,7 +95,7 @@ public class ContentCompetencyEvidenceProcessor {
     // we need to persist latest evidence for them.
     Double existingScore = this.service.getCompetencyScore(bean);
     LOGGER.debug("existing score for the competency '{}' is '{}'", competencyCode, existingScore);
-    if (existingScore == null || existingScore < getCompletedScoreSettings()) {
+    if (existingScore == null || existingScore < getCompletionScoreSettings()) {
       this.service.insertOrUpdateContentCompetencyEvidence(bean);
     } else {
       if (status != StatusConstants.IN_PROGRESS) {
