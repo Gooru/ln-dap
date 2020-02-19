@@ -45,7 +45,7 @@ public class StrugglingCompetencyProcessor {
     this.gutCodes = gutCodes;
   }
 
-  private double getCompletionScoreSettings() {
+  private double getCompletionScoreThreshold() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
@@ -82,7 +82,7 @@ public class StrugglingCompetencyProcessor {
       // need to keep previous months records as is to report the
       // competencies are struggling in
       // those months.
-      if (score != null && score >= getCompletionScoreSettings()) {
+      if (score != null && score >= getCompletionScoreThreshold()) {
         SERVICE.removeFromStruggling(bean);
       }
 
