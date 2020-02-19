@@ -31,7 +31,7 @@ public class ContentCompetencyStatusProcessor {
     this.competencyCode = competencyCode;
   }
 
-  private double getCompletionScoreSettings() {
+  private double getCompletionScoreThreshold() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
@@ -57,7 +57,7 @@ public class ContentCompetencyStatusProcessor {
     // status to completed. Status should not be updated to completed if its
     // already
     // completed. This should be handled in the query at DAO layer.
-    if (score != null && score >= getCompletionScoreSettings()) {
+    if (score != null && score >= getCompletionScoreThreshold()) {
       LOGGER.debug("Content Competency Status: competency:{} || status=completed",
           this.competencyCode);
       this.service.insertOrUpdateContentCompetencyStatusToCompleted(bean);

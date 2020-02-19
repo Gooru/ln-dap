@@ -36,7 +36,7 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     this.isSignature = isSignature;
   }
   
-  private double getCompletionScoreSettings() {
+  private double getCompletionScoreThreshold() {
     ContextMapper context = this.assessmentScore.getContext();
     String tenantId = context.getTenantId();
     if(tenantId != null && !tenantId.isEmpty()) {
@@ -74,7 +74,7 @@ public class LearnerProfileCompetencyEvidenceProcessor {
     if(score != null) {
       if (isSignature && score >= Constants.MASTERY_SCORE) {
         status = StatusConstants.MASTERED;
-      } else if (score >= getCompletionScoreSettings()) {
+      } else if (score >= getCompletionScoreThreshold()) {
         status = StatusConstants.COMPLETED;
       }
     }
