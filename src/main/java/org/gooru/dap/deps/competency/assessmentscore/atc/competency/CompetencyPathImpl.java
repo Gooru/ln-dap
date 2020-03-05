@@ -45,7 +45,8 @@ class CompetencyPathImpl implements CompetencyPath {
       return Collections.emptyList();
     } else if (beginningProgression < endProgression) {
       isProgressionOrder = true;
-      // Mukul - I need it inclusive, i.e the Top Competency should be included in the path
+      // Mukul - I need it inclusive, i.e the Top Competency should be
+      // included in the path
       for (int i = beginningProgression + 1; i <= endProgression; i++) {
         result.add(new ProgressionLevel(i));
       }

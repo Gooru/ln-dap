@@ -50,8 +50,10 @@ public class GroupTimespentReportsProcessor {
       LOGGER.debug("number of distinct classes to process {}", distinctClassIds.size());
 
       // Fetch class to school mapping
-      // Here the assumption is that the classes are mapped with the schools. We are inserting only
-      // those classes in the queue for the processing which are mapped to school.
+      // Here the assumption is that the classes are mapped with the
+      // schools. We are inserting only
+      // those classes in the queue for the processing which are mapped to
+      // school.
       Map<String, Long> classSchoolMap =
           this.groupsService.fetchClassSchoolMapping(distinctClassIds);
       Set<Long> schoolIds = classSchoolMap.values().stream().collect(Collectors.toSet());
@@ -64,14 +66,14 @@ public class GroupTimespentReportsProcessor {
 
       // Fetch details of all groups mapped with schools above
       Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
-      
+
       // Fetch class details from core and prepare map for further use
       List<ClassModel> classDetails = this.groupsService.fetchClassDetails(distinctClassIds);
       Map<String, ClassModel> classDetailsMap = new HashMap<>();
       classDetails.forEach(model -> {
         classDetailsMap.put(model.getId(), model);
       });
-      
+
       LOGGER.debug(
           "class, school and group mapping is fetched, now timespent data processing started");
       for (CollectionTimespentModel model : timespentData) {
@@ -80,10 +82,10 @@ public class GroupTimespentReportsProcessor {
         ClassModel classModel = classDetailsMap.get(classId);
         if (schoolId == null) {
           // If the school id does not present for the given class then the class is not yet
-          // grouped.
-          // We can skip and move ahead
-          LOGGER.debug("class '{}' is not grouped under school, persisting class level data", classId);
-          
+          // grouped. We can skip and move ahead
+          LOGGER.debug("class '{}' is not grouped under school, persisting class level data",
+              classId);
+
           // Even if there is no school and groups mapped with the class, at least persist the class
           // level time spent data.
           ClassTimespentDataReportBean clsbean =
@@ -97,7 +99,8 @@ public class GroupTimespentReportsProcessor {
         if (groupId == null) {
           // If the group id is null, then the schools has not been grouped, then still persist the
           // class level data and return
-          LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
+          LOGGER.debug("school '{}' is not associated with any group, persisting class level data",
+              schoolId);
           ClassTimespentDataReportBean clsbean =
               createClassTSDataReportBean(model, schoolId, null, classModel);
           processClassLevelCollectionTS(clsbean);
@@ -116,7 +119,8 @@ public class GroupTimespentReportsProcessor {
 
         LOGGER.debug("timespent data has been persisted");
 
-        // Update the status of the queue record to complete for the queue cleanup
+        // Update the status of the queue record to complete for the
+        // queue cleanup
         updateQueueStatusToCompleted(model);
       }
 
@@ -136,7 +140,7 @@ public class GroupTimespentReportsProcessor {
 
     bean.setSubject(classModel.getSubject());
     bean.setFramework(classModel.getFramework());
-    
+
     // Set current month and year values
     LocalDate now = LocalDate.now();
     WeekFields weekFields = WeekFields.of(Locale.getDefault());
@@ -148,11 +152,14 @@ public class GroupTimespentReportsProcessor {
       bean.setStateId(group.getStateId());
       bean.setCountryId(group.getCountryId());
       bean.setTenant(group.getTenant());
-      
-      // If the group type is school district, then set the group id as school district id in bean and
-      // return. Otherwise if its cluster we need to fetch the parent hierarchy and set the block and
+
+      // If the group type is school district, then set the group id as
+      // school district id in bean and
+      // return. Otherwise if its cluster we need to fetch the parent
+      // hierarchy and set the block and
       // district id's accordingly.
-      // Here we need to fetch the group hierarchy and set the appropriate id's to be used in further
+      // Here we need to fetch the group hierarchy and set the appropriate
+      // id's to be used in further
       // processing of the report generation
       if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_SCHOOL_DISTRICT)) {
         bean.setSchoolDistrictId(group.getId());
@@ -178,7 +185,8 @@ public class GroupTimespentReportsProcessor {
 
   private void processGroupLevelCollectionTS(ClassTimespentDataReportBean bean) {
     if (bean.getSchoolDistrictId() != null) {
-      // If the group type is school district then compute the collection timespent by SD id
+      // If the group type is school district then compute the collection
+      // timespent by SD id
       computeAndPersistSchoolDistrictTSData(bean);
     } else {
       computeAndPersistClusterTSData(bean);
@@ -238,9 +246,11 @@ public class GroupTimespentReportsProcessor {
     bean.setCountryId(clsLevelBean.getCountryId());
     bean.setSubject(clsLevelBean.getSubject());
     bean.setFramework(clsLevelBean.getFramework());
-    
-    // As this is a generic pojo used for all type of groups, this group id will be of type which is
-    // passed from the caller of the method. It can be School District, District and so on.
+
+    // As this is a generic pojo used for all type of groups, this group id
+    // will be of type which is
+    // passed from the caller of the method. It can be School District,
+    // District and so on.
     bean.setGroupId(groupId);
 
     bean.setCollectionTimespent(collectionTimespent);

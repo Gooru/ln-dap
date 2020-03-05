@@ -11,7 +11,8 @@ import org.slf4j.LoggerFactory;
 public class GradeCompetencyProcessor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(GradeCompetencyProcessor.class);
-  // We need to get the Competency Map right from the earthline, and hence the pseudo userId
+  // We need to get the Competency Map right from the earthline, and hence the
+  // pseudo userId
   private static final String userUUIDStr = "00000000-0000-0000-0000-000000000000";
   private GradeCompetencyService gradeCompetencyService =
       new GradeCompetencyService(DBICreator.getDbiForDefaultDS(), DBICreator.getDbiForCoreDS());

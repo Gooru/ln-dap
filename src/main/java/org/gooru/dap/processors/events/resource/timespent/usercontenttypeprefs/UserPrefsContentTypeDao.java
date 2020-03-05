@@ -33,8 +33,8 @@ public interface UserPrefsContentTypeDao {
       + " image_pref = :image, text_pref = :text, audio_pref = :audio")
   void updateLearnerPrefsNormalized(@BindBean LearnerPrefWeightedAverageNormalizedBean bean);
 
-
-  // While selecting we are converting milliseconds to seconds and casting it to bigint/long
+  // While selecting we are converting milliseconds to seconds and casting it
+  // to bigint/long
   @Mapper(ContentTypeTimespentModelMapper.class)
   @SqlQuery("select content_type, (avg(time_spent)/1000)::bigint average from userstat_resource_content_type_timespent_ts "
       + " where user_id = :userId group by content_type")

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 class CompetencyCollectorImpl implements CompetencyCollector {
   private final CompetencyLine sourceLine;
   private final List<DomainCode> domains;
@@ -16,11 +15,14 @@ class CompetencyCollectorImpl implements CompetencyCollector {
   CompetencyCollectorImpl(CompetencyLine sourceLine, CompetencyLine destinationLine) {
     this.sourceLine = sourceLine;
     this.destinationLine = destinationLine;
-    // While calculating path, if the domain is present in source but not in destination, do not
+    // While calculating path, if the domain is present in source but not in
+    // destination, do not
     // consider that
-    // domain. If the domain is present in destination but not in source, then work off with initial
+    // domain. If the domain is present in destination but not in source,
+    // then work off with initial
     // competency
-    // for that domain. If domain is present in both lines, directly calculate.
+    // for that domain. If domain is present in both lines, directly
+    // calculate.
     domains = Collections.unmodifiableList(new ArrayList<>(destinationLine.getDomains()));
     domainCodeCompetencyPathMap = calculateCompetencyPathsForDestinationDomains();
   }

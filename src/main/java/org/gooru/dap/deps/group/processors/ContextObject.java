@@ -132,7 +132,6 @@ public class ContextObject {
     this.additionalContext = additionalContext;
   }
 
-
   @Override
   public String toString() {
     return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId

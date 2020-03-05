@@ -49,14 +49,20 @@ public class CollectionStartEventProcessor implements EventProcessor {
   }
 
   private void processCollectionStart() {
-    // We do not want to persist the in progress status of the assessment if its
-    // signature assessment. There is check on pathId, pathType and format of the
-    // collection. We are assuming that if valid pathId is present, pathType is
-    // 'system' and its assessment then its signature item and skipping it from
-    // persisting status. For rest of all cases, we will persist status and evidence
+    // We do not want to persist the in progress status of the assessment if
+    // its
+    // signature assessment. There is check on pathId, pathType and format
+    // of the
+    // collection. We are assuming that if valid pathId is present, pathType
+    // is
+    // 'system' and its assessment then its signature item and skipping it
+    // from
+    // persisting status. For rest of all cases, we will persist status and
+    // evidence
     // as IN progress
 
-    // 07-March-19: We should store the in-progress status for Signature Assessments alsoSo the
+    // 07-March-19: We should store the in-progress status for Signature
+    // Assessments alsoSo the
     // corresponding checks have been removed.
     String collectionId = this.collectionStartEvent.getCollectionId();
 
@@ -87,7 +93,8 @@ public class CollectionStartEventProcessor implements EventProcessor {
     List<String> gutCodes = competency.getGutCodes();
     if (gutCodes != null && !gutCodes.isEmpty()) {
       gutCodes.forEach(gc -> {
-        // Always update the status and evidence of the learner profile, logic for
+        // Always update the status and evidence of the learner profile,
+        // logic for
         // mastery and completed will be in respective processors
         new LearnerProfileCompetencyStatusProcessor(collectionStartEvent, gc, false).process();
         new LearnerProfileCompetencyEvidenceProcessor(collectionStartEvent, gc, false).process();

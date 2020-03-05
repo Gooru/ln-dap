@@ -24,7 +24,6 @@ public class KafkaMessageProducer {
     sendMessage(topic, msg);
   }
 
-
   private void sendMessage(String topic, String msg) {
     Producer<String, String> producer = KafkaProducerRegistry.getInstance().getKafkaProducer();
     ProducerRecord<String, String> kafkaMsg;

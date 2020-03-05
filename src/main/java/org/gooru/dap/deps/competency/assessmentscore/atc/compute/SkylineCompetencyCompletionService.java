@@ -42,7 +42,8 @@ public class SkylineCompetencyCompletionService {
       totalCompetencies = userSkylineModels.size();
       skylineCompetencyStatsModel.setTotalCompetencies(totalCompetencies);
 
-      // We need to filter out completed/mastered specifically since in the L_p_C_s_ts table
+      // We need to filter out completed/mastered specifically since in
+      // the L_p_C_s_ts table
       // in-progress is also stored.
       List<CompetencyModel> skylineCompleted = userSkylineModels.stream()
           .filter(skymodel -> skymodel.getStatus() >= COMPLETED).collect(Collectors.toList());

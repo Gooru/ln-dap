@@ -4,7 +4,6 @@ import org.gooru.dap.components.jdbi.PGArray;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 
-
 /**
  * @author mukul@gooru
  */

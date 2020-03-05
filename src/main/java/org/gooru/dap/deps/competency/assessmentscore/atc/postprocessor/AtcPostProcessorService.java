@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 import org.skife.jdbi.v2.DBI;
 
-
 /**
  * @author mukul@gooru
  */

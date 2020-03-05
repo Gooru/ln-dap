@@ -48,8 +48,10 @@ public class GroupTimespentReportsEventProcessor implements EventProcessor {
     String collectionType = this.eventMapper.getCollectionType();
     ContextObject context = this.eventMapper.getContext();
 
-    // Check if the type of the collection is of valid type, class is not null and valid content
-    // source. If all of these conditions satisfies then only the record will be inserted into
+    // Check if the type of the collection is of valid type, class is not
+    // null and valid content
+    // source. If all of these conditions satisfies then only the record
+    // will be inserted into
     // queue.
     if (collectionType != null
         && EventMessageConstant.VALID_COLLECTION_TYPES.contains(collectionType)) {

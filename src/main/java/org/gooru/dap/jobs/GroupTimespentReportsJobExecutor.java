@@ -54,12 +54,14 @@ public class GroupTimespentReportsJobExecutor implements Job {
           break;
         }
 
-        // These lists are used to store the request data for coursemap and classactivities
+        // These lists are used to store the request data for coursemap
+        // and classactivities
         // separately.
         List<String> classesForCM = new ArrayList<>(dataModels.size());
         List<String> classesForCA = new ArrayList<>(dataModels.size());
 
-        // Iterate on records from queue and separate the coursemap and classactivities source
+        // Iterate on records from queue and separate the coursemap and
+        // classactivities source
         // classes to fetch timespent data separately.
         dataModels.forEach(model -> {
           if (model.getContentSource().equalsIgnoreCase(EventMessageConstant.CONTENT_SOURCE_CM)) {
@@ -75,7 +77,8 @@ public class GroupTimespentReportsJobExecutor implements Job {
 
         List<CollectionTimespentModel> allModels = new ArrayList<>();
 
-        // Fetch the timespent for the coursemap and collect the results for further processing
+        // Fetch the timespent for the coursemap and collect the results
+        // for further processing
         if (classesForCM != null && !classesForCM.isEmpty()) {
           List<CollectionTimespentModel> timespentForCM = this.collectionPerfService
               .fetchTimespentByClass(classesForCM, EventMessageConstant.CONTENT_SOURCE_CM);
@@ -84,7 +87,8 @@ public class GroupTimespentReportsJobExecutor implements Job {
           }
         }
 
-        // Fetch the timespent for the classactivity and collect the results for further processing
+        // Fetch the timespent for the classactivity and collect the
+        // results for further processing
         if (classesForCA != null && !classesForCA.isEmpty()) {
           List<CollectionTimespentModel> timespentForCA = this.collectionPerfService
               .fetchTimespentByClass(classesForCA, EventMessageConstant.CONTENT_SOURCE_CA);
@@ -96,11 +100,14 @@ public class GroupTimespentReportsJobExecutor implements Job {
         new GroupTimespentReportsProcessor(allModels).process();
 
         // Queue cleanup
-        // Execution for the current set of classes has been finished, now we can delete the records
-        // from the queue which are marked as completed by the report processor
+        // Execution for the current set of classes has been finished,
+        // now we can delete the records
+        // from the queue which are marked as completed by the report
+        // processor
         this.queueService.deleteCompletedFromTimespentQueue();
 
-        // Increase offset count to fetch next set of records from the queue
+        // Increase offset count to fetch next set of records from the
+        // queue
         offset = offset + limit;
       }
     } catch (Throwable t) {

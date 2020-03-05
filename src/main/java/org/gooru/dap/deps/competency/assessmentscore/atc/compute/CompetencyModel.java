@@ -42,6 +42,4 @@ public class CompetencyModel {
     this.competencySeq = competencySeq;
   }
 
-
-
 }

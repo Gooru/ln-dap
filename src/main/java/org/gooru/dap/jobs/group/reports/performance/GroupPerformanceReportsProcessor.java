@@ -54,8 +54,10 @@ public class GroupPerformanceReportsProcessor {
       LOGGER.debug("number of distinct classes to process {}", distinctClassIds.size());
 
       // Fetch class to school mapping
-      // Here the assumption is that the classes are mapped with the schools. We are inserting only
-      // those classes in the queue for the processing which are mapped to school.
+      // Here the assumption is that the classes are mapped with the
+      // schools. We are inserting only
+      // those classes in the queue for the processing which are mapped to
+      // school.
       Map<String, Long> classSchoolMap =
           this.groupsService.fetchClassSchoolMapping(distinctClassIds);
       Set<Long> schoolIds = classSchoolMap.values().stream().collect(Collectors.toSet());
@@ -66,12 +68,13 @@ public class GroupPerformanceReportsProcessor {
       Set<Long> groupIds = schoolGroupMap.values().stream().collect(Collectors.toSet());
       LOGGER.debug("number of groups returned {}", groupIds.size());
 
-      // TODO: If not school is mapped to group then need to handle and update queue status
+      // TODO: If not school is mapped to group then need to handle and
+      // update queue status
       // accordingly
 
       // Fetch details of all groups mapped with schools above
       Map<Long, GroupModel> groupsMap = this.groupsService.fetchGroupsByIds(groupIds);
-      
+
       // Fetch class details from core and prepare map for further use
       List<ClassModel> classDetails = this.groupsService.fetchClassDetails(distinctClassIds);
       Map<String, ClassModel> classDetailsMap = new HashMap<>();
@@ -80,12 +83,18 @@ public class GroupPerformanceReportsProcessor {
       });
 
       LOGGER.debug("class, school and group mapping is fetched, now usage data processing started");
-      // Now iterate on usage data objects to prepare bean object and persist the assessment
-      // performance and time spent data of the each class. Insert or update will happen for class
-      // and group level tables. Inserting or updating KPI data in class level table is
-      // straightforward as we receive cumulative data till date from the upstream class performance
-      // APIs. For the group level data report updates will happen after computing the average
-      // performances of the child elements. We are not considering assessment time spent data to be
+      // Now iterate on usage data objects to prepare bean object and
+      // persist the assessment
+      // performance and time spent data of the each class. Insert or
+      // update will happen for class
+      // and group level tables. Inserting or updating KPI data in class
+      // level table is
+      // straightforward as we receive cumulative data till date from the
+      // upstream class performance
+      // APIs. For the group level data report updates will happen after
+      // computing the average
+      // performances of the child elements. We are not considering
+      // assessment time spent data to be
       // aggregated for group levels.
       for (UsageData usage : allUsageData) {
         String classId = usage.getClassId();
@@ -93,14 +102,14 @@ public class GroupPerformanceReportsProcessor {
         ClassModel classModel = classDetailsMap.get(classId);
         if (schoolId == null) {
           // If the school id does not present for the given class then the class is not yet
-          // grouped.
-          // We can skip and move ahead
-          LOGGER.debug("class '{}' is not grouped under school, persisting class level data", classId);
-          
+          // grouped. We can skip and move ahead
+          LOGGER.debug("class '{}' is not grouped under school, persisting class level data",
+              classId);
+
           // Even if there is no school and groups mapped with the class, at least persist the class
           // level performance.
-          ClassPerformanceDataReportsBean bean =
-              prepareClassLevelDataReportsBean(usage, null, null, usage.getContentSource(), classModel);
+          ClassPerformanceDataReportsBean bean = prepareClassLevelDataReportsBean(usage, null, null,
+              usage.getContentSource(), classModel);
           processClassLevelAssessmentPerf(bean);
           updateQueueStatusToCompleted(usage);
           continue;
@@ -108,20 +117,22 @@ public class GroupPerformanceReportsProcessor {
 
         Long groupId = schoolGroupMap.get(schoolId);
         if (groupId == null) {
-          // If the group id is null, then the schools has not been grouped, then still persist
+          // If the group id is null, then the schools has not been
+          // grouped, then still persist
           // class level data and return.
-          LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
+          LOGGER.debug("school '{}' is not associated with any group, persisting class level data",
+              schoolId);
 
-          ClassPerformanceDataReportsBean bean =
-              prepareClassLevelDataReportsBean(usage, schoolId, null, usage.getContentSource(), classModel);
+          ClassPerformanceDataReportsBean bean = prepareClassLevelDataReportsBean(usage, schoolId,
+              null, usage.getContentSource(), classModel);
           processClassLevelAssessmentPerf(bean);
           updateQueueStatusToCompleted(usage);
           continue;
         }
 
         GroupModel group = groupsMap.get(groupId);
-        ClassPerformanceDataReportsBean bean =
-            prepareClassLevelDataReportsBean(usage, schoolId, group, usage.getContentSource(), classModel);
+        ClassPerformanceDataReportsBean bean = prepareClassLevelDataReportsBean(usage, schoolId,
+            group, usage.getContentSource(), classModel);
 
         // persist the class and group level data.
         LOGGER.debug("persisting performances at class and group level");
@@ -130,7 +141,8 @@ public class GroupPerformanceReportsProcessor {
 
         LOGGER.debug("performance data has been persisted");
 
-        // Update the status of the queue record to complete for the queue cleanup
+        // Update the status of the queue record to complete for the
+        // queue cleanup
         updateQueueStatusToCompleted(usage);
       }
     } catch (Throwable t) {
@@ -150,7 +162,8 @@ public class GroupPerformanceReportsProcessor {
 
   private void processGroupLevelAssessmentPerf(ClassPerformanceDataReportsBean bean) {
     if (bean.getSchoolDistrictId() != null) {
-      // If the group type is school district then compute the assessment performance by SD id
+      // If the group type is school district then compute the assessment
+      // performance by SD id
       computeAndPersistSchoolDistrictPerfData(bean);
     } else {
       computeAndPersistClusterPerfData(bean);
@@ -208,7 +221,8 @@ public class GroupPerformanceReportsProcessor {
   }
 
   private Double computeAssessmentPerformance(List<AssessmentPerfByGroupModel> perfData) {
-    // average performance is computed by adding up all the performances of the child's and divide
+    // average performance is computed by adding up all the performances of
+    // the child's and divide
     // by number of child's
     Double totalPerformance =
         perfData.stream().collect(Collectors.summingDouble(o -> o.getPerformance()));
@@ -225,9 +239,11 @@ public class GroupPerformanceReportsProcessor {
     bean.setCountryId(clsLevelBean.getCountryId());
     bean.setSubject(clsLevelBean.getSubject());
     bean.setFramework(clsLevelBean.getFramework());
-    
-    // As this is a generic pojo used for all type of groups, this group id will be of type which is
-    // passed from the caller of the method. It can be School District, District and so on.
+
+    // As this is a generic pojo used for all type of groups, this group id
+    // will be of type which is
+    // passed from the caller of the method. It can be School District,
+    // District and so on.
     bean.setGroupId(groupId);
 
     bean.setAssessmentPerformance(perf);
@@ -248,18 +264,21 @@ public class GroupPerformanceReportsProcessor {
 
     ClassPerformanceDataReportsBean bean = new ClassPerformanceDataReportsBean();
 
-    // Performance value is cumulative received from the class performance API so we are persisting
+    // Performance value is cumulative received from the class performance
+    // API so we are persisting
     // as is
     bean.setAssessmentPerformance(perfData.getScoreInPercentage());
 
-    // Here we are receiving the cumulative time spent from the class performance API and hence we
-    // are updating as is. To compute the month on month timespent, it should heppen at read API of
+    // Here we are receiving the cumulative time spent from the class
+    // performance API and hence we
+    // are updating as is. To compute the month on month timespent, it
+    // should heppen at read API of
     // the groups reports.
     bean.setAssessmentTimespent(perfData.getTimeSpent());
     bean.setClassId(perfData.getClassId());
     bean.setSchoolId(schoolId);
     bean.setContentSource(contentSource);
-    
+
     bean.setSubject(classModel.getSubject());
     bean.setFramework(classModel.getFramework());
 
@@ -269,16 +288,19 @@ public class GroupPerformanceReportsProcessor {
     bean.setWeek(now.get(weekFields.weekOfWeekBasedYear()));
     bean.setMonth(now.getMonthValue());
     bean.setYear(now.getYear());
-    
+
     if (group != null) {
       bean.setStateId(group.getStateId());
       bean.setCountryId(group.getCountryId());
       bean.setTenant(group.getTenant());
-      
-      // If the group type is school district, then set the group id as school district id in bean and
-      // return. Otherwise if its cluster we need to fetch the parent hierarchy and set the block and
+
+      // If the group type is school district, then set the group id as
+      // school district id in bean and
+      // return. Otherwise if its cluster we need to fetch the parent
+      // hierarchy and set the block and
       // district id's accordingly.
-      // Here we need to fetch the group hierarchy and set the appropriate id's to be used in further
+      // Here we need to fetch the group hierarchy and set the appropriate
+      // id's to be used in further
       // processing of the report generation
       if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_SCHOOL_DISTRICT)) {
         bean.setSchoolDistrictId(group.getId());

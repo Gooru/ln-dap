@@ -4,7 +4,6 @@ import java.util.UUID;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 
-
 /**
  * @author mukul@gooru
  */
@@ -23,4 +22,3 @@ public interface AtcDao {
   Integer fetchClassCurrentGrade(@Bind("classId") UUID classId, @Bind("courseId") UUID courseId);
 
 }
-
