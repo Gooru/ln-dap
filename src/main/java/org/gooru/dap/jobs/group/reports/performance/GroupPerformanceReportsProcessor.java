@@ -95,7 +95,7 @@ public class GroupPerformanceReportsProcessor {
           // If the school id does not present for the given class then the class is not yet
           // grouped.
           // We can skip and move ahead
-          LOGGER.warn("class '{}' is not grouped under school, persisting class level data", classId);
+          LOGGER.debug("class '{}' is not grouped under school, persisting class level data", classId);
           
           // Even if there is no school and groups mapped with the class, at least persist the class
           // level performance.

@@ -78,7 +78,7 @@ public class GroupCompetencyReportsProcessor {
     });
     
     LOGGER
-        .debug("class, school and group mapping is fetched, now timespent data processing started");
+        .debug("class, school and group mapping is fetched, now competency data processing started");
 
     for (ClassCompetencyStatsModel model : this.currentStatsModels) {
       String classId = model.getClassId();
@@ -88,7 +88,7 @@ public class GroupCompetencyReportsProcessor {
         // If the school id does not present for the given class then the class is not yet
         // grouped.
         // We can skip and move ahead
-        LOGGER.warn("class '{}' is not grouped under school, persisting class level data", classId);
+        LOGGER.debug("class '{}' is not grouped under school, persisting class level data", classId);
         
         // Even if there is no school and groups mapped with the class, at least persist the class
         // level competency data.

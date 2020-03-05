@@ -14,7 +14,7 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
  */
 public interface GroupsDao {
   @Mapper(ClassSchoolMappingModelMapper.class)
-  @SqlQuery("SELECT school_id, id FROM class WHERE id = ANY(:classIds)")
+  @SqlQuery("SELECT school_id, id FROM class WHERE id = ANY(:classIds) AND school_id IS NOT NULL")
   List<ClassSchoolMappingModel> fetchClassSchoolMapping(@Bind("classIds") PGArray<UUID> classIds);
   
   @Mapper(ClassModelMapper.class)
