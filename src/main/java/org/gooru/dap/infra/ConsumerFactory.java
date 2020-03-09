@@ -3,6 +3,7 @@ package org.gooru.dap.infra;
 import java.util.ArrayList;
 import java.util.List;
 import org.gooru.dap.configuration.KafkaConsumerConfig;
+import org.gooru.dap.deps.competency.ActivityDataCompetencyEventConsumer;
 import org.gooru.dap.deps.competency.AssessmentScoreEventConsumer;
 import org.gooru.dap.deps.competency.CollectionStartEventConsumer;
 import org.gooru.dap.deps.competency.CompetencyStatsEventConsumer;
@@ -73,7 +74,9 @@ final class ConsumerFactory {
 
       case "org.gooru.dap.deps.struggling.StrugglingCompetencyEventConsumer":
         return new StrugglingCompetencyEventConsumer(id, config);
-
+        
+      case "org.gooru.dap.deps.competency.ActivityDataCompetencyEventConsumer":
+        return new ActivityDataCompetencyEventConsumer(id, config);
       default:
         LOGGER.warn("Factory does not know to initiate the deployment for '{}'", deploymentName);
         throw new IllegalStateException("Invalid deployment descriptor: " + deploymentName);
