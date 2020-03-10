@@ -19,7 +19,7 @@ public final class LearnerProfileCompetencyStatusCommandBuilder {
       AssessmentScoreEventMapper assessmentScore, String gutCode) {
     String subjectCode = HYPEN_PATTERN.split(gutCode)[0];
     LearnerProfileCompetencyStatusCommand command = new LearnerProfileCompetencyStatusCommand(
-        subjectCode, assessmentScore.getUserId(), gutCode, assessmentScore.getActivityTime());
+        subjectCode, assessmentScore.getUserId(), gutCode, assessmentScore.getActivityTime(), assessmentScore.getContext().getContentSource());
     return command;
   }
 

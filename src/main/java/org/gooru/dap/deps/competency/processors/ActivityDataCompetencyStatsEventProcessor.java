@@ -52,8 +52,14 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
     competencyEvidenceBean.setStatus(activityDataEvent.getResult().getStatus());
 
     UpdateLearnerProfileCompetencyStatusBuilder
-        .lookupBuilder(activityDataEvent.getResult().getStatus()).build(competencyStatusService,
-            competencyStatusBean, competencyEvidenceService, competencyEvidenceBean);
+        .lookupBuilder(activityDataEvent.getResult().getStatus())
+        .build(competencyStatusService, competencyStatusBean);
+
+    competencyEvidenceService
+        .insertOrUpdateLearnerProfileCompetencyEvidence(competencyEvidenceBean);
+    competencyEvidenceService
+        .insertOrUpdateLearnerProfileCompetencyEvidenceTS(competencyEvidenceBean);
+
 
   }
 
@@ -66,9 +72,7 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
 
       @Override
       public void build(LearnerProfileCompetencyStatusService service,
-          LearnerProfileCompetencyStatusBean bean,
-          LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-          LearnerProfileCompetencyEvidenceBean competencyEvidenceBean) {
+          LearnerProfileCompetencyStatusBean bean) {
         LOGGER.error("Invalid competency type passed in, not able to handle");
       }
 
@@ -77,9 +81,7 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
 
       @Override
       public void build(LearnerProfileCompetencyStatusService service,
-          LearnerProfileCompetencyStatusBean bean,
-          LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-          LearnerProfileCompetencyEvidenceBean competencyEvidenceBean) {
+          LearnerProfileCompetencyStatusBean bean) {
         service.updateLearnerProfileCompetencyStatusToNotStarted(bean);
       }
     },
@@ -87,9 +89,7 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
 
       @Override
       public void build(LearnerProfileCompetencyStatusService service,
-          LearnerProfileCompetencyStatusBean bean,
-          LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-          LearnerProfileCompetencyEvidenceBean competencyEvidenceBean) {
+          LearnerProfileCompetencyStatusBean bean) {
         service.updateLearnerProfileCompetencyStatusToInprogress(bean);
       }
     },
@@ -97,14 +97,8 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
 
       @Override
       public void build(LearnerProfileCompetencyStatusService service,
-          LearnerProfileCompetencyStatusBean bean,
-          LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-          LearnerProfileCompetencyEvidenceBean competencyEvidenceBean) {
+          LearnerProfileCompetencyStatusBean bean) {
         service.updateLearnerProfileCompetencyStatusToInferred(bean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidence(competencyEvidenceBean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidenceTS(competencyEvidenceBean);
       }
     },
 
@@ -112,42 +106,24 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
 
       @Override
       public void build(LearnerProfileCompetencyStatusService service,
-          LearnerProfileCompetencyStatusBean bean,
-          LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-          LearnerProfileCompetencyEvidenceBean competencyEvidenceBean) {
+          LearnerProfileCompetencyStatusBean bean) {
         service.updateLearnerProfileCompetencyStatusToAsserted(bean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidence(competencyEvidenceBean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidenceTS(competencyEvidenceBean);
       }
     },
     COMPLETED(StatusConstants.COMPLETED) {
 
       @Override
       public void build(LearnerProfileCompetencyStatusService service,
-          LearnerProfileCompetencyStatusBean bean,
-          LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-          LearnerProfileCompetencyEvidenceBean competencyEvidenceBean) {
+          LearnerProfileCompetencyStatusBean bean) {
         service.updateLearnerProfileCompetencyStatusToCompleted(bean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidence(competencyEvidenceBean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidenceTS(competencyEvidenceBean);
       }
     },
     MASTERED(StatusConstants.MASTERED) {
 
       @Override
       public void build(LearnerProfileCompetencyStatusService service,
-          LearnerProfileCompetencyStatusBean bean,
-          LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-          LearnerProfileCompetencyEvidenceBean competencyEvidenceBean) {
+          LearnerProfileCompetencyStatusBean bean) {
         service.updateLearnerProfileCompetencyStatusToMastered(bean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidence(competencyEvidenceBean);
-        competencyEvidenceService
-            .insertOrUpdateLearnerProfileCompetencyEvidenceTS(competencyEvidenceBean);
       }
     };
 
@@ -180,8 +156,6 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
     }
 
     public abstract void build(LearnerProfileCompetencyStatusService service,
-        LearnerProfileCompetencyStatusBean bean,
-        LearnerProfileCompetencyEvidenceService competencyEvidenceService,
-        LearnerProfileCompetencyEvidenceBean competencyEvidenceBean);
+        LearnerProfileCompetencyStatusBean bean);
   }
 }

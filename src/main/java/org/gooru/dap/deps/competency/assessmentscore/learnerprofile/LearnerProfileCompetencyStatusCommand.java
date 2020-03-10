@@ -12,11 +12,12 @@ public class LearnerProfileCompetencyStatusCommand {
   private String profileSource;
 
   public LearnerProfileCompetencyStatusCommand(String txSubjectCode, String userId, String gutCode,
-      long activityTime) {
+      long activityTime, String profileSource) {
     this.txSubjectCode = txSubjectCode;
     this.userId = userId;
     this.gutCode = gutCode;
     this.activityTime = activityTime;
+    this.profileSource = profileSource;
   }
 
   public LearnerProfileCompetencyStatusCommand(String txSubjectCode, String userId, String gutCode,

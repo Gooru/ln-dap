@@ -40,6 +40,7 @@ public class AssessmentScoreEventProcessor implements EventProcessor {
       String eventName = this.assessmentScoreEvent.getEventName();
       LOGGER.debug("processing event: {}", eventName);
       switch (eventName) {
+        case "activity.learners.assessment.score":
         case "usage.assessment.score":
           processAssessmentScore();
           break;
