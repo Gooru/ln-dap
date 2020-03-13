@@ -14,6 +14,12 @@ public class LearnerProfileCompetencyStatusService {
     this.dao = dbi.onDemand(LearnerProfileCompetencyStatusDao.class);
   }
 
+  public void updateLearnerProfileCompetencyStatusToNotStarted(
+      LearnerProfileCompetencyStatusBean bean) {
+    bean.setStatus(StatusConstants.NOT_STARTED);
+    insertOrUpdateLearnerProfileCompetencyStatus(bean);
+  }
+
   public void updateLearnerProfileCompetencyStatusToInprogress(
       LearnerProfileCompetencyStatusBean bean) {
     bean.setStatus(StatusConstants.IN_PROGRESS);
@@ -23,6 +29,18 @@ public class LearnerProfileCompetencyStatusService {
   public void updateLearnerProfileCompetencyStatusToCompleted(
       LearnerProfileCompetencyStatusBean bean) {
     bean.setStatus(StatusConstants.COMPLETED);
+    insertOrUpdateLearnerProfileCompetencyStatus(bean);
+  }
+
+  public void updateLearnerProfileCompetencyStatusToAsserted(
+      LearnerProfileCompetencyStatusBean bean) {
+    bean.setStatus(StatusConstants.ASSERTED);
+    insertOrUpdateLearnerProfileCompetencyStatus(bean);
+  }
+
+  public void updateLearnerProfileCompetencyStatusToInferred(
+      LearnerProfileCompetencyStatusBean bean) {
+    bean.setStatus(StatusConstants.INFERRED);
     insertOrUpdateLearnerProfileCompetencyStatus(bean);
   }
 

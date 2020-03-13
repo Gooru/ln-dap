@@ -9,13 +9,23 @@ public class LearnerProfileCompetencyStatusCommand {
   private String userId;
   private String gutCode;
   private long activityTime;
+  private String profileSource;
 
   public LearnerProfileCompetencyStatusCommand(String txSubjectCode, String userId, String gutCode,
-      long activityTime) {
+      long activityTime, String profileSource) {
     this.txSubjectCode = txSubjectCode;
     this.userId = userId;
     this.gutCode = gutCode;
     this.activityTime = activityTime;
+    this.profileSource = profileSource;
+  }
+
+  public LearnerProfileCompetencyStatusCommand(String txSubjectCode, String userId, String gutCode,
+      String profileSource) {
+    this.txSubjectCode = txSubjectCode;
+    this.userId = userId;
+    this.gutCode = gutCode;
+    this.profileSource = profileSource;
   }
 
   public String getTxSubjectCode() {
@@ -32,6 +42,14 @@ public class LearnerProfileCompetencyStatusCommand {
 
   public long getActivityTime() {
     return activityTime;
+  }
+
+  public String getProfileSource() {
+    return profileSource;
+  }
+
+  public void setProfileSource(String profileSource) {
+    this.profileSource = profileSource;
   }
 
 }
