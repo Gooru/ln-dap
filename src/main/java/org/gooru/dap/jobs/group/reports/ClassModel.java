@@ -11,6 +11,7 @@ public class ClassModel {
   private Long gradeCurrent;
   private String subject;
   private String framework;
+  private String tenant;
 
   public String getId() {
     return id;
@@ -52,4 +53,12 @@ public class ClassModel {
     this.framework = framework;
   }
 
+  public String getTenant() {
+    return tenant;
+  }
+
+  public void setTenant(String tenant) {
+    this.tenant = tenant;
+  }
+  
 }

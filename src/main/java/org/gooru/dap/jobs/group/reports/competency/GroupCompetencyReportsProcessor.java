@@ -238,7 +238,8 @@ public class GroupCompetencyReportsProcessor {
       Long schoolId, GroupModel group, ClassModel classModel) {
     ClassCompetencyDataReportsBean bean = new ClassCompetencyDataReportsBean();
     bean.setClassId(currentStatsmodel.getClassId());
-
+    bean.setTenant(classModel.getTenant());
+    
     // If the previous months stats are now available, then we will consider
     // the current stats model
     // as actual counts for this month. Otherwise if previous months stats
@@ -275,7 +276,6 @@ public class GroupCompetencyReportsProcessor {
     if (group != null) {
       bean.setStateId(group.getStateId());
       bean.setCountryId(group.getCountryId());
-      bean.setTenant(group.getTenant());
 
       // If the group type is school district, then set the group id as
       // school district id in bean and

@@ -140,7 +140,8 @@ public class GroupTimespentReportsProcessor {
 
     bean.setSubject(classModel.getSubject());
     bean.setFramework(classModel.getFramework());
-
+    bean.setTenant(classModel.getTenant());
+    
     // Set current month and year values
     LocalDate now = LocalDate.now();
     WeekFields weekFields = WeekFields.of(Locale.getDefault());
@@ -151,7 +152,6 @@ public class GroupTimespentReportsProcessor {
     if (group != null) {
       bean.setStateId(group.getStateId());
       bean.setCountryId(group.getCountryId());
-      bean.setTenant(group.getTenant());
 
       // If the group type is school district, then set the group id as
       // school district id in bean and

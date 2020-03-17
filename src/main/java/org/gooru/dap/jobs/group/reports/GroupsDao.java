@@ -18,7 +18,7 @@ public interface GroupsDao {
   List<ClassSchoolMappingModel> fetchClassSchoolMapping(@Bind("classIds") PGArray<UUID> classIds);
 
   @Mapper(ClassModelMapper.class)
-  @SqlQuery("SELECT id, title, grade_current, preference FROM class where id = ANY(:classIds) AND is_deleted = false")
+  @SqlQuery("SELECT id, title, grade_current, preference, tenant FROM class where id = ANY(:classIds) AND is_deleted = false")
   List<ClassModel> fetchClassDetails(@Bind("classIds") PGArray<UUID> classIds);
 
   @Mapper(SchoolGroupMappingModelMapper.class)
