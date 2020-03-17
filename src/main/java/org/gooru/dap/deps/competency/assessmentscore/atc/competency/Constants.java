@@ -6,6 +6,7 @@ public class Constants {
 
   public static final String COMPETENCY_PLACEHOLDER = new UUID(0, 0).toString();
   public static final String USER_PLACEHOLDER = new UUID(0, 0).toString();
+  public static final String COLON = ":";
 
   private Constants() {
     throw new AssertionError();

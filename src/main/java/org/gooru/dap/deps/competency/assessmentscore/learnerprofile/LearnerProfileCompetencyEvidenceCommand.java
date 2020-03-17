@@ -17,6 +17,7 @@ public class LearnerProfileCompetencyEvidenceCommand {
   private String collectionType;
   private long activityTime;
   private String contentSource;
+  private String gutCode;
 
   public LearnerProfileCompetencyEvidenceCommand(String userId, String classId, String courseId,
       String unitId, String lessonId, String latestSessionId, String collectionId,
@@ -33,6 +34,13 @@ public class LearnerProfileCompetencyEvidenceCommand {
     this.collectionScore = collectionScore;
     this.collectionType = collectionType;
     this.activityTime = activityTime;
+    this.contentSource = contentSource;
+  }
+
+  public LearnerProfileCompetencyEvidenceCommand(String userId, String gutCode,
+      String contentSource) {
+    this.userId = userId;
+    this.gutCode = gutCode;
     this.contentSource = contentSource;
   }
 
@@ -82,6 +90,14 @@ public class LearnerProfileCompetencyEvidenceCommand {
 
   public String getContentSource() {
     return contentSource;
+  }
+
+  public String getGutCode() {
+    return gutCode;
+  }
+
+  public void setGutCode(String gutCode) {
+    this.gutCode = gutCode;
   }
 
 }

@@ -33,8 +33,8 @@ public abstract class LearnerProfileCompetencyStatusDao {
    * Uniqueness is based on user and gut code. Compentecy status may transition from 0/1 to 4/5. In
    * short for one competency and user there will always be one status present in this table.
    */
-  @SqlUpdate("INSERT INTO learner_profile_competency_status(tx_subject_code, user_id, gut_code, status, created_at, updated_at) "
-      + "VALUES(:txSubjectCode, :userId, :gutCode, :status, :createdAt, :updatedAt) ON CONFLICT (user_id, gut_code) "
+  @SqlUpdate("INSERT INTO learner_profile_competency_status(tx_subject_code, user_id, gut_code, status, created_at, updated_at, profile_source) "
+      + "VALUES(:txSubjectCode, :userId, :gutCode, :status, :createdAt, :updatedAt, :profileSource) ON CONFLICT (user_id, gut_code) "
       + "DO UPDATE SET status = :status, updated_at = :updatedAt WHERE learner_profile_competency_status.status <= EXCLUDED.status")
   protected abstract void insertOrUpdateLearnerProfileCompetencyStatus(
       @BindBean LearnerProfileCompetencyStatusBean bean);
@@ -43,8 +43,8 @@ public abstract class LearnerProfileCompetencyStatusDao {
    * We do not need to update anything in TS tables if the conflict found based on user, gut code
    * and status. We always serve cumulative data up to month/week.
    */
-  @SqlUpdate("INSERT INTO learner_profile_competency_status_ts(tx_subject_code, user_id, gut_code, status, created_at, updated_at) "
-      + "VALUES(:txSubjectCode, :userId, :gutCode, :status, :createdAt, :updatedAt) ON CONFLICT (user_id, gut_code, status) DO NOTHING")
+  @SqlUpdate("INSERT INTO learner_profile_competency_status_ts(tx_subject_code, user_id, gut_code, status, created_at, updated_at, profile_source) "
+      + "VALUES(:txSubjectCode, :userId, :gutCode, :status, :createdAt, :updatedAt, :profileSource) ON CONFLICT (user_id, gut_code, status) DO NOTHING")
   protected abstract void insertOrUpdateLearnerProfileCompetencyStatusTS(
       @BindBean LearnerProfileCompetencyStatusBean bean);
 }

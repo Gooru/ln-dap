@@ -11,6 +11,7 @@ public class LearnerProfileCompetencyStatusBean {
   private String userId;
   private String gutCode;
   private int status;
+  private String profileSource;
   private Timestamp createdAt;
   private Timestamp updatedAt;
 
@@ -23,6 +24,7 @@ public class LearnerProfileCompetencyStatusBean {
     Timestamp now = new Timestamp(System.currentTimeMillis());
     this.createdAt = now;
     this.updatedAt = now;
+    this.setProfileSource(command.getProfileSource());
   }
 
   public String getTxSubjectCode() {
@@ -71,6 +73,14 @@ public class LearnerProfileCompetencyStatusBean {
 
   public void setUpdatedAt(Timestamp updatedAt) {
     this.updatedAt = updatedAt;
+  }
+
+  public String getProfileSource() {
+    return profileSource;
+  }
+
+  public void setProfileSource(String profileSource) {
+    this.profileSource = profileSource;
   }
 
 }

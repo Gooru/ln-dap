@@ -11,7 +11,6 @@ public class AssessmentScoreEventPreProcessor implements EventPreProcessor {
 
   private final static Logger LOGGER =
       LoggerFactory.getLogger(AssessmentScoreEventPreProcessor.class);
-  private final static String DCA = "dailyclassactivity";
   private AssessmentScoreEventMapper assessmentScoreEvent;
 
   public AssessmentScoreEventPreProcessor(AssessmentScoreEventMapper assessmentScoreEvent) {
