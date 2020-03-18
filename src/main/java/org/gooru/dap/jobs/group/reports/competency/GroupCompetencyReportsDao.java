@@ -46,7 +46,7 @@ public interface GroupCompetencyReportsDao {
 
   @SqlUpdate("INSERT INTO group_competency_data_reports(group_id, completed_count, inprogress_count, cumulative_completed_count, school_id, state_id,"
       + " country_id, week, month, year, tenant, subject, framework) VALUES (:groupId, :completedCount, :inprogressCount, :cumulativeCompletedCount,"
-      + " :schoolId, :stateId, :countryId, :week, :month, :year, :tenant, :subject, :framework) ON CONFLICT (group_id, week, month, year) DO UPDATE"
+      + " :schoolId, :stateId, :countryId, :week, :month, :year, :tenant, :subject, :framework) ON CONFLICT (group_id, week, month, year, subject, framework) DO UPDATE"
       + " SET group_id = :groupId, completed_count = :completedCount, inprogress_count = :inprogressCount, cumulative_completed_count ="
       + " :cumulativeCompletedCount, updated_at = now()")
   void insertOrUpdateGroupCompetencyDataReport(@BindBean GroupCompetencyDataReportsBean bean);

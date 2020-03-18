@@ -5,12 +5,13 @@ package org.gooru.dap.jobs.group.reports;
  * @author szgooru Created On 09-Dec-2019
  */
 public class ClassModel {
-  
+
   private String id;
   private String title;
   private Long gradeCurrent;
   private String subject;
   private String framework;
+  private String tenant;
 
   public String getId() {
     return id;
@@ -52,4 +53,12 @@ public class ClassModel {
     this.framework = framework;
   }
 
+  public String getTenant() {
+    return tenant;
+  }
+
+  public void setTenant(String tenant) {
+    this.tenant = tenant;
+  }
+  
 }

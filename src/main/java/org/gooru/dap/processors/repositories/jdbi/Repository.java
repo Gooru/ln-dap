@@ -14,7 +14,6 @@ public abstract class Repository {
 
   public abstract void executeRequest();
 
-
   protected DBI getDbiForCoreDS() {
     return CORE_DBI;
   }

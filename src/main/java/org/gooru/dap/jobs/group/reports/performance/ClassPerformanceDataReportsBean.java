@@ -112,7 +112,7 @@ public class ClassPerformanceDataReportsBean {
   public void setCountryId(Long countryId) {
     this.countryId = countryId;
   }
-  
+
   public Integer getWeek() {
     return week;
   }
@@ -136,7 +136,7 @@ public class ClassPerformanceDataReportsBean {
   public void setYear(Integer year) {
     this.year = year;
   }
-  
+
   public String getSubject() {
     return subject;
   }

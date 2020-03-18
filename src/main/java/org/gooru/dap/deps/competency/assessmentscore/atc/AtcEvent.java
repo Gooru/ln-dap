@@ -51,7 +51,6 @@ public class AtcEvent {
     this.userId = userId;
   }
 
-
   public AtcEvent(String classId, String courseId, String userId, Integer gradeId,
       String subjectCode) {
     this.classId = classId;

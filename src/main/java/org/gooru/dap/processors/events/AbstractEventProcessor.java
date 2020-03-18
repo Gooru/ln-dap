@@ -6,7 +6,6 @@ import org.gooru.dap.processors.ProcessorContext;
 public abstract class AbstractEventProcessor implements Processor {
   protected final ProcessorContext context;
 
-
   protected AbstractEventProcessor(ProcessorContext context) {
     this.context = context;
   }

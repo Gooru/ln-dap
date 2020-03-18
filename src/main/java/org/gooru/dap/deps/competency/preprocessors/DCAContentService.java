@@ -2,7 +2,6 @@ package org.gooru.dap.deps.competency.preprocessors;
 
 import org.skife.jdbi.v2.DBI;
 
-
 /**
  * @author mukul@gooru
  */

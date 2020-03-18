@@ -23,15 +23,18 @@ public class ClassModelMapper implements ResultSetMapper<ClassModel> {
     model.setId(r.getString("id"));
     model.setTitle(r.getString("title"));
     model.setGradeCurrent(r.getLong("grade_current"));
-
+    model.setTenant(r.getString("tenant"));
     String strPreference = r.getString("preference");
-    ObjectMapper mapper = new ObjectMapper();
-    try {
-      ClassPreferenceModel preference = mapper.readValue(strPreference, ClassPreferenceModel.class);
-      model.setSubject(preference.getSubject());
-      model.setFramework(preference.getFramework());
-    } catch (IOException e) {
-      LOGGER.debug("unable to read preference from the class");
+    
+    if (strPreference != null && !strPreference.isEmpty()) {
+      ObjectMapper mapper = new ObjectMapper();
+      try {
+        ClassPreferenceModel preference = mapper.readValue(strPreference, ClassPreferenceModel.class);
+        model.setSubject(preference.getSubject());
+        model.setFramework(preference.getFramework());
+      } catch (IOException e) {
+        LOGGER.debug("unable to read preference from the class");
+      }
     }
     return model;
   }

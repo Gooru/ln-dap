@@ -35,13 +35,15 @@ public class AtcPreProcessor {
       courseId = this.assessmentScoreEvent.getContext().getCourseId();
       userId = this.assessmentScoreEvent.getUserId();
 
-      // If courseId obtained from the event is NULL, fallback to the courseId
+      // If courseId obtained from the event is NULL, fallback to the
+      // courseId
       // stored in the class table
       if (courseId == null) {
         courseId = service.fetchCourseFromClass(classId);
       }
 
-      // Check if Class == Premium. If class != Premium - Don't go any further.
+      // Check if Class == Premium. If class != Premium - Don't go any
+      // further.
       if (classId != null && courseId != null & userId != null) {
         if (service.CheckifClassPremium(classId)) {
           LOGGER.info("Class " + classId + " is Premium, Continue ..");

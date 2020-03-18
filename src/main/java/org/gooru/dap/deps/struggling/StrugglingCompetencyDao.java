@@ -31,6 +31,6 @@ public interface StrugglingCompetencyDao {
       + " ucm on cm.tx_subject_code = ucm.tx_subject_code and cm.tx_comp_code = ucm.gut_code and ucm.user_id = :user and "
       + " ucm.updated_at < :toDate where cm.tx_subject_code = :subject order by cm.tx_domain_code,"
       + " cm.tx_comp_seq asc")
-  List<UserDomainCompetencyMatrixModel> fetchUserSkyline(
-      @Bind("user") String user, @Bind("subject") String subject, @Bind("toDate") Timestamp toDate);
+  List<UserDomainCompetencyMatrixModel> fetchUserSkyline(@Bind("user") String user,
+      @Bind("subject") String subject, @Bind("toDate") Timestamp toDate);
 }

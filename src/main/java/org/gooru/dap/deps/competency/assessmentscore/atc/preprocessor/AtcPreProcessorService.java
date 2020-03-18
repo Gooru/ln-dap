@@ -13,7 +13,6 @@ public class AtcPreProcessorService {
   private final AtcPreProcessorDao atcPreprocessorDao;
   private static final String PREMIUM = "premium";
 
-
   AtcPreProcessorService(DBI coreDbi) {
     this.atcPreprocessorDao = coreDbi.onDemand(AtcPreProcessorDao.class);
   }

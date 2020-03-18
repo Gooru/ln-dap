@@ -14,13 +14,13 @@ import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
  */
 public interface GroupsDao {
   @Mapper(ClassSchoolMappingModelMapper.class)
-  @SqlQuery("SELECT school_id, id FROM class WHERE id = ANY(:classIds)")
+  @SqlQuery("SELECT school_id, id FROM class WHERE id = ANY(:classIds) AND school_id IS NOT NULL")
   List<ClassSchoolMappingModel> fetchClassSchoolMapping(@Bind("classIds") PGArray<UUID> classIds);
-  
+
   @Mapper(ClassModelMapper.class)
-  @SqlQuery("SELECT id, title, grade_current, preference FROM class where id = ANY(:classIds) AND is_deleted = false")
+  @SqlQuery("SELECT id, title, grade_current, preference, tenant FROM class where id = ANY(:classIds) AND is_deleted = false")
   List<ClassModel> fetchClassDetails(@Bind("classIds") PGArray<UUID> classIds);
-  
+
   @Mapper(SchoolGroupMappingModelMapper.class)
   @SqlQuery("SELECT group_id, school_id FROM group_school_mapping WHERE school_id = ANY(:schoolIds::bigint[])")
   List<SchoolGroupMappingModel> fetchSchoolGroupMapping(@Bind("schoolIds") String schoolIds);

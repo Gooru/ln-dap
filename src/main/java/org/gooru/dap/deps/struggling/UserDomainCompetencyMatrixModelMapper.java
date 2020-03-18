@@ -25,7 +25,7 @@ public class UserDomainCompetencyMatrixModelMapper
     model.setStatus(r.getInt(MapperFields.STATUS));
     return model;
   }
-  
+
   static class MapperFields {
     static final String DOMAIN_CODE = "tx_domain_code";
     static final String COMPETENCY_CODE = "tx_comp_code";

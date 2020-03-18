@@ -56,8 +56,10 @@ public class GroupCompetencyReportsProcessor {
     });
 
     // Fetch class to school mapping
-    // Here the assumption is that the classes are mapped with the schools. We are inserting only
-    // those classes in the queue for the processing which are mapped to school.
+    // Here the assumption is that the classes are mapped with the schools.
+    // We are inserting only
+    // those classes in the queue for the processing which are mapped to
+    // school.
     Map<String, Long> classSchoolMap = this.groupsService.fetchClassSchoolMapping(uniqueClasses);
     Set<Long> schoolIds = classSchoolMap.values().stream().collect(Collectors.toSet());
     LOGGER.debug("number of schools returned {}", schoolIds.size());
@@ -76,20 +78,20 @@ public class GroupCompetencyReportsProcessor {
     classDetails.forEach(model -> {
       classDetailsMap.put(model.getId(), model);
     });
-    
+
     LOGGER
-        .debug("class, school and group mapping is fetched, now timespent data processing started");
+        .debug("class, school and group mapping is fetched, now competency data processing started");
 
     for (ClassCompetencyStatsModel model : this.currentStatsModels) {
       String classId = model.getClassId();
       Long schoolId = classSchoolMap.get(classId);
       ClassModel classModel = classDetailsMap.get(classId);
       if (schoolId == null) {
-        // If the school id does not present for the given class then the class is not yet
-        // grouped.
+        // If the school id does not present for the given class then the class is not yet grouped.
         // We can skip and move ahead
-        LOGGER.warn("class '{}' is not grouped under school, persisting class level data", classId);
-        
+        LOGGER.debug("class '{}' is not grouped under school, persisting class level data",
+            classId);
+
         // Even if there is no school and groups mapped with the class, at least persist the class
         // level competency data.
         ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
@@ -103,7 +105,8 @@ public class GroupCompetencyReportsProcessor {
       if (groupId == null) {
         // If the group id is null, then the schools has not been grouped, then still persist class
         // level data and return
-        LOGGER.debug("school '{}' is not associated with any group, persisting class level data", schoolId);
+        LOGGER.debug("school '{}' is not associated with any group, persisting class level data",
+            schoolId);
 
         ClassCompetencyDataReportsBean clsBean = createClassCompetencyDataReportsBean(model,
             previousStatsModelMap.get(classId), schoolId, null, classModel);
@@ -123,7 +126,8 @@ public class GroupCompetencyReportsProcessor {
 
       LOGGER.debug("competency data has been persisted");
 
-      // Update the status of the queue record to complete for the queue cleanup
+      // Update the status of the queue record to complete for the queue
+      // cleanup
       updateQueueStatusToCompleted(model);
     }
   }
@@ -134,7 +138,8 @@ public class GroupCompetencyReportsProcessor {
 
   private void processGroupLevelCompetency(ClassCompetencyDataReportsBean clsBean) {
     if (clsBean.getSchoolDistrictId() != null) {
-      // If the group type is school district then compute the collection timespent by SD id
+      // If the group type is school district then compute the collection
+      // timespent by SD id
       computeAndPersistSchoolDistrictCompetencyData(clsBean);
     } else {
       computeAndPersistClusterCompetencyData(clsBean);
@@ -160,15 +165,17 @@ public class GroupCompetencyReportsProcessor {
 
   private void computeAndPersistBlockCompetecyData(ClassCompetencyDataReportsBean clsBean) {
     Set<Long> blockChildIds = this.groupsService.fetchGroupChilds(clsBean.getBlockId());
-    List<GroupCompetencyStatsModel> competencyStatsModel = this.reportService
-        .fetchCompetencyCompletionsByGroup(blockChildIds, clsBean.getWeek(), clsBean.getMonth(), clsBean.getYear());
+    List<GroupCompetencyStatsModel> competencyStatsModel =
+        this.reportService.fetchCompetencyCompletionsByGroup(blockChildIds, clsBean.getWeek(),
+            clsBean.getMonth(), clsBean.getYear());
     createGroupReportDataBeanAndPersist(clsBean, clsBean.getBlockId(), competencyStatsModel);
   }
 
   private void computeAndPersistDistrictCompetencyData(ClassCompetencyDataReportsBean clsBean) {
     Set<Long> districtChildIds = this.groupsService.fetchGroupChilds(clsBean.getDistrictId());
-    List<GroupCompetencyStatsModel> competencyStatsModel = this.reportService
-        .fetchCompetencyCompletionsByGroup(districtChildIds, clsBean.getWeek(), clsBean.getMonth(), clsBean.getYear());
+    List<GroupCompetencyStatsModel> competencyStatsModel =
+        this.reportService.fetchCompetencyCompletionsByGroup(districtChildIds, clsBean.getWeek(),
+            clsBean.getMonth(), clsBean.getYear());
     createGroupReportDataBeanAndPersist(clsBean, clsBean.getDistrictId(), competencyStatsModel);
   }
 
@@ -211,10 +218,10 @@ public class GroupCompetencyReportsProcessor {
     bean.setCumulativeCompletedCount(cumulativeCompletedCount);
 
     bean.setGroupId(groupId);
-    
+
     bean.setSubject(clsBean.getSubject());
     bean.setFramework(clsBean.getFramework());
-    
+
     bean.setSchoolId(clsBean.getSchoolId());
     bean.setStateId(clsBean.getStateId());
     bean.setCountryId(clsBean.getCountryId());
@@ -231,10 +238,14 @@ public class GroupCompetencyReportsProcessor {
       Long schoolId, GroupModel group, ClassModel classModel) {
     ClassCompetencyDataReportsBean bean = new ClassCompetencyDataReportsBean();
     bean.setClassId(currentStatsmodel.getClassId());
-
-    // If the previous months stats are now available, then we will consider the current stats model
-    // as actual counts for this month. Otherwise if previous months stats are available then we
-    // will subtract it from current months stats and set them as current months stat
+    bean.setTenant(classModel.getTenant());
+    
+    // If the previous months stats are now available, then we will consider
+    // the current stats model
+    // as actual counts for this month. Otherwise if previous months stats
+    // are available then we
+    // will subtract it from current months stats and set them as current
+    // months stat
     if (previousStatsModel == null) {
       bean.setCompletedCount(currentStatsmodel.getCompletedCount());
       bean.setInprogressCount(currentStatsmodel.getInprogressCount());
@@ -247,13 +258,14 @@ public class GroupCompetencyReportsProcessor {
       bean.setInprogressCount(inprogressCount);
     }
 
-    // As the data is cumulative, the completed count present in current months model is cumulative
+    // As the data is cumulative, the completed count present in current
+    // months model is cumulative
     // count hence setting is directly
     bean.setCumulativeCompletedCount(currentStatsmodel.getCompletedCount());
     bean.setSchoolId(schoolId);
     bean.setSubject(classModel.getSubject());
     bean.setFramework(classModel.getFramework());
-    
+
     // Set current month and year values
     LocalDate now = LocalDate.now();
     WeekFields weekFields = WeekFields.of(Locale.getDefault());
@@ -264,12 +276,14 @@ public class GroupCompetencyReportsProcessor {
     if (group != null) {
       bean.setStateId(group.getStateId());
       bean.setCountryId(group.getCountryId());
-      bean.setTenant(group.getTenant());
-      
-      // If the group type is school district, then set the group id as school district id in bean and
-      // return. Otherwise if its cluster we need to fetch the parent hierarchy and set the block and
+
+      // If the group type is school district, then set the group id as
+      // school district id in bean and
+      // return. Otherwise if its cluster we need to fetch the parent
+      // hierarchy and set the block and
       // district id's accordingly.
-      // Here we need to fetch the group hierarchy and set the appropriate id's to be used in further
+      // Here we need to fetch the group hierarchy and set the appropriate
+      // id's to be used in further
       // processing of the report generation
       if (group.getSubType().equalsIgnoreCase(GroupConstants.GROUP_SUBTYPE_SCHOOL_DISTRICT)) {
         bean.setSchoolDistrictId(group.getId());
