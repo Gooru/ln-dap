@@ -60,11 +60,15 @@ public class LearnerProfileCompetencyStatusProcessor {
         LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Masterd",
             score, this.isSignature, gutCode);
         service.updateLearnerProfileCompetencyStatusToMastered(bean);
-      } 
-      if(score >= getCompletionScoreThreshold()) {
+      } else if (score >= getCompletionScoreThreshold()) {
         LOGGER.info("LP Status: score = {} || isSignature = {} || gutCode = {} || status=Completed",
             score, this.isSignature, gutCode);
         service.updateLearnerProfileCompetencyStatusToCompleted(bean);
+      } else if (!this.isSignature) {
+        LOGGER.info(
+            "LP Status: score = {} || isSignature = {} || gutCode = {} || status=InProgress", score,
+            this.isSignature, gutCode);
+        service.updateLearnerProfileCompetencyStatusToInprogress(bean);
       }
     } else {
       if (!this.isSignature) {
