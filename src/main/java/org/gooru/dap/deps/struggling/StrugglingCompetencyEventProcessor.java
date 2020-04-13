@@ -1,6 +1,8 @@
 
 package org.gooru.dap.deps.struggling;
 
+import java.util.Arrays;
+import java.util.List;
 import org.gooru.dap.components.jdbi.DBICreator;
 import org.gooru.dap.deps.competency.common.CompetencyAssessmentService;
 import org.gooru.dap.deps.competency.db.mapper.AssessmentCompetency;
@@ -31,11 +33,12 @@ public class StrugglingCompetencyEventProcessor implements EventProcessor {
       String eventName = this.assessmentScoreEvent.getEventName();
       LOGGER.debug("processing event: {}", eventName);
       switch (eventName) {
-        case "activity.learners.assessment.score":
         case "usage.assessment.score":
           processAssessmentScore();
           break;
-
+        case "activity.learners.assessment.score":
+          processActivityAssessmentScore();
+          break;
         default:
           LOGGER.warn("invalid event passed in");
           return;
@@ -56,4 +59,12 @@ public class StrugglingCompetencyEventProcessor implements EventProcessor {
 
     new StrugglingCompetencyProcessor(assessmentScoreEvent, competency.getGutCodes()).process();
   }
+  
+  
+  private void processActivityAssessmentScore() {
+    LOGGER.debug("Struggling competency processing start");
+    List<String> gutCodes = Arrays.asList(assessmentScoreEvent.getContext().getGutCompCode());
+    new StrugglingCompetencyProcessor(assessmentScoreEvent, gutCodes).process();
+  }
+  
 }

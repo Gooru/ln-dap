@@ -29,6 +29,7 @@ public class GroupPerformanceReportsEventProcessor implements EventProcessor {
       String eventName = this.eventMapper.getEventName();
       LOGGER.debug("processing event: {}", eventName);
       switch (eventName) {
+        case "activity.learners.assessment.score":
         case "usage.assessment.score":
           processAssessmentScore();
           break;

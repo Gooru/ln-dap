@@ -13,7 +13,7 @@ import org.gooru.dap.deps.competency.assessmentscore.learnerprofile.LearnerProfi
 import org.gooru.dap.deps.competency.assessmentscore.learnerprofile.LearnerProfileCompetencyStatusCommand;
 import org.gooru.dap.deps.competency.assessmentscore.learnerprofile.LearnerProfileCompetencyStatusCommandBuilder;
 import org.gooru.dap.deps.competency.assessmentscore.learnerprofile.LearnerProfileCompetencyStatusService;
-import org.gooru.dap.deps.competency.events.mapper.ActivityDataEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ActivityDataCompetencyEventMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,13 +21,13 @@ public class ActivityDataCompetencyStatsEventProcessor implements EventProcessor
 
   private final static Logger LOGGER = LoggerFactory.getLogger(CompetencyConstants.LOGGER_NAME);
 
-  private final ActivityDataEventMapper activityDataEvent;
+  private final ActivityDataCompetencyEventMapper activityDataEvent;
   private LearnerProfileCompetencyStatusService competencyStatusService =
       new LearnerProfileCompetencyStatusService(DBICreator.getDbiForDefaultDS());
   private LearnerProfileCompetencyEvidenceService competencyEvidenceService =
       new LearnerProfileCompetencyEvidenceService(DBICreator.getDbiForDefaultDS());
 
-  public ActivityDataCompetencyStatsEventProcessor(ActivityDataEventMapper activityDataEvent) {
+  public ActivityDataCompetencyStatsEventProcessor(ActivityDataCompetencyEventMapper activityDataEvent) {
     this.activityDataEvent = activityDataEvent;
   }
 
