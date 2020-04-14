@@ -41,18 +41,18 @@ public class ActivityDataAssessmentScoreEventProcessor implements EventProcessor
   }
 
   private void processActivityAssessmentScore() {
-    LOGGER.debug("activity assessment score event processing start");
+    LOGGER.debug("activity assessment question score event processing start");
+    // Expecting the activity assessment score event should have both the gutcode and compcode, here
+    // not doing DB validation, Since such validation will be done in ASDP where the entry point of
+    // data in.
+    final String gutCode = assessmentScoreEvent.getContext().getGutCompCode();
+    final String compCode = assessmentScoreEvent.getContext().getCompCode();
+    if (gutCode != null && compCode != null) {
+      new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent, gutCode, false).process();
+      new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent, gutCode, false).process();
 
-    new LearnerProfileCompetencyStatusProcessor(assessmentScoreEvent,
-        assessmentScoreEvent.getContext().getGutCompCode(), false).process();
-    new LearnerProfileCompetencyEvidenceProcessor(assessmentScoreEvent,
-        assessmentScoreEvent.getContext().getGutCompCode(), false).process();
-
-    new ContentCompetencyStatusProcessor(assessmentScoreEvent,
-        assessmentScoreEvent.getContext().getGutCompCode()).process();
-    new ContentCompetencyEvidenceProcessor(assessmentScoreEvent,
-        assessmentScoreEvent.getContext().getGutCompCode(),
-        assessmentScoreEvent.getContext().getGutCompCode()).process();
-    
+      new ContentCompetencyStatusProcessor(assessmentScoreEvent, compCode).process();
+      new ContentCompetencyEvidenceProcessor(assessmentScoreEvent, compCode, gutCode).process();
+    }
   }
 }

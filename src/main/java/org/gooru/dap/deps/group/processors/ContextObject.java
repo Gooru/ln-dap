@@ -20,6 +20,7 @@ public class ContextObject {
   private String contentSource;
   private String additionalContext;
   private String gutCompCode;
+  private String compCode;
 
   public String getCourseId() {
     return courseId;
@@ -141,6 +142,14 @@ public class ContextObject {
     this.gutCompCode = gutCompCode;
   }
 
+  public String getCompCode() {
+    return compCode;
+  }
+
+  public void setCompCode(String compCode) {
+    this.compCode = compCode;
+  }
+
   @Override
   public String toString() {
     return "ContextObject [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId
@@ -148,8 +157,9 @@ public class ContextObject {
         + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId
         + ", pathType=" + pathType + ", contextCollectionType=" + contextCollectionType
         + ", contextCollectionId=" + contextCollectionId + ", contentSource=" + contentSource
-        + ", additionalContext=" + additionalContext + ", gutCompCode=" + gutCompCode + "]";
+        + ", additionalContext=" + additionalContext + ", gutCompCode=" + gutCompCode
+        + ", compCode=" + compCode + "]";
   }
 
-  
+
 }

@@ -20,6 +20,7 @@ public class ContextMapper {
   private String contentSource;
   private String additionalContext;
   private String gutCompCode;
+  private String compCode;
 
   public String getCourseId() {
     return courseId;
@@ -141,6 +142,14 @@ public class ContextMapper {
     this.gutCompCode = gutCompCode;
   }
 
+  public String getCompCode() {
+    return compCode;
+  }
+
+  public void setCompCode(String compCode) {
+    this.compCode = compCode;
+  }
+
   @Override
   public String toString() {
     return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId
@@ -148,7 +157,9 @@ public class ContextMapper {
         + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId
         + ", pathType=" + pathType + ", contextCollectionType=" + contextCollectionType
         + ", contextCollectionId=" + contextCollectionId + ", contentSource=" + contentSource
-        + ", additionalContext=" + additionalContext + ", gutCode=" + gutCompCode + "]";
+        + ", additionalContext=" + additionalContext + ", gutCompCode=" + gutCompCode
+        + ", compCode=" + compCode + "]";
   }
 
+  
 }
