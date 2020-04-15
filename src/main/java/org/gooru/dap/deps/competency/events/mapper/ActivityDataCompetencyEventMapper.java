@@ -1,6 +1,6 @@
 package org.gooru.dap.deps.competency.events.mapper;
 
-public class ActivityDataEventMapper {
+public class ActivityDataCompetencyEventMapper {
 
   private String userId;
   private String eventId;

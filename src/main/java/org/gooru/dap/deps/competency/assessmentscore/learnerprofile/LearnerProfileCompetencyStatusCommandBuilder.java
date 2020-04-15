@@ -1,7 +1,7 @@
 package org.gooru.dap.deps.competency.assessmentscore.learnerprofile;
 
 import java.util.regex.Pattern;
-import org.gooru.dap.deps.competency.events.mapper.ActivityDataEventMapper;
+import org.gooru.dap.deps.competency.events.mapper.ActivityDataCompetencyEventMapper;
 import org.gooru.dap.deps.competency.events.mapper.AssessmentScoreEventMapper;
 
 /**
@@ -24,8 +24,8 @@ public final class LearnerProfileCompetencyStatusCommandBuilder {
   }
 
   public static LearnerProfileCompetencyStatusCommand build(
-      ActivityDataEventMapper activityDataEvent) {
-    String gutCode = activityDataEvent.getContext().getGutCode();
+      ActivityDataCompetencyEventMapper activityDataEvent) {
+    String gutCode = activityDataEvent.getContext().getGutCompCode();
     String subjectCode = HYPEN_PATTERN.split(gutCode)[0];
     LearnerProfileCompetencyStatusCommand command = new LearnerProfileCompetencyStatusCommand(
         subjectCode, activityDataEvent.getUserId(), gutCode, activityDataEvent.getContext().getContentSource());

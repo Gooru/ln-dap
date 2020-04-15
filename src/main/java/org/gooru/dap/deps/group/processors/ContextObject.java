@@ -19,6 +19,8 @@ public class ContextObject {
   private String contextCollectionId;
   private String contentSource;
   private String additionalContext;
+  private String gutCompCode;
+  private String compCode;
 
   public String getCourseId() {
     return courseId;
@@ -132,13 +134,32 @@ public class ContextObject {
     this.additionalContext = additionalContext;
   }
 
+  public String getGutCompCode() {
+    return gutCompCode;
+  }
+
+  public void setGutCompCode(String gutCompCode) {
+    this.gutCompCode = gutCompCode;
+  }
+
+  public String getCompCode() {
+    return compCode;
+  }
+
+  public void setCompCode(String compCode) {
+    this.compCode = compCode;
+  }
+
   @Override
   public String toString() {
-    return "ContextMapper [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId
+    return "ContextObject [courseId=" + courseId + ", classId=" + classId + ", unitId=" + unitId
         + ", lessonId=" + lessonId + ", sessionId=" + sessionId + ", tenantId=" + tenantId
         + ", partnerId=" + partnerId + ", questionCount=" + questionCount + ", pathId=" + pathId
-        + ", contentSource=" + contentSource + ", contextCollectionType=" + contextCollectionType
-        + ", " + "contextCollectionId=" + contextCollectionId + ", " + "contextCollectionId="
-        + "+ contextCollectionId + ]";
+        + ", pathType=" + pathType + ", contextCollectionType=" + contextCollectionType
+        + ", contextCollectionId=" + contextCollectionId + ", contentSource=" + contentSource
+        + ", additionalContext=" + additionalContext + ", gutCompCode=" + gutCompCode
+        + ", compCode=" + compCode + "]";
   }
+
+
 }
